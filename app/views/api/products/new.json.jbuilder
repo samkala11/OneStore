@@ -2,7 +2,7 @@
 
 
 
-@products.each do |product|
+@all_products.each do |product|
     json.set! product.id do
         json.extract! product, :id, :name, :short_desc, :department_id
 
