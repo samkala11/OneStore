@@ -544,9 +544,9 @@ function (_React$Component) {
           getAllProducts = _this$props.getAllProducts;
       var products = {
         products: [{
-          // name: 'tomato',
-          // short_desc: 'tomato',
-          // department_id: 6,
+          name: 'tomato',
+          short_desc: 'tomato',
+          department_id: 6,
           price: 10
         }, {
           name: 'bananaaa' // short_desc: 'bananaa',

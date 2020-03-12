@@ -42,6 +42,7 @@ class Api::ProductsController < ApplicationController
         # query2 = params
 
         @all_products = []
+        last_id = 0
         errors_rendered = false
             query.keys.each do |el|
                 new = Product.new
@@ -53,8 +54,12 @@ class Api::ProductsController < ApplicationController
                     @all_products << new
                 else
                     errors_rendered = true
-                    debugger
-                    render json: new.errors.full_messages, status: 404
+                    result = {
+                        created_products: @all_products,
+                        product_name: new.name,
+                        errors: new.errors.full_messages
+                    }
+                    render json: result, status: 404
                     return
                 end
             end
