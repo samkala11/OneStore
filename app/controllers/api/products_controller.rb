@@ -38,20 +38,21 @@ class Api::ProductsController < ApplicationController
     # end
 
     def create_product
-        # query = params[:product][:products]
-        query2 = params
+        query = params[:product][:products]
+        # query2 = params
 
         @all_products = []
         errors_rendered = false
-        debugger
-        if query is_a? Array
-            query.each do |product|
+        # debugger
+            query.keys.each do |el|
                 new = Product.new
-                new.name = product.name
-                new.department_id = product.department_id
-                new.price = product.price
-                new.long_desc = product.long_desc
+                # debugger
+                new.name = query[el]["name"]
+                new.department_id = query[el]["department_id"]
+                new.price = query[el]["price"]
+                new.short_desc = query[el]["short_desc"]
                 if new.save
+                    debugger
                     @all_products << new
                 else
                     errors_rendered = true
@@ -61,7 +62,7 @@ class Api::ProductsController < ApplicationController
             if (!errors_rendered) 
                 render :new
             end
-        end
+        
 
         
 
@@ -76,7 +77,8 @@ class Api::ProductsController < ApplicationController
     
 
     def product_params
-    params.require(:product).permit(:name, :department_id, :price, :discount_price, :long_desc, :short_desc, products: [])
+    params.require(:product).permit!.to_hash
+    # (:name, :department_id, :price, :discount_price, :long_desc, :short_desc, products: [])
     end
 
       
