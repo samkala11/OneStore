@@ -51,16 +51,16 @@ class App extends React.Component {
       let products = {
          products: [
             {
-               name: 'tomato',
-               short_desc: 'tomato',
-               department_id: 6,
+               // name: 'tomato',
+               // short_desc: 'tomato',
+               // department_id: 6,
                price: 10
             },
             {
-               name: 'banana',
-               short_desc: 'banana',
-               department_id: 7,
-               price: 20
+               name: 'bananaaa',
+               // short_desc: 'bananaa',
+               // department_id: 7,
+               // price: 20
             }
          ]
       }

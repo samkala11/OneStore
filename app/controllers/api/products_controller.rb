@@ -43,20 +43,19 @@ class Api::ProductsController < ApplicationController
 
         @all_products = []
         errors_rendered = false
-        # debugger
             query.keys.each do |el|
                 new = Product.new
-                # debugger
                 new.name = query[el]["name"]
                 new.department_id = query[el]["department_id"]
                 new.price = query[el]["price"]
                 new.short_desc = query[el]["short_desc"]
                 if new.save
-                    debugger
                     @all_products << new
                 else
                     errors_rendered = true
+                    debugger
                     render json: new.errors.full_messages, status: 404
+                    return
                 end
             end
             if (!errors_rendered) 
