@@ -7,7 +7,7 @@ class Api::OrdersController < ApplicationController
 
     def create_order
         @order = Order.new(order_params)
-        @order.order_number = (Time.now.to_s.delete("-").delete(":").delete(" ")[2..-8] + rand(1000..9999).to_s)[2..-1].to_i
+        @order.order_number = (Time.now.to_s.delete("-").delete(":").delete(" ")[2..-8] + rand(1000..9999).to_s)[2..-1].to_i * 22 / 24
         @order.order_type = 1
         @order.status = 1000
         if @order.save

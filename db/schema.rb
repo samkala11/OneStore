@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_03_19_052527) do
+ActiveRecord::Schema.define(version: 2020_03_22_213341) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -25,10 +25,12 @@ ActiveRecord::Schema.define(version: 2020_03_19_052527) do
     t.string "line_note"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "unit"
     t.index ["line_note"], name: "index_order_lines_on_line_note"
     t.index ["line_total"], name: "index_order_lines_on_line_total"
     t.index ["order_id"], name: "index_order_lines_on_order_id"
     t.index ["product_id"], name: "index_order_lines_on_product_id"
+    t.index ["unit"], name: "index_order_lines_on_unit"
   end
 
   create_table "orders", force: :cascade do |t|
@@ -59,9 +61,13 @@ ActiveRecord::Schema.define(version: 2020_03_19_052527) do
     t.integer "discount_price"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "unit"
+    t.integer "product_id"
     t.index ["department_id"], name: "index_products_on_department_id"
     t.index ["name"], name: "index_products_on_name"
     t.index ["price"], name: "index_products_on_price"
+    t.index ["product_id"], name: "index_products_on_product_id"
+    t.index ["unit"], name: "index_products_on_unit"
   end
 
 end

@@ -9,13 +9,26 @@ class Api::OrderLinesController < ApplicationController
 
     def create_order_line
         @order_line = OrderLine.new(order_line_params)
-        # @order_line.order_line_number = (Time.now.to_s.delete("-").delete(":").delete(" ")[2..-8] + rand(10).to_s + rand(10).to_s + rand(10).to_s)[2..-1].to_i
         @order_line.line_no = 2
         @order_line.product_id = 4
         # @order_line.status = 1000
         if @order_line.save
             p "order_line #{@order_line.product_id} created successfuly"
             render :new
+        else
+            render json: @order_line.errors.full_messages, status: 404
+        end
+    end
+
+    # needs 2 params to find the order
+    def update_order_line
+        product_id = params[:order_line][:product_id]
+        order_id = params[:order_line][:order_id]
+        @order_line = OrderLine.where("product_id = #{product_id} and order_id = #{order_id}")[0]
+        # @order_line.status = 1000
+        if @order_line.update(order_line_params)
+            p "order_line #{@order_line.product_id} updated successfuly"
+            render :updated
         else
             render json: @order_line.errors.full_messages, status: 404
         end
