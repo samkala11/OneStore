@@ -16,6 +16,9 @@ Rails.application.routes.draw do
     resources :orders, only: [:index]
     post 'orders/new', to: 'orders#create_order'
     put 'orders/update', to: 'orders#update_order'
+
+    post 'orderlines/new', to: 'order_lines#create_order_line'
+
   end
 
 end

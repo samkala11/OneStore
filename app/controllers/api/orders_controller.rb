@@ -11,6 +11,7 @@ class Api::OrdersController < ApplicationController
         @order.order_type = 1
         @order.status = 1000
         if @order.save
+            p "order #{@order.order_number} created successfuly"
             render :new
         else
             render json: @order.errors.full_messages, status: 404
@@ -18,13 +19,14 @@ class Api::OrdersController < ApplicationController
     end
 
     def update_order
-        @order2 = Order.where("order_number = #{params[:order][:order_number]}")
+        @order = Order.where("order_number = #{params[:order][:order_number]}")[0]
         # @order = Song.where("lower(order_no) like '#{query.to_i}' ")
         #  + Song.joins(:artist).where("lower(artists.name) like '#{query}' ")
-        if @order2.update(order_params)
+        if @order.update(order_params)
+            p "order #{@order.order_number} updated successfuly"
             render :updated
         else
-            render json: @order2.errors.full_messages, status: 404
+            render json: @order.errors.full_messages, status: 404
         end
     end
 
