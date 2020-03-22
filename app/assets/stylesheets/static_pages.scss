@@ -15,6 +15,10 @@
         background-color: floralwhite;
     }
 
+    .header {
+        height: 84px;
+    }
+    
     .product-show {
         height: 100%;
     }
@@ -50,6 +54,7 @@
                 border-top: 1px solid #eee;
                 box-sizing: border-box;
                 text-align: center;
+                font-size: 44px;
             }
 
             .add-button {
@@ -58,14 +63,14 @@
                 border-top-right-radius: 0;
                 padding: 0 10px;
                 line-height: 6px;
-                height: 32px;
-                font-size: 12px;
+                height: 44px;
+                font-size: 39px;
                 display: block;
                 box-sizing: border-box;
                 text-transform: uppercase;
                 background-color: green;
                 color: white;
-                margin-left: 44px;
+                margin-left: 20%;
             }
 
             .product-title {

@@ -13,7 +13,9 @@ Rails.application.routes.draw do
     get '/products/price', to: 'products#prodcuts_by_price'
     post '/products/new', to: 'products#create_product'
 
-
+    resources :orders, only: [:index]
+    post 'orders/new', to: 'orders#create_order'
+    put 'orders/update', to: 'orders#update_order'
   end
 
 end

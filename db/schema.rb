@@ -10,10 +10,45 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_02_23_054745) do
+ActiveRecord::Schema.define(version: 2020_03_19_052527) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "order_lines", force: :cascade do |t|
+    t.integer "order_id", null: false
+    t.integer "line_no", null: false
+    t.integer "sub_line_no"
+    t.integer "product_id", null: false
+    t.integer "quantity", null: false
+    t.integer "line_total", null: false
+    t.string "line_note"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["line_note"], name: "index_order_lines_on_line_note"
+    t.index ["line_total"], name: "index_order_lines_on_line_total"
+    t.index ["order_id"], name: "index_order_lines_on_order_id"
+    t.index ["product_id"], name: "index_order_lines_on_product_id"
+  end
+
+  create_table "orders", force: :cascade do |t|
+    t.integer "order_type", null: false
+    t.integer "order_number", null: false
+    t.integer "customer_id"
+    t.string "first_name"
+    t.string "last_name"
+    t.string "customer_address"
+    t.integer "order_total", null: false
+    t.integer "pending_total"
+    t.integer "paid_total"
+    t.integer "status"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["customer_address"], name: "index_orders_on_customer_address"
+    t.index ["first_name"], name: "index_orders_on_first_name"
+    t.index ["last_name"], name: "index_orders_on_last_name"
+    t.index ["order_number"], name: "index_orders_on_order_number", unique: true
+  end
 
   create_table "products", force: :cascade do |t|
     t.string "name", null: false

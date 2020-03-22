@@ -58,9 +58,9 @@ class App extends React.Component {
             },
             {
                name: 'bananaaa',
-               // short_desc: 'bananaa',
-               // department_id: 7,
-               // price: 20
+               short_desc: 'bananaa',
+               department_id: 7,
+               price: 20
             }
          ]
       }

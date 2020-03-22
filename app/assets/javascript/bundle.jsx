@@ -549,10 +549,10 @@ function (_React$Component) {
           department_id: 6,
           price: 10
         }, {
-          name: 'bananaaa' // short_desc: 'bananaa',
-          // department_id: 7,
-          // price: 20
-
+          name: 'bananaaa',
+          short_desc: 'bananaa',
+          department_id: 7,
+          price: 20
         }]
       }; // debugger;
       // createProduct(this.state.productInfo)
