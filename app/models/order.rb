@@ -1,10 +1,10 @@
 class Order < ApplicationRecord
-    validates :order_type, :order_number, :order_total, presence: true
+    validates :order_type, :order_number, :order_total, :unit, :product_id, presence: true
   
     # belongs_to :customer
   
-  #   has_many :songs
+    # has_many :songs
   
-  #   has_one_attached :album_image
+    # has_one_attached :album_image
   end
   
