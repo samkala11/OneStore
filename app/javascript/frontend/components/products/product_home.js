@@ -9,14 +9,16 @@ class App extends React.Component {
       super(props);
 
       this.state = {
-         array: [],
-         first: false,
-         name: '',
+         // array: [],
+         // first: false,
+         // name: '',
          productInfo: {
             name: '',
             short_desc: '',
             department_id: '',
-            price: ''
+            price: '',
+            product_id: '',
+            unit: ''
          },
          errorsCreate: []
       }
@@ -29,9 +31,9 @@ class App extends React.Component {
       const { getAllProducts } = this.props;
       getAllProducts();
       // this.setState({ first: true})
-      this.setState({array: [...this.state.array, 5,4]})
+      // this.setState({array: [...this.state.array, 5,4]})
       // this.setState({array: [...this.state.array, 5]})
-      setTimeout(() => this.setState({array: [...this.state.array, 7]}), 500)
+      // setTimeout(() => this.setState({array: [...this.state.array, 7]}), 500)
       // this.setState({array: [...this.state.array, 7]})
    }
 
@@ -45,34 +47,34 @@ class App extends React.Component {
       }
    }
 
-   handleCreate() {
+   handleCreate(e) {
+      e.preventDefault()
       const { createProduct, getAllProducts } = this.props;
 
-      let products = {
-         products: [
-            {
-               name: 'tomato',
-               short_desc: 'tomato',
-               department_id: 6,
-               price: 10
-            },
-            {
-               name: 'bananaaa',
-               short_desc: 'bananaa',
-               department_id: 7,
-               price: 20
-            }
-         ]
-      }
+      // let products = {
+      //    products: [
+      //       {
+      //          name: 'tomato',
+      //          short_desc: 'tomato',
+      //          department_id: 6,
+      //          price: 10
+      //       },
+      //       {
+      //          name: 'bananaaa',
+      //          short_desc: 'bananaa',
+      //          department_id: 7,
+      //          price: 20
+      //       }
+      //    ]
+      // }
 
-      
-      // createProduct(this.state.productInfo)
-      createProduct(products)
+      console.log('right before create', this.state.productInfo);      
+      createProduct(this.state.productInfo)
       .then((response) => {
-         console.log('your response', response.data);
-         getAllProducts();
-         let resetProductInfo =  { name: '', short_desc: '', department_id: '', price: ''};
-         this.setState({ productInfo: resetProductInfo })
+         console.log('your response', response);
+         // let resetProductInfo =  { name: '', short_desc: '', department_id: '', price: ''};
+         // this.setState({ productInfo: resetProductInfo })
+         // getAllProducts();
       })
       .catch((response) => {
          console.log('there is a failure in creating this product', response.responseJSON)
@@ -82,7 +84,7 @@ class App extends React.Component {
    }
 
    render() {
-      window.heyyyState = this.state;
+      window.homeState = this.state;
       return(
          <div className="home-page">
             <div className="header"> </div>
@@ -98,9 +100,17 @@ class App extends React.Component {
                <input 
                   type="text" 
                   className="product-name-input" 
+                  placeholder="product_id"
+                  onChange={this.update('product_id')}
+                  value = {this.state.productInfo['product_id'] || ''}
+               />
+
+               <input 
+                  type="text" 
+                  className="product-name-input" 
                   placeholder="Name"
                   onChange={this.update('name')}
-                  value = {this.state.productInfo['name']}
+                  value = {this.state.productInfo['name'] || ''}
                /> 
 
                <input 
@@ -108,7 +118,7 @@ class App extends React.Component {
                   className="product-name-input" 
                   placeholder="Short Desc"
                   onChange={this.update('short_desc')}
-                  value = {this.state.productInfo['short_desc']}
+                  value = {this.state.productInfo['short_desc'] || ''}
                />
 
                 <input 
@@ -116,7 +126,7 @@ class App extends React.Component {
                   className="product-name-input" 
                   placeholder="Department"
                   onChange={this.update('department_id')}
-                  value = {this.state.productInfo['department_id']}
+                  value = {this.state.productInfo['department_id'] || ''}
                />
 
                 <input 
@@ -124,11 +134,16 @@ class App extends React.Component {
                   className="product-name-input" 
                   placeholder="Price"
                   onChange={this.update('price')}
-                  value = {this.state.productInfo['price']}
+                  value = {this.state.productInfo['price'] || ''}
                /> 
- 
- 
 
+               <input 
+                  type="text" 
+                  className="product-name-input" 
+                  placeholder="Unit"
+                  onChange={this.update('unit')}
+                  value = {this.state.productInfo['unit'] || ''}
+               /> 
 
                <button 
                   onClick = {this.handleCreate}

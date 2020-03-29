@@ -30,7 +30,12 @@ const receiveProductsByDept = (products) => ({
 
 // Redux Thunk Create Product  
 export const createProductThunk = (product) => dispatch => createProduct(product)
-.then((product) => dispatch(receiveCreatedProduct(product)));
+.then((product) => {
+  
+  dispatch(receiveCreatedProduct(product))
+  console.log( product.length)
+
+});
 
 // Private receive created product
 const receiveCreatedProduct = (data) => ({

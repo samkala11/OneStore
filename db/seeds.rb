@@ -5,3 +5,12 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
+
+# require "open-uri"
+
+ActiveRecord::Base.transaction do 
+    Product.destroy_all
+
+    product1 = Product.create!( name: 'tomato', short_desc: 'tomato', department_id: '10', unit: 'KG', product_id: 1000, price: 500)
+
+end

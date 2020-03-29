@@ -142,7 +142,8 @@ var receiveProductsByDept = function receiveProductsByDept(products) {
 var createProductThunk = function createProductThunk(product) {
   return function (dispatch) {
     return Object(_util_product_api_util__WEBPACK_IMPORTED_MODULE_0__["createProduct"])(product).then(function (product) {
-      return dispatch(receiveCreatedProduct(product));
+      dispatch(receiveCreatedProduct(product));
+      console.log(product.length);
     });
   };
 }; // Private receive created product
@@ -184,6 +185,10 @@ var App = function App() {
     exact: true,
     path: "/",
     component: _products_product_home__WEBPACK_IMPORTED_MODULE_2__["default"]
+  }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Route"], {
+    exact: true,
+    path: "/fruits",
+    component: _products_Fruits__WEBPACK_IMPORTED_MODULE_3__["default"]
   }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Route"], {
     exact: true,
     path: "/departments",
@@ -418,14 +423,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _actions_product_actions__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../actions/product_actions */ "./app/javascript/frontend/actions/product_actions.js");
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
-
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance"); }
-
-function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter); }
-
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -459,14 +456,16 @@ function (_React$Component) {
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(App).call(this, props));
     _this.state = {
-      array: [],
-      first: false,
-      name: '',
+      // array: [],
+      // first: false,
+      // name: '',
       productInfo: {
         name: '',
         short_desc: '',
         department_id: '',
-        price: ''
+        price: '',
+        product_id: '',
+        unit: ''
       },
       errorsCreate: []
     };
@@ -478,74 +477,61 @@ function (_React$Component) {
   _createClass(App, [{
     key: "componentDidMount",
     value: function componentDidMount() {
-      var _this2 = this;
-
       var getAllProducts = this.props.getAllProducts;
       getAllProducts(); // this.setState({ first: true})
-
-      this.setState({
-        array: [].concat(_toConsumableArray(this.state.array), [5, 4])
-      }); // this.setState({array: [...this.state.array, 5]})
-
-      setTimeout(function () {
-        return _this2.setState({
-          array: [].concat(_toConsumableArray(_this2.state.array), [7])
-        });
-      }, 500); // this.setState({array: [...this.state.array, 7]})
+      // this.setState({array: [...this.state.array, 5,4]})
+      // this.setState({array: [...this.state.array, 5]})
+      // setTimeout(() => this.setState({array: [...this.state.array, 7]}), 500)
+      // this.setState({array: [...this.state.array, 7]})
     }
   }, {
     key: "update",
     value: function update(field) {
-      var _this3 = this;
+      var _this2 = this;
 
       var newProductInfo = Object.assign({}, this.state.productInfo);
       return function (e) {
         newProductInfo[field] = e.currentTarget.value;
 
-        _this3.setState({
+        _this2.setState({
           productInfo: newProductInfo
         });
       };
     }
   }, {
     key: "handleCreate",
-    value: function handleCreate() {
-      var _this4 = this;
+    value: function handleCreate(e) {
+      var _this3 = this;
 
+      e.preventDefault();
       var _this$props = this.props,
           createProduct = _this$props.createProduct,
-          getAllProducts = _this$props.getAllProducts;
-      var products = {
-        products: [{
-          name: 'tomato',
-          short_desc: 'tomato',
-          department_id: 6,
-          price: 10
-        }, {
-          name: 'bananaaa',
-          short_desc: 'bananaa',
-          department_id: 7,
-          price: 20
-        }]
-      }; // createProduct(this.state.productInfo)
+          getAllProducts = _this$props.getAllProducts; // let products = {
+      //    products: [
+      //       {
+      //          name: 'tomato',
+      //          short_desc: 'tomato',
+      //          department_id: 6,
+      //          price: 10
+      //       },
+      //       {
+      //          name: 'bananaaa',
+      //          short_desc: 'bananaa',
+      //          department_id: 7,
+      //          price: 20
+      //       }
+      //    ]
+      // }
 
-      createProduct(products).then(function (response) {
-        console.log('your response', response.data);
-        getAllProducts();
-        var resetProductInfo = {
-          name: '',
-          short_desc: '',
-          department_id: '',
-          price: ''
-        };
-
-        _this4.setState({
-          productInfo: resetProductInfo
-        });
+      console.log('right before create', this.state.productInfo);
+      createProduct(this.state.productInfo).then(function (response) {
+        console.log('your response', response); // let resetProductInfo =  { name: '', short_desc: '', department_id: '', price: ''};
+        // this.setState({ productInfo: resetProductInfo })
+        // getAllProducts();
       })["catch"](function (response) {
         console.log('there is a failure in creating this product', response.responseJSON);
 
-        _this4.setState({
+        _this3.setState({
           errorsCreate: response.responseJSON
         });
       });
@@ -553,7 +539,7 @@ function (_React$Component) {
   }, {
     key: "render",
     value: function render() {
-      window.heyyyState = this.state;
+      window.homeState = this.state;
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "home-page"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -567,27 +553,39 @@ function (_React$Component) {
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
         type: "text",
         className: "product-name-input",
+        placeholder: "product_id",
+        onChange: this.update('product_id'),
+        value: this.state.productInfo['product_id'] || ''
+      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        type: "text",
+        className: "product-name-input",
         placeholder: "Name",
         onChange: this.update('name'),
-        value: this.state.productInfo['name']
+        value: this.state.productInfo['name'] || ''
       }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
         type: "text",
         className: "product-name-input",
         placeholder: "Short Desc",
         onChange: this.update('short_desc'),
-        value: this.state.productInfo['short_desc']
+        value: this.state.productInfo['short_desc'] || ''
       }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
         type: "text",
         className: "product-name-input",
         placeholder: "Department",
         onChange: this.update('department_id'),
-        value: this.state.productInfo['department_id']
+        value: this.state.productInfo['department_id'] || ''
       }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
         type: "text",
         className: "product-name-input",
         placeholder: "Price",
         onChange: this.update('price'),
-        value: this.state.productInfo['price']
+        value: this.state.productInfo['price'] || ''
+      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        type: "text",
+        className: "product-name-input",
+        placeholder: "Unit",
+        onChange: this.update('unit'),
+        value: this.state.productInfo['unit'] || ''
       }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
         onClick: this.handleCreate
       }, "Create")));

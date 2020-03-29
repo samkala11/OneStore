@@ -8,7 +8,7 @@ const App = () => (
    
    <div className="app-wrapper">
       <Route exact path="/" component={ProductHome}/>
-      {/* <Route exact path="/fruits" component={Fruits}/> */}
+      <Route exact path="/fruits" component={Fruits}/>
       <Route exact path="/departments" component={ProductByDepartment}/> 
       <Route exact path="/departments/:department" component={ProductByDepartment}/> 
 
