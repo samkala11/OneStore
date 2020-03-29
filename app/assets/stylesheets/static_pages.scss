@@ -7,6 +7,7 @@
     // background-color: lightblue;
     width: 100vw;
     height: 100vh;
+    overflow-wrap: break-word;
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
 
     h4, .header {
@@ -55,6 +56,7 @@
                 box-sizing: border-box;
                 text-align: center;
                 font-size: 44px;
+                height: 98px;
             }
 
             .add-button {
@@ -63,14 +65,14 @@
                 border-top-right-radius: 0;
                 padding: 0 10px;
                 line-height: 6px;
-                height: 44px;
-                font-size: 39px;
+                height: 72px;
+                font-size: 45px;
                 display: block;
                 box-sizing: border-box;
                 text-transform: uppercase;
                 background-color: green;
                 color: white;
-                margin-left: 20%;
+                width: 100%;
             }
 
             .product-title {
@@ -81,7 +83,7 @@
         }
     }
 
-}
+}   
 
 #map-container{
     width: 100vw;

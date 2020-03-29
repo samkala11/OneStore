@@ -65,7 +65,7 @@ class App extends React.Component {
          ]
       }
 
-      // debugger;
+      
       // createProduct(this.state.productInfo)
       createProduct(products)
       .then((response) => {
