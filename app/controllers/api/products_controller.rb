@@ -40,8 +40,8 @@ class Api::ProductsController < ApplicationController
     def create_product
         query = params[:product][:products]
 
+        @all_products = []
         if query
-            @all_products = []
             last_id = 0
             errors_rendered = false
             query.keys.each do |el|
@@ -50,6 +50,8 @@ class Api::ProductsController < ApplicationController
                 new.department_id = query[el]["department_id"]
                 new.price = query[el]["price"]
                 new.short_desc = query[el]["short_desc"]
+                new.product_id = query[el]["product_id"]
+                new.unit = query[el]["unit"]
                 if new.save
                     @all_products << new
                 else
@@ -69,7 +71,12 @@ class Api::ProductsController < ApplicationController
         else
             @product = Product.new(product_params)
             if @product.save
-              render :new
+                result = {
+                    created_product: @product,
+                    product_name: @product.name,
+                    errors: false
+                }
+              render json: result, status: 200
             else
               render json: @product.errors.full_messages, status: 404
             end

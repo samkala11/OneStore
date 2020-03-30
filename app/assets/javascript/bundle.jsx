@@ -142,8 +142,8 @@ var receiveProductsByDept = function receiveProductsByDept(products) {
 var createProductThunk = function createProductThunk(product) {
   return function (dispatch) {
     return Object(_util_product_api_util__WEBPACK_IMPORTED_MODULE_0__["createProduct"])(product).then(function (product) {
-      dispatch(receiveCreatedProduct(product));
-      console.log(product.length);
+      console.log(product);
+      return dispatch(receiveCreatedProduct(product));
     });
   };
 }; // Private receive created product
@@ -509,27 +509,32 @@ function (_React$Component) {
           getAllProducts = _this$props.getAllProducts; // let products = {
       //    products: [
       //       {
-      //          name: 'tomato',
+      //          name: 'tomatoo',
       //          short_desc: 'tomato',
       //          department_id: 6,
-      //          price: 10
+      //          price: 10,
+      //          product_id: 2908878,
+      //          unit: 'kg'
       //       },
       //       {
       //          name: 'bananaaa',
       //          short_desc: 'bananaa',
       //          department_id: 7,
-      //          price: 20
+      //          price: 20,
+      //          product_id: 29440074,
+      //          unit: 'kg'
       //       }
       //    ]
       // }
 
       console.log('right before create', this.state.productInfo);
-      createProduct(this.state.productInfo).then(function (response) {
+      createProduct(this.state.productInfo) // createProduct(products)
+      .then(function (response) {
         console.log('your response', response); // let resetProductInfo =  { name: '', short_desc: '', department_id: '', price: ''};
         // this.setState({ productInfo: resetProductInfo })
         // getAllProducts();
       })["catch"](function (response) {
-        console.log('there is a failure in creating this product', response.responseJSON);
+        console.log('there is a failure in creating this product', response);
 
         _this3.setState({
           errorsCreate: response.responseJSON
@@ -548,47 +553,7 @@ function (_React$Component) {
         className: "search-bar"
       }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "products-categories"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h4", null, "  Main Categoriesopopo ")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "new-product-form"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
-        type: "text",
-        className: "product-name-input",
-        placeholder: "product_id",
-        onChange: this.update('product_id'),
-        value: this.state.productInfo['product_id'] || ''
-      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
-        type: "text",
-        className: "product-name-input",
-        placeholder: "Name",
-        onChange: this.update('name'),
-        value: this.state.productInfo['name'] || ''
-      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
-        type: "text",
-        className: "product-name-input",
-        placeholder: "Short Desc",
-        onChange: this.update('short_desc'),
-        value: this.state.productInfo['short_desc'] || ''
-      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
-        type: "text",
-        className: "product-name-input",
-        placeholder: "Department",
-        onChange: this.update('department_id'),
-        value: this.state.productInfo['department_id'] || ''
-      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
-        type: "text",
-        className: "product-name-input",
-        placeholder: "Price",
-        onChange: this.update('price'),
-        value: this.state.productInfo['price'] || ''
-      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
-        type: "text",
-        className: "product-name-input",
-        placeholder: "Unit",
-        onChange: this.update('unit'),
-        value: this.state.productInfo['unit'] || ''
-      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
-        onClick: this.handleCreate
-      }, "Create")));
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h4", null, " In Progress ")));
     }
   }]);
 

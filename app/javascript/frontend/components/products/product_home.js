@@ -54,22 +54,27 @@ class App extends React.Component {
       // let products = {
       //    products: [
       //       {
-      //          name: 'tomato',
+      //          name: 'tomatoo',
       //          short_desc: 'tomato',
       //          department_id: 6,
-      //          price: 10
+      //          price: 10,
+      //          product_id: 2908878,
+      //          unit: 'kg'
       //       },
       //       {
       //          name: 'bananaaa',
       //          short_desc: 'bananaa',
       //          department_id: 7,
-      //          price: 20
+      //          price: 20,
+      //          product_id: 29440074,
+      //          unit: 'kg'
       //       }
       //    ]
       // }
 
       console.log('right before create', this.state.productInfo);      
       createProduct(this.state.productInfo)
+      // createProduct(products)
       .then((response) => {
          console.log('your response', response);
          // let resetProductInfo =  { name: '', short_desc: '', department_id: '', price: ''};
@@ -77,7 +82,7 @@ class App extends React.Component {
          // getAllProducts();
       })
       .catch((response) => {
-         console.log('there is a failure in creating this product', response.responseJSON)
+         console.log('there is a failure in creating this product', response)
          this.setState({ errorsCreate: response.responseJSON})
       })
      
@@ -91,11 +96,12 @@ class App extends React.Component {
             <Map/>
             <div className="search-bar"></div>
             <div className="products-categories">
-               <h4>  Main Categoriesopopo </h4>
+               {/* <h4>  Main Categories</h4> */}
+               <h4> In Progress </h4>
             </div>
 
 
-            <div className="new-product-form">
+            {/* <div className="new-product-form">
 
                <input 
                   type="text" 
@@ -151,7 +157,7 @@ class App extends React.Component {
                   Create
                </button>
 
-            </div>
+            </div> */}
 
          </div>
       )

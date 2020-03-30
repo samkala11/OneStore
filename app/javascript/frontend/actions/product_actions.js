@@ -32,8 +32,8 @@ const receiveProductsByDept = (products) => ({
 export const createProductThunk = (product) => dispatch => createProduct(product)
 .then((product) => {
   
-  dispatch(receiveCreatedProduct(product))
-  console.log( product.length)
+  console.log( product )
+  return dispatch(receiveCreatedProduct(product))
 
 });
 
