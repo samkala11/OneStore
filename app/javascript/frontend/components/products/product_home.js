@@ -93,7 +93,9 @@ class App extends React.Component {
       return(
          <div className="home-page">
             <div className="header"> </div>
+
             <Map/>
+            
             <div className="search-bar"></div>
             <div className="products-categories">
                {/* <h4>  Main Categories</h4> */}
