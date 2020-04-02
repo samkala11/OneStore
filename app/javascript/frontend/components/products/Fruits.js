@@ -1,7 +1,7 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import { getProductsByDeptThunk } from '../../actions/product_actions'
-
+import * as OrderActions from '../../actions/order_actions';
 class Fruits extends React.Component {
    
    constructor(props){
@@ -16,6 +16,15 @@ class Fruits extends React.Component {
       getProductsByDept(10) //config constant
       .then(() => this.setState({products: Object.values(this.props.productsByDept)}));
 
+   }
+
+   handleCreateOrder(orderInfo) {
+      const { createOrder } = this.props;
+      let order = { 
+            order_total: '2000' 
+      }
+      createOrder(order)
+      .then(() => console.log('order created successfully'))
    }
 
    render() {
@@ -41,7 +50,9 @@ class Fruits extends React.Component {
                            </span>
                         </div>
 
-                        <button className="add-button">
+                        <button 
+                        onClick = {this.handleCreateOrder.bind(this)}
+                        className="add-button">
                            Add to list
                         </button>
                      </div>
@@ -76,6 +87,7 @@ const mapStateToProps = state => ({
  
  const mapDispatchToProps = dispatch => ({
    getProductsByDept: (no) => dispatch(getProductsByDeptThunk(no)),
+   createOrder: (orderInfo) => dispatch(OrderActions.createOrderReduxAjax(orderInfo))
 });
  
  

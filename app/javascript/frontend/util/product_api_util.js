@@ -1,6 +1,5 @@
 import $ from "jquery";
 
-
 export const getAllProducts = () => (
     $.ajax({
         method: 'GET',

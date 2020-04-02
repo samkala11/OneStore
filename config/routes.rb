@@ -19,7 +19,7 @@ Rails.application.routes.draw do
 
     post 'orderlines/new', to: 'order_lines#create_order_line'
     put 'orderlines/update', to: 'order_lines#update_order_line'
-
+    get 'orderlines/order', to: 'order_lines#orderlines_by_order'
 
   end
 

@@ -34,6 +34,12 @@ class Api::OrderLinesController < ApplicationController
         end
     end
 
+    def orderlines_by_order
+        query = params[:order_line][:order_id]
+        @order_lines =  OrderLine.where("order_id <= '#{query}'")
+        render :order_lines_order
+    end
+
     def order_line_params
         params.require(:order_line).permit(:order_id, :line_no, :product_id, :quantity, :line_total)
     end

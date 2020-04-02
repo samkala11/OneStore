@@ -86,6 +86,39 @@
 /************************************************************************/
 /******/ ({
 
+/***/ "./app/javascript/frontend/actions/order_actions.js":
+/*!**********************************************************!*\
+  !*** ./app/javascript/frontend/actions/order_actions.js ***!
+  \**********************************************************/
+/*! exports provided: RECEIVE_CREATED_ORDER_ACTION, createOrderReduxAjax */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RECEIVE_CREATED_ORDER_ACTION", function() { return RECEIVE_CREATED_ORDER_ACTION; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createOrderReduxAjax", function() { return createOrderReduxAjax; });
+/* harmony import */ var _util_order_api_util__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../util/order_api_util */ "./app/javascript/frontend/util/order_api_util.js");
+
+var RECEIVE_CREATED_ORDER_ACTION = 'RECEIVE_CREATED_ORDER_ACTION'; // Redux Thunk Create order  
+
+var createOrderReduxAjax = function createOrderReduxAjax(orderInfo) {
+  return function (dispatch) {
+    return Object(_util_order_api_util__WEBPACK_IMPORTED_MODULE_0__["createOrder"])(orderInfo).then(function (order) {
+      console.log(order);
+      return dispatch(receiveCreatedOrder(order));
+    });
+  };
+}; // Private receive created order
+
+var receiveCreatedOrder = function receiveCreatedOrder(data) {
+  return {
+    type: RECEIVE_CREATED_ORDER_ACTION,
+    data: data
+  };
+};
+
+/***/ }),
+
 /***/ "./app/javascript/frontend/actions/product_actions.js":
 /*!************************************************************!*\
   !*** ./app/javascript/frontend/actions/product_actions.js ***!
@@ -399,6 +432,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
 /* harmony import */ var _actions_product_actions__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../actions/product_actions */ "./app/javascript/frontend/actions/product_actions.js");
+/* harmony import */ var _actions_order_actions__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../actions/order_actions */ "./app/javascript/frontend/actions/order_actions.js");
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -416,6 +450,7 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
 
 
 
@@ -452,8 +487,21 @@ function (_React$Component) {
       });
     }
   }, {
+    key: "handleCreateOrder",
+    value: function handleCreateOrder(orderInfo) {
+      var createOrder = this.props.createOrder;
+      var order = {
+        order_total: '2000'
+      };
+      createOrder(order).then(function () {
+        return console.log('order created successfully');
+      });
+    }
+  }, {
     key: "render",
     value: function render() {
+      var _this3 = this;
+
       var products = this.state.products;
       window.fruitsState = this.state;
       var key = 0;
@@ -480,6 +528,7 @@ function (_React$Component) {
         }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
           className: "product-title"
         }, product.name.capitalize())), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+          onClick: _this3.handleCreateOrder.bind(_this3),
           className: "add-button"
         }, "Add to list"));
       })));
@@ -499,6 +548,9 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
   return {
     getProductsByDept: function getProductsByDept(no) {
       return dispatch(Object(_actions_product_actions__WEBPACK_IMPORTED_MODULE_2__["getProductsByDeptThunk"])(no));
+    },
+    createOrder: function createOrder(orderInfo) {
+      return dispatch(_actions_order_actions__WEBPACK_IMPORTED_MODULE_3__["createOrderReduxAjax"](orderInfo));
     }
   };
 };
@@ -1054,6 +1106,52 @@ document.addEventListener("DOMContentLoaded", function () {
 
 /***/ }),
 
+/***/ "./app/javascript/frontend/reducers/orders/created_order_reducer.js":
+/*!**************************************************************************!*\
+  !*** ./app/javascript/frontend/reducers/orders/created_order_reducer.js ***!
+  \**************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _actions_order_actions__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../actions/order_actions */ "./app/javascript/frontend/actions/order_actions.js");
+
+/* harmony default export */ __webpack_exports__["default"] = (function () {
+  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+  var action = arguments.length > 1 ? arguments[1] : undefined;
+  Object.freeze(state);
+
+  switch (action.type) {
+    case _actions_order_actions__WEBPACK_IMPORTED_MODULE_0__["RECEIVE_CREATED_ORDER_ACTION"]:
+      return action.data;
+
+    default:
+      return state;
+  }
+});
+
+/***/ }),
+
+/***/ "./app/javascript/frontend/reducers/orders_reducer.js":
+/*!************************************************************!*\
+  !*** ./app/javascript/frontend/reducers/orders_reducer.js ***!
+  \************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var redux__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! redux */ "./node_modules/redux/es/redux.js");
+/* harmony import */ var _orders_created_order_reducer__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./orders/created_order_reducer */ "./app/javascript/frontend/reducers/orders/created_order_reducer.js");
+
+
+/* harmony default export */ __webpack_exports__["default"] = (Object(redux__WEBPACK_IMPORTED_MODULE_0__["combineReducers"])({
+  currentOrder: _orders_created_order_reducer__WEBPACK_IMPORTED_MODULE_1__["default"]
+}));
+
+/***/ }),
+
 /***/ "./app/javascript/frontend/reducers/products/all_products_reducer.js":
 /*!***************************************************************************!*\
   !*** ./app/javascript/frontend/reducers/products/all_products_reducer.js ***!
@@ -1141,7 +1239,9 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var redux__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! redux */ "./node_modules/redux/es/redux.js");
 /* harmony import */ var _products_reducer__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./products_reducer */ "./app/javascript/frontend/reducers/products_reducer.js");
-/* harmony import */ var _session_reducer__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./session_reducer */ "./app/javascript/frontend/reducers/session_reducer.js");
+/* harmony import */ var _orders_reducer__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./orders_reducer */ "./app/javascript/frontend/reducers/orders_reducer.js");
+/* harmony import */ var _session_reducer__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./session_reducer */ "./app/javascript/frontend/reducers/session_reducer.js");
+
 
 
 
@@ -1151,7 +1251,8 @@ __webpack_require__.r(__webpack_exports__);
   //   errors: errorsReducer,
   //   currentlyPlaying: CurrentlyPlayingReducer
   products: _products_reducer__WEBPACK_IMPORTED_MODULE_1__["default"],
-  session: _session_reducer__WEBPACK_IMPORTED_MODULE_2__["default"]
+  orders: _orders_reducer__WEBPACK_IMPORTED_MODULE_2__["default"],
+  session: _session_reducer__WEBPACK_IMPORTED_MODULE_3__["default"]
 }));
 
 /***/ }),
@@ -1269,6 +1370,41 @@ function () {
 }();
 
 
+
+/***/ }),
+
+/***/ "./app/javascript/frontend/util/order_api_util.js":
+/*!********************************************************!*\
+  !*** ./app/javascript/frontend/util/order_api_util.js ***!
+  \********************************************************/
+/*! exports provided: createOrder, updateOrder */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createOrder", function() { return createOrder; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "updateOrder", function() { return updateOrder; });
+/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js");
+/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(jquery__WEBPACK_IMPORTED_MODULE_0__);
+
+var createOrder = function createOrder(order) {
+  return jquery__WEBPACK_IMPORTED_MODULE_0___default.a.ajax({
+    method: 'POST',
+    url: '/api/orders/new',
+    data: {
+      order: order
+    }
+  });
+};
+var updateOrder = function updateOrder(order) {
+  return jquery__WEBPACK_IMPORTED_MODULE_0___default.a.ajax({
+    method: 'PUT',
+    url: '/api/orders/update',
+    data: {
+      order: order
+    }
+  });
+};
 
 /***/ }),
 
