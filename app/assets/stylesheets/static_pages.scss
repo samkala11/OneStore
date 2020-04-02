@@ -2,18 +2,20 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: https://sass-lang.com/
 
-
-.app-wrapper{
+.app-wrapper {
     // background-color: lightblue;
     width: 100vw;
     height: 100vh;
     overflow-wrap: break-word;
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-
+    font-size: 50px;
+    
     h4, .header {
-        font-size: 50px;
+        font-size: 83px;
         text-align: center;
         background-color: floralwhite;
+        margin: 0;
+        padding: 25px;
     }
 
     .header {
@@ -23,7 +25,6 @@
     .product-show {
         height: 100%;
     }
-
 
     .product-list-wrapper {
         box-sizing: border-box;
@@ -83,6 +84,49 @@
         }
     }
 
+    .department-wrapper {
+        box-sizing: border-box;
+        height: 90%;
+        // width: calc(50% - 12px);
+        // margin: 0 5px 10px 3px;
+        // float: left;
+        // position: relative;
+        // padding: 20px 0 17px 0;
+        // border: 1px solid beige;
+    
+        .department-image {
+            top: -15px;
+            left: 10px;
+            width: calc(100% - 20px);
+            height: calc(100% - 20px);
+            //backgroundimageurl css
+        }
+
+        .department-details {
+            margin-bottom: 32px;
+            display: block;
+            position: relative;
+            width: 100%;
+            border-top: 1px solid #eee;
+            box-sizing: border-box;
+            text-align: center;
+            font-size: 44px;
+            height: 98px;
+        }
+
+        .department-title {
+            display: block;
+            margin-bottom: 20px;
+            box-sizing: border-box;
+            font-size: 65px;
+
+            a {
+                text-decoration: none;
+                color: black;
+            }
+        }
+
+    }
 }   
 
 #map-container{

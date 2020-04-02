@@ -1,5 +1,6 @@
 import React from 'react';
 import Map from '../Map';
+import {Link} from 'react-router-dom';
 import {connect} from 'react-redux';
 import * as ProductActions from '../../actions/product_actions'
 
@@ -92,14 +93,44 @@ class App extends React.Component {
       window.homeState = this.state;
       return(
          <div className="home-page">
-            <div className="header"> </div>
+            <div className="header">
+               <h4> Beirut Market </h4>
+            </div>
 
-            <Map/>
+            {/* <Map/> */}
             
-            <div className="search-bar"></div>
+            <div className="search-bar">
+               <input 
+                  placeholder="search"
+                  type="text"/>
+            </div>
             <div className="products-categories">
                {/* <h4>  Main Categories</h4> */}
-               <h4> In Progress </h4>
+               <div className="department-wrapper">
+                  <Link to="/departments/fruits">    
+                    <img className="department-image" 
+                     src="https://onestorebucket.s3.eu-west-3.amazonaws.com/fruits.jpg"/> 
+                  </Link>
+                  
+                  <div className="department-details">
+                     <span className="department-title">
+                           <Link to="/departments/fruits"> Fruits </Link>
+                     </span>
+                  </div>
+               </div>
+
+               <div className="department-wrapper">
+                  <Link to="/departments/fruits">    
+                    <img className="department-image" 
+                     src="https://onestorebucket.s3.eu-west-3.amazonaws.com/vegetables.jpg"/> 
+                  </Link>
+                  <div className="department-details">
+                     <span className="department-title">
+                           <Link to="/departments/fruits"> Vegetables </Link>
+                     </span>
+                  </div>
+               </div>
+
             </div>
 
 

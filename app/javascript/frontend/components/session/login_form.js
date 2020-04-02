@@ -1,24 +1,23 @@
 import React from 'react';
-import {Link} from 'react-router-dom'
+import {Link} from 'react-router-dom';
+import { connect } from 'react-redux';
+import { loginReduxAjax, clearErrors } from '../../actions/session_actions';
 
 class LoginSessionForm extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            username: "",
+            // username: "",
             email: "",
             password: ""
         };
         this.handleSubmit = this.handleSubmit.bind(this);
         this.update = this.update.bind(this);
-        this.handleDemo = this.handleDemo.bind(this);
     }
 
-
 componentWillMount(){
-    this.props.zeroOutErrors();
+    // this.props.zeroOutErrors();
 }
-
   
 update(field) {
     return e => this.setState({
@@ -26,18 +25,10 @@ update(field) {
     })
 }
 
-//   handleDemo(e) {
-//     let user = { username: 'sam330', password: '111222' }
-//     e.preventDefault();
-//     this.props.processForm(user)
-//       .then(() => this.props.history.push('/'))
-//   }
-
-
 handleSubmit(e) {
     e.preventDefault();
     const user = Object.assign({}, this.state);
-    this.props.processForm(user)
+    this.props.handleLogin(user)
         .then(() => this.props.history.push('/'));
     //() => this.props.history.push('/')
     //Why when logout, current user is still there in state??
@@ -59,10 +50,10 @@ renderErrors() {
 
 
 render() {
+    window.loginState = this.state;
 
     return (
         <div className="login-page-container">
-            
             {/*         
             <div className="header-login"> 
             <Link to="/" className="header-logoo">
@@ -80,18 +71,16 @@ render() {
                 <br />
             </div> */}
             
-            <form className="login-form" onSubmit={this.handleSubmit}>
-            
-                {this.props.errors.length > 0 && <div className="ErrorLogin">
+            <form className="login-form">
+                {/* {this.props.errors.length > 0 && <div className="ErrorLogin">
                     {this.renderErrors()} 
-                </div>  }
+                </div>  } */}
 
                 <input type="text"
                     className="login-input"
-                    onChange={this.update('username')}
-                    value={this.state.username}
-                    placeholder="Email address or username" 
-                    // why the vlalue is like this??
+                    onChange={this.update('email')}
+                    value={this.state.email}
+                    placeholder="Email address or email" 
                 />
 
                 <input type="password"
@@ -101,14 +90,28 @@ render() {
                     placeholder="Password"
                 />
                 
-                <input type="submit" className="session-submit" value={this.props.formType} />
+                <button 
+                    className="session-submit"
+                    onClick = {this.handleSubmit}
+                > submit </button>
 
             </form>
-            
         </div>
     )
   }
 
 }
 
-export default LoginSessionForm;
+const mapStateToProps = (state, ownProps) => ({
+    // errors: state.errors.session,
+    // formType: 'login',
+    // navLink: <Link to="/signup">sign up</Link>
+  
+  });
+  
+  const mapDispatchToProps = (dispatch, ownProps) => ({
+    handleLogin: (user) => dispatch(loginReduxAjax(user)),
+    clearErrors: () => dispatch(clearErrors())
+  });
+  
+  export default connect(mapStateToProps, mapDispatchToProps)(LoginSessionForm);

@@ -14,7 +14,7 @@ export const signupNewUser = (user) => ({
     }
 });
 
-export const signupAjax = (user) => (dispatch) => (
+export const signupReduxAjax = (user) => (dispatch) => (
     signup(user)
     .then(user => dispatch(signupNewUser(user)), errors => dispatch(receiveErrors(errors)))
 );
@@ -27,7 +27,7 @@ export const loginCurrentUser = (user) => ({
     }
 });
 
-export const loginAjax = (user) => (dispatch) => (login(user)
+export const loginReduxAjax = (user) => (dispatch) => (login(user)
   .then(user => dispatch(loginCurrentUser(user)), errors => dispatch(receiveErrors(errors)))
 );
 
@@ -36,7 +36,7 @@ export const logoutCurrentUser = () => ({
     type: LOGOUT_CURRENT_USER_ACTION
 });
 
-export const logoutAjax = () => (dispatch) => (logout()
+export const logoutReduxAjax = () => (dispatch) => (logout()
   .then(() => dispatch(logoutCurrentUser()))
 );
 

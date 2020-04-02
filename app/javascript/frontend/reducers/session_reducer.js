@@ -18,8 +18,7 @@ export default (state = _nullSession, action) => {
       });
     case LOGIN_CURRENT_USER_ACTION:
       data = action.payload;
-      return Object.assign({}, { currentUser: data.user
-    });
+      return Object.assign({}, { currentUser: data.user });
     case LOGOUT_CURRENT_USER_ACTION:
       return _nullSession;
     default:
