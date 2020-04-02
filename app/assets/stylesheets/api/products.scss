@@ -6,15 +6,60 @@
     
     .home-page {
 
-        .search-bar {
+        .loader-main {
+            width: 100vw;
+            height: 100vh;
+            background-color: floralwhite;
+            z-index: 2;
+            position: fixed;
 
-            height: 88px;
-            line-height: 80px;
-            
-            input{
-                font-size: 50px;
+            .loader-container {
+                width: 700px;
+                height: 700px;
+                position: relative;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%,-50%);
+
+                .loader-div{
+                    width: calc(100% - 16px);
+                    height: calc(100% - 16px);
+                    // border: 8px solid #162534;
+                    border-radius: 50%;
+                    animation: rotate 4s linear infinite;
+                }
+
+                .red-border {
+                    border-top: 20px solid rgb(218, 44, 44);
+                }
+
+                .white-border {
+                    border-top: 20px solid rgb(245, 239, 239);
+                }
+
+                .green-border {
+                    border-top: 20px solid rgb(5, 156, 18);
+                }
+
+                @keyframes rotate {
+                    100% { transform: rotate(360deg); }
+                }
             }
         }
 
+        .search-bar {
+
+            height: 116px;
+            line-height: 80px;
+            display: flex;
+            
+            input {
+                font-size: 50px;
+                width: 100%;
+                padding-top: 10px;
+                padding-bottom: 10px;
+                padding-left: 52px;
+            }
+        }
     }
 }

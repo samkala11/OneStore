@@ -19,7 +19,7 @@
     }
 
     .header {
-        height: 84px;
+        height: 152px;
     }
     
     .product-show {
@@ -73,7 +73,7 @@
                 text-transform: uppercase;
                 background-color: green;
                 color: white;
-                width: 100%;
+                width: calc(100% - 20px);
             }
 
             .product-title {
@@ -97,8 +97,7 @@
         .department-image {
             top: -15px;
             left: 10px;
-            width: calc(100% - 20px);
-            height: calc(100% - 20px);
+            width: 100%;
             //backgroundimageurl css
         }
 

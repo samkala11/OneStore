@@ -21,9 +21,10 @@ class App extends React.Component {
             product_id: '',
             unit: ''
          },
-         errorsCreate: []
+         errorsCreate: [],
+         showLoader: true
       }
-
+      this.timer = false;
       this.update = this.update.bind(this);
       this.handleCreate = this.handleCreate.bind(this);
    }
@@ -36,8 +37,12 @@ class App extends React.Component {
       // this.setState({array: [...this.state.array, 5]})
       // setTimeout(() => this.setState({array: [...this.state.array, 7]}), 500)
       // this.setState({array: [...this.state.array, 7]})
+      this.timer = setTimeout(() => this.setState({showLoader: false}), 900)
    }
 
+   componentWillUnmount() {
+      clearTimeout(this.timer);
+   }
 
    update(field) {
 
@@ -93,6 +98,20 @@ class App extends React.Component {
       window.homeState = this.state;
       return(
          <div className="home-page">
+
+           { this.state.showLoader && <div  className="loader-main">
+           <div className="loader-container"> 
+               <div className="loader-div red-border">
+                  <div className="loader-div white-border">
+                     <div className="loader-div green-border">
+                     <div className="loader-div red-border">
+                     </div>
+                     </div>
+                  </div>
+               </div>
+           </div> 
+           </div>}
+
             <div className="header">
                <h4> Beirut Market </h4>
             </div>

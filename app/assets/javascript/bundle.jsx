@@ -569,8 +569,10 @@ function (_React$Component) {
         product_id: '',
         unit: ''
       },
-      errorsCreate: []
+      errorsCreate: [],
+      showLoader: true
     };
+    _this.timer = false;
     _this.update = _this.update.bind(_assertThisInitialized(_this));
     _this.handleCreate = _this.handleCreate.bind(_assertThisInitialized(_this));
     return _this;
@@ -579,23 +581,36 @@ function (_React$Component) {
   _createClass(App, [{
     key: "componentDidMount",
     value: function componentDidMount() {
+      var _this2 = this;
+
       var getAllProducts = this.props.getAllProducts;
       getAllProducts(); // this.setState({ first: true})
       // this.setState({array: [...this.state.array, 5,4]})
       // this.setState({array: [...this.state.array, 5]})
       // setTimeout(() => this.setState({array: [...this.state.array, 7]}), 500)
       // this.setState({array: [...this.state.array, 7]})
+
+      this.timer = setTimeout(function () {
+        return _this2.setState({
+          showLoader: false
+        });
+      }, 900);
+    }
+  }, {
+    key: "componentWillUnmount",
+    value: function componentWillUnmount() {
+      clearTimeout(this.timer);
     }
   }, {
     key: "update",
     value: function update(field) {
-      var _this2 = this;
+      var _this3 = this;
 
       var newProductInfo = Object.assign({}, this.state.productInfo);
       return function (e) {
         newProductInfo[field] = e.currentTarget.value;
 
-        _this2.setState({
+        _this3.setState({
           productInfo: newProductInfo
         });
       };
@@ -603,7 +618,7 @@ function (_React$Component) {
   }, {
     key: "handleCreate",
     value: function handleCreate(e) {
-      var _this3 = this;
+      var _this4 = this;
 
       e.preventDefault();
       var _this$props = this.props,
@@ -638,7 +653,7 @@ function (_React$Component) {
       })["catch"](function (response) {
         console.log('there is a failure in creating this product', response);
 
-        _this3.setState({
+        _this4.setState({
           errorsCreate: response.responseJSON
         });
       });
@@ -649,7 +664,19 @@ function (_React$Component) {
       window.homeState = this.state;
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "home-page"
+      }, this.state.showLoader && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "loader-main"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "loader-container"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "loader-div red-border"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "loader-div white-border"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "loader-div green-border"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "loader-div red-border"
+      })))))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "header"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h4", null, " Beirut Market ")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "search-bar"
