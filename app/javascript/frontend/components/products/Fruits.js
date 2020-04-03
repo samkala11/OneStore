@@ -9,7 +9,10 @@ class Fruits extends React.Component {
    constructor(props){
       super(props);
       this.state = {
-         products: []
+         products: [],
+         order: {
+            order_total: 1500
+         }
       }
       this.handleCreateOrder = this.handleCreateOrder.bind(this)
    }
@@ -24,10 +27,10 @@ class Fruits extends React.Component {
    handleCreateOrder(productId, productUnit, productPrice) {
       const { createOrder, createOrderLine } = this.props;
       // let order = { 
-      //       order_total: '2000' 
+      //       order_total: '1500' 
       // }
       // debugger;
-      createOrder()
+      createOrder(this.state.order)
       .then((order) => {
          // debugger;
          let orderLineInfo = {
@@ -40,7 +43,8 @@ class Fruits extends React.Component {
          console.log('order created successfully from handle create', order);
          createOrderLine(orderLineInfo)
          .then((line) => console.log(line, 'newly line created'))
-      })
+      }
+      )
 
    }
 
@@ -105,7 +109,7 @@ const mapStateToProps = state => ({
  
  const mapDispatchToProps = dispatch => ({
    getProductsByDept: (no) => dispatch(getProductsByDeptThunk(no)),
-   createOrder: () => dispatch(OrderActions.createOrderReduxAjax()),
+   createOrder: (orderInfo) => dispatch(OrderActions.createOrderReduxAjax(orderInfo)),
    createOrderLine: (orderLineInfo) => dispatch(LineActions.createOrderLineReduxAjax(orderLineInfo))
 });
  

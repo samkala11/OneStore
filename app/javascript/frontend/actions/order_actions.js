@@ -4,7 +4,7 @@ export const RECEIVE_CREATED_ORDER_ACTION = 'RECEIVE_CREATED_ORDER_ACTION';
 
 
 // Redux Thunk Create order  
-export const createOrderReduxAjax = () => dispatch => createOrder()
+export const createOrderReduxAjax = (order) => dispatch => createOrder(order)
 .then((order) => {
   console.log( 'new order created',order );
   return dispatch(receiveCreatedOrder(order));

@@ -101,9 +101,9 @@ __webpack_require__.r(__webpack_exports__);
 
 var RECEIVE_CREATED_ORDER_ACTION = 'RECEIVE_CREATED_ORDER_ACTION'; // Redux Thunk Create order  
 
-var createOrderReduxAjax = function createOrderReduxAjax() {
+var createOrderReduxAjax = function createOrderReduxAjax(order) {
   return function (dispatch) {
-    return Object(_util_order_api_util__WEBPACK_IMPORTED_MODULE_0__["createOrder"])().then(function (order) {
+    return Object(_util_order_api_util__WEBPACK_IMPORTED_MODULE_0__["createOrder"])(order).then(function (order) {
       console.log('new order created', order);
       return dispatch(receiveCreatedOrder(order));
     });
@@ -503,7 +503,10 @@ function (_React$Component) {
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(Fruits).call(this, props));
     _this.state = {
-      products: []
+      products: [],
+      order: {
+        order_total: 1500
+      }
     };
     _this.handleCreateOrder = _this.handleCreateOrder.bind(_assertThisInitialized(_this));
     return _this;
@@ -528,11 +531,11 @@ function (_React$Component) {
       var _this$props = this.props,
           createOrder = _this$props.createOrder,
           createOrderLine = _this$props.createOrderLine; // let order = { 
-      //       order_total: '2000' 
+      //       order_total: '1500' 
       // }
       // debugger;
 
-      createOrder().then(function (order) {
+      createOrder(this.state.order).then(function (order) {
         // debugger;
         var orderLineInfo = {
           product_id: productId,
@@ -602,8 +605,8 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
     getProductsByDept: function getProductsByDept(no) {
       return dispatch(Object(_actions_product_actions__WEBPACK_IMPORTED_MODULE_2__["getProductsByDeptThunk"])(no));
     },
-    createOrder: function createOrder() {
-      return dispatch(_actions_order_actions__WEBPACK_IMPORTED_MODULE_3__["createOrderReduxAjax"]());
+    createOrder: function createOrder(orderInfo) {
+      return dispatch(_actions_order_actions__WEBPACK_IMPORTED_MODULE_3__["createOrderReduxAjax"](orderInfo));
     },
     createOrderLine: function createOrderLine(orderLineInfo) {
       return dispatch(_actions_order_line_actions__WEBPACK_IMPORTED_MODULE_4__["createOrderLineReduxAjax"](orderLineInfo));
@@ -1516,8 +1519,10 @@ __webpack_require__.r(__webpack_exports__);
 var createOrder = function createOrder(order) {
   return jquery__WEBPACK_IMPORTED_MODULE_0___default.a.ajax({
     method: 'POST',
-    url: '/api/orders/new' //   data: { order }
-
+    url: '/api/orders/new',
+    data: {
+      order: order
+    }
   });
 };
 var updateOrder = function updateOrder(order) {
