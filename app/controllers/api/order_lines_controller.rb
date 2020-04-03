@@ -9,8 +9,8 @@ class Api::OrderLinesController < ApplicationController
 
     def create_order_line
         @order_line = OrderLine.new(order_line_params)
-        @order_line.line_no = 2
-        @order_line.product_id = 4
+        @order_line.line_no = 1
+        # @order_line.product_id = 4
         # @order_line.status = 1000
         if @order_line.save
             p "order_line #{@order_line.product_id} created successfuly"
@@ -41,7 +41,7 @@ class Api::OrderLinesController < ApplicationController
     end
 
     def order_line_params
-        params.require(:order_line).permit(:order_id, :line_no, :product_id, :quantity, :line_total)
+        params.require(:order_line).permit(:order_id, :line_no, :product_id, :quantity, :line_total, :unit)
     end
     
     

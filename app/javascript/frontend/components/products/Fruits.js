@@ -2,6 +2,8 @@ import React from 'react';
 import {connect} from 'react-redux';
 import { getProductsByDeptThunk } from '../../actions/product_actions'
 import * as OrderActions from '../../actions/order_actions';
+import * as LineActions from '../../actions/order_line_actions';
+
 class Fruits extends React.Component {
    
    constructor(props){
@@ -9,6 +11,7 @@ class Fruits extends React.Component {
       this.state = {
          products: []
       }
+      this.handleCreateOrder = this.handleCreateOrder.bind(this)
    }
 
    componentDidMount(){
@@ -18,13 +21,27 @@ class Fruits extends React.Component {
 
    }
 
-   handleCreateOrder(orderInfo) {
-      const { createOrder } = this.props;
-      let order = { 
-            order_total: '2000' 
-      }
-      createOrder(order)
-      .then(() => console.log('order created successfully'))
+   handleCreateOrder(productId, productUnit, productPrice) {
+      const { createOrder, createOrderLine } = this.props;
+      // let order = { 
+      //       order_total: '2000' 
+      // }
+      // debugger;
+      createOrder()
+      .then((order) => {
+         // debugger;
+         let orderLineInfo = {
+            product_id: productId,
+            order_id: order.data.id,
+            quantity: 1,
+            line_total: 1000,
+            unit: productUnit
+         }
+         console.log('order created successfully from handle create', order);
+         createOrderLine(orderLineInfo)
+         .then((line) => console.log(line, 'newly line created'))
+      })
+
    }
 
    render() {
@@ -51,7 +68,7 @@ class Fruits extends React.Component {
                         </div>
 
                         <button 
-                        onClick = {this.handleCreateOrder.bind(this)}
+                        onClick = { () => this.handleCreateOrder(product.id, product.unit)}
                         className="add-button">
                            Add to list
                         </button>
@@ -82,12 +99,14 @@ class Fruits extends React.Component {
 
 
 const mapStateToProps = state => ({
-   productsByDept: state.products.productsByDept
+   productsByDept: state.products.productsByDept,
+   currentOrder: state.orders.currentOrder
  });
  
  const mapDispatchToProps = dispatch => ({
    getProductsByDept: (no) => dispatch(getProductsByDeptThunk(no)),
-   createOrder: (orderInfo) => dispatch(OrderActions.createOrderReduxAjax(orderInfo))
+   createOrder: (orderInfo) => dispatch(OrderActions.createOrderReduxAjax(orderInfo)),
+   createOrderLine: (orderLineInfo) => dispatch(LineActions.createOrderLineReduxAjax(orderLineInfo))
 });
  
  
