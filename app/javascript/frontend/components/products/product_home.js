@@ -153,7 +153,7 @@ class App extends React.Component {
             </div>
 
 
-            {/* <div className="new-product-form">
+            <div className="new-product-form">
 
                <input 
                   type="text" 
@@ -209,7 +209,7 @@ class App extends React.Component {
                   Create
                </button>
 
-            </div> */}
+            </div>
 
          </div>
       )

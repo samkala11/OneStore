@@ -819,7 +819,47 @@ function (_React$Component) {
         className: "department-title"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Link"], {
         to: "/departments/fruits"
-      }, " Vegetables "))))));
+      }, " Vegetables "))))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "new-product-form"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        type: "text",
+        className: "product-name-input",
+        placeholder: "product_id",
+        onChange: this.update('product_id'),
+        value: this.state.productInfo['product_id'] || ''
+      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        type: "text",
+        className: "product-name-input",
+        placeholder: "Name",
+        onChange: this.update('name'),
+        value: this.state.productInfo['name'] || ''
+      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        type: "text",
+        className: "product-name-input",
+        placeholder: "Short Desc",
+        onChange: this.update('short_desc'),
+        value: this.state.productInfo['short_desc'] || ''
+      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        type: "text",
+        className: "product-name-input",
+        placeholder: "Department",
+        onChange: this.update('department_id'),
+        value: this.state.productInfo['department_id'] || ''
+      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        type: "text",
+        className: "product-name-input",
+        placeholder: "Price",
+        onChange: this.update('price'),
+        value: this.state.productInfo['price'] || ''
+      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        type: "text",
+        className: "product-name-input",
+        placeholder: "Unit",
+        onChange: this.update('unit'),
+        value: this.state.productInfo['unit'] || ''
+      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+        onClick: this.handleCreate
+      }, "Create")));
     }
   }]);
 
