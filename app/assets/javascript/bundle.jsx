@@ -1516,10 +1516,8 @@ __webpack_require__.r(__webpack_exports__);
 var createOrder = function createOrder(order) {
   return jquery__WEBPACK_IMPORTED_MODULE_0___default.a.ajax({
     method: 'POST',
-    url: '/api/orders/new',
-    data: {
-      order: order
-    }
+    url: '/api/orders/new' //   data: { order }
+
   });
 };
 var updateOrder = function updateOrder(order) {
