@@ -105,7 +105,7 @@ const mapStateToProps = state => ({
  
  const mapDispatchToProps = dispatch => ({
    getProductsByDept: (no) => dispatch(getProductsByDeptThunk(no)),
-   createOrder: (orderInfo) => dispatch(OrderActions.createOrderReduxAjax(orderInfo)),
+   createOrder: () => dispatch(OrderActions.createOrderReduxAjax()),
    createOrderLine: (orderLineInfo) => dispatch(LineActions.createOrderLineReduxAjax(orderLineInfo))
 });
  

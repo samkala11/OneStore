@@ -101,9 +101,9 @@ __webpack_require__.r(__webpack_exports__);
 
 var RECEIVE_CREATED_ORDER_ACTION = 'RECEIVE_CREATED_ORDER_ACTION'; // Redux Thunk Create order  
 
-var createOrderReduxAjax = function createOrderReduxAjax(orderInfo) {
+var createOrderReduxAjax = function createOrderReduxAjax() {
   return function (dispatch) {
-    return Object(_util_order_api_util__WEBPACK_IMPORTED_MODULE_0__["createOrder"])(orderInfo).then(function (order) {
+    return Object(_util_order_api_util__WEBPACK_IMPORTED_MODULE_0__["createOrder"])().then(function (order) {
       console.log('new order created', order);
       return dispatch(receiveCreatedOrder(order));
     });
@@ -602,8 +602,8 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
     getProductsByDept: function getProductsByDept(no) {
       return dispatch(Object(_actions_product_actions__WEBPACK_IMPORTED_MODULE_2__["getProductsByDeptThunk"])(no));
     },
-    createOrder: function createOrder(orderInfo) {
-      return dispatch(_actions_order_actions__WEBPACK_IMPORTED_MODULE_3__["createOrderReduxAjax"](orderInfo));
+    createOrder: function createOrder() {
+      return dispatch(_actions_order_actions__WEBPACK_IMPORTED_MODULE_3__["createOrderReduxAjax"]());
     },
     createOrderLine: function createOrderLine(orderLineInfo) {
       return dispatch(_actions_order_line_actions__WEBPACK_IMPORTED_MODULE_4__["createOrderLineReduxAjax"](orderLineInfo));
