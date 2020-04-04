@@ -1,7 +1,7 @@
-import { createOrderLine, updateOrderLine } from '../util/order_line_api_util';
+import { createOrderLine, updateOrderLine, getOrderLinesByOrder } from '../util/order_line_api_util';
 
 export const RECEIVE_CREATED_ORDER_LINE_ACTION = 'RECEIVE_CREATED_ORDER_LINE_ACTION';
-
+export const RECEIVE_ORDER_LINES_BY_ORDER_ACTION = 'RECEIVE_ORDER_LINES_BY_ORDER_ACTION';
 
 // Redux Thunk Create order  
 export const createOrderLineReduxAjax = (orderLineInfo) => dispatch => createOrderLine(orderLineInfo)
@@ -10,9 +10,23 @@ export const createOrderLineReduxAjax = (orderLineInfo) => dispatch => createOrd
   return dispatch(receiveCreatedOrderLine(orderLine));
 });
 
-// Private receive created order
+// Private receive created orderline
 const receiveCreatedOrderLine = (data) => ({
     type: RECEIVE_CREATED_ORDER_LINE_ACTION,
     data
-  })
+})
+
+
+// Redux Thunk get orderlines by order  
+export const getOrderLinesByOrderReduxAjax = (orderId) => dispatch => getOrderLinesByOrder(orderId)
+.then((orderLines) => {
+  console.log( 'orderlines by order received, about to dispatch receive orderlines');
+  return dispatch(receiveOrderLinesByOrder(orderLines));
+});
+
+// Private receive orderlines by department
+const receiveOrderLinesByOrder = (data) => ({
+    type: RECEIVE_ORDER_LINES_BY_ORDER_ACTION,
+    data
+})
   

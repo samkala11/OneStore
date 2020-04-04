@@ -15,3 +15,10 @@ export const updateOrderLine = order_line => (
       data: { order_line }
     })
 );
+
+export const getOrderLinesByOrder = orderId => (
+  $.ajax({
+    method: 'GET',
+    url: `/api/orderlines/order?order_id=${orderId}`,
+  })
+);

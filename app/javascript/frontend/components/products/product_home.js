@@ -1,5 +1,6 @@
 import React from 'react';
 import Map from '../Map';
+import NavBar from '../navbar/navbar';
 import {Link} from 'react-router-dom';
 import {connect} from 'react-redux';
 import * as ProductActions from '../../actions/product_actions'
@@ -111,7 +112,7 @@ class App extends React.Component {
                </div>
            </div> 
            </div>}
-
+            <NavBar/>
             <div className="header">
                <h4> Beirut Market </h4>
             </div>

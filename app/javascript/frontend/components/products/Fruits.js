@@ -1,6 +1,7 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import { getProductsByDeptThunk } from '../../actions/product_actions'
+import { getProductsByDeptThunk } from '../../actions/product_actions';
+import NavBar from '../navbar/navbar';
 import * as OrderActions from '../../actions/order_actions';
 import * as LineActions from '../../actions/order_line_actions';
 
@@ -25,7 +26,7 @@ class Fruits extends React.Component {
    }
 
    handleCreateOrder(productId, productUnit, productPrice) {
-      const { createOrder, createOrderLine } = this.props;
+      const { createOrder, createOrderLine, getOrderLinesByOrder } = this.props;
       // let order = { 
       //       order_total: '1500' 
       // }
@@ -42,7 +43,10 @@ class Fruits extends React.Component {
          }
          console.log('order created successfully from handle create', order);
          createOrderLine(orderLineInfo)
-         .then((line) => console.log(line, 'newly line created'))
+         .then((line) => {
+            console.log('newly line created', line);
+            getOrderLinesByOrder(line.data.order_id);
+         })
       }
       )
 
@@ -58,7 +62,10 @@ class Fruits extends React.Component {
       }
 
       return(<div className="product-show">
-               <div className="header"> Fruits  </div>
+               <NavBar 
+                  title = 'Fruits'
+               />
+               {/* <div className="header"> Fruits  </div> */}
                <div className="product-list-wrapper">
                   {products.map(product => (
                      <div className="product-item-wrapper" key={key++}>
@@ -110,7 +117,8 @@ const mapStateToProps = state => ({
  const mapDispatchToProps = dispatch => ({
    getProductsByDept: (no) => dispatch(getProductsByDeptThunk(no)),
    createOrder: (orderInfo) => dispatch(OrderActions.createOrderReduxAjax(orderInfo)),
-   createOrderLine: (orderLineInfo) => dispatch(LineActions.createOrderLineReduxAjax(orderLineInfo))
+   createOrderLine: (orderLineInfo) => dispatch(LineActions.createOrderLineReduxAjax(orderLineInfo)),
+   getOrderLinesByOrder: (orderId) => dispatch(LineActions.getOrderLinesByOrderReduxAjax(orderId))
 });
  
  

@@ -9,6 +9,8 @@
     <%= stylesheet_link_tag 'application', media: 'all' %>
     <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
 
+    <%= javascript_include_tag "https://kit.fontawesome.com/7fbaf62e33.js" %>
+
     <% if current_user %>
       <script>
         window.currentUser = {

@@ -35,8 +35,8 @@ class Api::OrderLinesController < ApplicationController
     end
 
     def orderlines_by_order
-        query = params[:order_line][:order_id]
-        @order_lines =  OrderLine.where("order_id <= '#{query}'")
+        query = params[:order_id]
+        @order_lines =  OrderLine.where("order_id = '#{query}'")
         render :order_lines_order
     end
 
