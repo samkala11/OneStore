@@ -4,18 +4,23 @@ import { getProductsByDeptThunk } from '../../actions/product_actions';
 import NavBar from '../navbar/navbar';
 import * as OrderActions from '../../actions/order_actions';
 import * as LineActions from '../../actions/order_line_actions';
+import { updateOrder } from '../../util/order_api_util';
 
-class Fruits extends React.Component {
+class ProductListDept extends React.Component {
    
    constructor(props){
       super(props);
       this.state = {
          products: [],
          order: {
-            order_total: 1500
+            order_total: 1500,
+         },
+         orderLine : {
+            quantity: 1
          }
       }
-      this.handleCreateOrder = this.handleCreateOrder.bind(this)
+      this.handleCreateOrder = this.handleCreateOrder.bind(this);
+      this.handleUpdateOrder = this.handleUpdateOrder.bind(this);
    }
 
    componentDidMount(){
@@ -34,13 +39,13 @@ class Fruits extends React.Component {
       createOrder(this.state.order)
       .then((order) => {
          // debugger;
-         let orderLineInfo = {
+         const orderLineInfo = {
             product_id: productId,
             order_id: order.data.id,
             quantity: 1,
             line_total: 1000,
             unit: productUnit
-         }
+         };
          console.log('order created successfully from handle create', order);
          createOrderLine(orderLineInfo)
          .then((line) => {
@@ -49,8 +54,69 @@ class Fruits extends React.Component {
          })
       }
       )
-
    }
+
+   getMatchingLine( orderLines, productId ) {
+      let orderLinesArray = Object.values(orderLines);
+      // debugger;
+
+      for (let index = 0; index < orderLinesArray.length; index++) {
+         if (orderLinesArray[index].product_id === productId) return orderLinesArray[index];
+      }
+      return false;
+   }
+
+   handleUpdateOrder(productId, productUnit, orderId, productQuantity, productPrice) {
+      const { currentOrderLines, createOrderLine, currentOrder, 
+         getOrderLinesByOrder, updateOrderLine } = this.props;
+
+      let matchingLine = this.getMatchingLine(currentOrderLines, productId);
+      if (matchingLine) {
+         let newQuantity = productQuantity + matchingLine.quantity;
+         let newLineTotal = (productQuantity * productPrice) + matchingLine.line_total;
+         // let lineId = matchingLine.id;
+         const orderLineInfo = {
+            product_id: productId,
+            order_id: orderId,
+            quantity: newQuantity,
+            line_total: newLineTotal,
+         };
+         updateOrderLine(orderLineInfo)
+         .then(() => getOrderLinesByOrder(currentOrder.id));
+      } else {
+         const orderLineInfo = {
+            product_id: productId,
+            order_id: orderId,
+            quantity: 1,
+            line_total: 1000,
+            unit: productUnit
+         };
+         createOrderLine(orderLineInfo)
+         .then(() => getOrderLinesByOrder(currentOrder.id))
+         .then(() => console.log('order updated and orderLine added to order successfully'))
+      }
+   }
+
+   handleAddToOrder(productId, productUnit, productPrice, productQuantity) {
+      const { currentOrder } = this.props;
+      if (currentOrder && currentOrder.id) {
+         this.handleUpdateOrder(productId, productUnit,  currentOrder.id, productQuantity);
+      } else {
+         this.handleCreateOrder(productId, productUnit);
+      }
+   }
+
+   // handleUpdateLine(orderLines, productId) {
+   //    const { updateOrderLine } = this.props;
+   //    let orderLinesArray = Object.values(orderLines);
+   //    let lineId = -1;
+   //    for (let index = 0; index < orderLinesArray.length; index++) {
+   //       if (orderLinesArray[index].product_id === productId) lineId = orderLinesArray[index].id;
+   //    }
+   //    if (lineId >= 0) {
+   //       updateOrderLine() 
+   //    } 
+   // }
 
    render() {
       const products = this.state.products;
@@ -79,7 +145,7 @@ class Fruits extends React.Component {
                         </div>
 
                         <button 
-                        onClick = { () => this.handleCreateOrder(product.id, product.unit)}
+                        onClick = { () => this.handleAddToOrder(product.id, product.unit, null, 5)}
                         className="add-button">
                            Add to list
                         </button>
@@ -102,7 +168,7 @@ class Fruits extends React.Component {
                      </button>
                   </div> */}                
                </div>
-            </div>
+         </div>
       )
    }
 }
@@ -111,18 +177,20 @@ class Fruits extends React.Component {
 
 const mapStateToProps = state => ({
    productsByDept: state.products.productsByDept,
-   currentOrder: state.orders.currentOrder
+   currentOrder: state.orders.currentOrder,
+   currentOrderLines: state.orders.currentOrderLines
  });
  
  const mapDispatchToProps = dispatch => ({
    getProductsByDept: (no) => dispatch(getProductsByDeptThunk(no)),
    createOrder: (orderInfo) => dispatch(OrderActions.createOrderReduxAjax(orderInfo)),
    createOrderLine: (orderLineInfo) => dispatch(LineActions.createOrderLineReduxAjax(orderLineInfo)),
+   updateOrderLine: (orderLineInfo) => dispatch(LineActions.updateOrderLineReduxAjax(orderLineInfo)),
    getOrderLinesByOrder: (orderId) => dispatch(LineActions.getOrderLinesByOrderReduxAjax(orderId))
 });
  
  
-export default connect(mapStateToProps, mapDispatchToProps)(Fruits);
+export default connect(mapStateToProps, mapDispatchToProps)(ProductListDept);
 
 
 

@@ -2,7 +2,7 @@ import React from 'react';
 // import Map from '../Map';
 import {withRouter} from 'react-router-dom';
 import {connect} from 'react-redux';
-import Fruits from './Fruits';
+import ProductListDepartment from './product_list_department';
 // import * as ProductActions from '../../actions/product_actions'
 
 class ProductsByDepartment extends React.Component {
@@ -25,7 +25,7 @@ class ProductsByDepartment extends React.Component {
        let params = this.props.match.params.department;
        switch(params){
            case 'fruits':{
-                return <Fruits/>
+                return <ProductListDepartment/>
            }
            case 'vegetables':{
 
