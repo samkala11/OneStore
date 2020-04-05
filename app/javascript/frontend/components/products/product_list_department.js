@@ -22,23 +22,28 @@ class ProductListDept extends React.Component {
       this.handleCreateOrder = this.handleCreateOrder.bind(this);
       this.handleUpdateOrder = this.handleUpdateOrder.bind(this);
    }
-
+   
    componentDidMount(){
       const { getProductsByDept } = this.props;
       getProductsByDept(10) //config constant
       .then(() => this.setState({products: Object.values(this.props.productsByDept)}));
+   }
 
+   getMatchingLine( orderLines, productId ) {
+      let orderLinesArray = Object.values(orderLines);
+      // debugger;
+      for (let index = 0; index < orderLinesArray.length; index++) {
+         let orderLine = orderLinesArray[index];
+         if (orderLine.product_id === productId) return orderLine;
+      }
+      return false;
    }
 
    handleCreateOrder(productId, productUnit, productPrice) {
       const { createOrder, createOrderLine, getOrderLinesByOrder } = this.props;
-      // let order = { 
-      //       order_total: '1500' 
-      // }
-      // debugger;
+
       createOrder(this.state.order)
       .then((order) => {
-         // debugger;
          const orderLineInfo = {
             product_id: productId,
             order_id: order.data.id,
@@ -56,17 +61,9 @@ class ProductListDept extends React.Component {
       )
    }
 
-   getMatchingLine( orderLines, productId ) {
-      let orderLinesArray = Object.values(orderLines);
-      // debugger;
-
-      for (let index = 0; index < orderLinesArray.length; index++) {
-         if (orderLinesArray[index].product_id === productId) return orderLinesArray[index];
-      }
-      return false;
-   }
 
    handleUpdateOrder(productId, productUnit, orderId, productQuantity, productPrice) {
+
       const { currentOrderLines, createOrderLine, currentOrder, 
          getOrderLinesByOrder, updateOrderLine } = this.props;
 
@@ -105,18 +102,24 @@ class ProductListDept extends React.Component {
          this.handleCreateOrder(productId, productUnit);
       }
    }
-
-   // handleUpdateLine(orderLines, productId) {
-   //    const { updateOrderLine } = this.props;
-   //    let orderLinesArray = Object.values(orderLines);
-   //    let lineId = -1;
-   //    for (let index = 0; index < orderLinesArray.length; index++) {
-   //       if (orderLinesArray[index].product_id === productId) lineId = orderLinesArray[index].id;
-   //    }
-   //    if (lineId >= 0) {
-   //       updateOrderLine() 
-   //    } 
-   // }
+   
+   decreaseLineQuantity(productId, productPrice) {
+      const { currentOrderLines, updateOrderLine, getOrderLinesByOrder } = this.props;
+      let matchingLine = this.getMatchingLine(currentOrderLines, productId);
+      if (matchingLine) {
+         let newQuantity =  matchingLine.quantity - 0.5;
+         let newLineTotal = matchingLine.line_total - 500;
+         // let lineId = matchingLine.id;
+         const orderLineInfo = {
+            product_id: productId,
+            order_id: matchingLine.order_id,
+            quantity: newQuantity,
+            line_total: newLineTotal,
+         };
+         updateOrderLine(orderLineInfo)
+         .then(() => getOrderLinesByOrder( matchingLine.order_id,));
+      }
+   }
 
    render() {
       const products = this.state.products;
@@ -126,13 +129,12 @@ class ProductListDept extends React.Component {
 
       String.prototype.capitalize = function() {
          return this.charAt(0).toUpperCase() + this.slice(1)
-      }
+      };
 
       return(<div className="product-show">
                <NavBar 
                   title = 'Fruits'
                />
-               {/* <div className="header"> Fruits  </div> */}
                <div className="product-list-wrapper">
                   {products.map(product => (
                      <div className="product-item-wrapper" key={key++}>
@@ -145,33 +147,25 @@ class ProductListDept extends React.Component {
                            </span>
                         </div>
 
+                        { (currentOrderLines && this.getMatchingLine(currentOrderLines, product.id) && this.getMatchingLine(currentOrderLines, product.id).quantity > 0) && <button
+                           className="decrease-quantity-button"
+                           onClick = {() => this.decreaseLineQuantity(product.id)}
+                        > - </button> }
                         <button 
                         onClick = { () => this.handleAddToOrder(product.id, product.unit, null, 0.5)}
                         className="add-button">
-                           { (currentOrderLines && this.getMatchingLine(currentOrderLines, product.id)) 
+                           { (currentOrderLines && this.getMatchingLine(currentOrderLines, product.id) && this.getMatchingLine(currentOrderLines, product.id).quantity > 0) 
                               ?
-                              <span> { this.getMatchingLine(currentOrderLines, product.id).quantity }</span>
+                              <span> { this.getMatchingLine(currentOrderLines, product.id).quantity }
+                                 <span 
+                                 className = "plus-sign"
+                                 > + </span>
+                              </span>
                               :
                              <span> Add to list </span>}
                         </button>
                      </div>
-                  ))}
-                 
-                  {/* <div  className="product-item-wrapper">
-                     <img className="product-image" 
-                           src="https://media.istockphoto.com/photos/tomato-isolated-on-white-background-picture-id466175630?k=6&m=466175630&s=612x612&w=0&h=fu_mQBjGJZIliOWwCR0Vf2myRvKWyQDsymxEIi8tZ38="
-                     />
-                     <div className="product-details">
-                        <span className="product-title">
-                           Tomato
-                           300/kilo
-                        </span>
-                     </div>
-
-                     <button className="add-button">
-                        Add to list
-                     </button>
-                  </div> */}                
+                  ))}              
                </div>
          </div>
       )

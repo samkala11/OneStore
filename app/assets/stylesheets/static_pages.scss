@@ -74,12 +74,32 @@
                 background-color: green;
                 color: white;
                 width: calc(100% - 20px);
+                position: relative;
             }
 
             .product-title {
                 display: block;
                 margin-top: 20px;
                 box-sizing: border-box;
+            }
+
+            .decrease-quantity-button {
+                position: absolute;
+                color: yellow;
+                height: 72px;
+                border-right: 6px solid white;
+                background: green;
+                z-index: 4;
+                line-height: 20px;
+                width: 78px;
+                font-size: 64px;
+            }
+
+            .plus-sign {
+                display: inline-block;
+                position: absolute;
+                padding-left: 30%;
+                font-size: 55px;
             }
         }
     }

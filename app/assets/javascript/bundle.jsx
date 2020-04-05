@@ -961,18 +961,25 @@ function (_React$Component) {
       });
     }
   }, {
+    key: "getMatchingLine",
+    value: function getMatchingLine(orderLines, productId) {
+      var orderLinesArray = Object.values(orderLines); // debugger;
+
+      for (var index = 0; index < orderLinesArray.length; index++) {
+        var orderLine = orderLinesArray[index];
+        if (orderLine.product_id === productId) return orderLine;
+      }
+
+      return false;
+    }
+  }, {
     key: "handleCreateOrder",
     value: function handleCreateOrder(productId, productUnit, productPrice) {
       var _this$props = this.props,
           createOrder = _this$props.createOrder,
           createOrderLine = _this$props.createOrderLine,
-          getOrderLinesByOrder = _this$props.getOrderLinesByOrder; // let order = { 
-      //       order_total: '1500' 
-      // }
-      // debugger;
-
+          getOrderLinesByOrder = _this$props.getOrderLinesByOrder;
       createOrder(this.state.order).then(function (order) {
-        // debugger;
         var orderLineInfo = {
           product_id: productId,
           order_id: order.data.id,
@@ -986,17 +993,6 @@ function (_React$Component) {
           getOrderLinesByOrder(line.data.order_id);
         });
       });
-    }
-  }, {
-    key: "getMatchingLine",
-    value: function getMatchingLine(orderLines, productId) {
-      var orderLinesArray = Object.values(orderLines); // debugger;
-
-      for (var index = 0; index < orderLinesArray.length; index++) {
-        if (orderLinesArray[index].product_id === productId) return orderLinesArray[index];
-      }
-
-      return false;
     }
   }, {
     key: "handleUpdateOrder",
@@ -1047,18 +1043,31 @@ function (_React$Component) {
       } else {
         this.handleCreateOrder(productId, productUnit);
       }
-    } // handleUpdateLine(orderLines, productId) {
-    //    const { updateOrderLine } = this.props;
-    //    let orderLinesArray = Object.values(orderLines);
-    //    let lineId = -1;
-    //    for (let index = 0; index < orderLinesArray.length; index++) {
-    //       if (orderLinesArray[index].product_id === productId) lineId = orderLinesArray[index].id;
-    //    }
-    //    if (lineId >= 0) {
-    //       updateOrderLine() 
-    //    } 
-    // }
+    }
+  }, {
+    key: "decreaseLineQuantity",
+    value: function decreaseLineQuantity(productId, productPrice) {
+      var _this$props3 = this.props,
+          currentOrderLines = _this$props3.currentOrderLines,
+          updateOrderLine = _this$props3.updateOrderLine,
+          getOrderLinesByOrder = _this$props3.getOrderLinesByOrder;
+      var matchingLine = this.getMatchingLine(currentOrderLines, productId);
 
+      if (matchingLine) {
+        var newQuantity = matchingLine.quantity - 0.5;
+        var newLineTotal = matchingLine.line_total - 500; // let lineId = matchingLine.id;
+
+        var orderLineInfo = {
+          product_id: productId,
+          order_id: matchingLine.order_id,
+          quantity: newQuantity,
+          line_total: newLineTotal
+        };
+        updateOrderLine(orderLineInfo).then(function () {
+          return getOrderLinesByOrder(matchingLine.order_id);
+        });
+      }
+    }
   }, {
     key: "render",
     value: function render() {
@@ -1090,12 +1099,19 @@ function (_React$Component) {
           className: "product-details"
         }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
           className: "product-title"
-        }, product.name.capitalize())), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+        }, product.name.capitalize())), currentOrderLines && _this3.getMatchingLine(currentOrderLines, product.id) && _this3.getMatchingLine(currentOrderLines, product.id).quantity > 0 && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+          className: "decrease-quantity-button",
+          onClick: function onClick() {
+            return _this3.decreaseLineQuantity(product.id);
+          }
+        }, " - "), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
           onClick: function onClick() {
             return _this3.handleAddToOrder(product.id, product.unit, null, 0.5);
           },
           className: "add-button"
-        }, currentOrderLines && _this3.getMatchingLine(currentOrderLines, product.id) ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, " ", _this3.getMatchingLine(currentOrderLines, product.id).quantity) : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, " Add to list ")));
+        }, currentOrderLines && _this3.getMatchingLine(currentOrderLines, product.id) && _this3.getMatchingLine(currentOrderLines, product.id).quantity > 0 ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, " ", _this3.getMatchingLine(currentOrderLines, product.id).quantity, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+          className: "plus-sign"
+        }, " + ")) : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, " Add to list ")));
       })));
     }
   }]);
