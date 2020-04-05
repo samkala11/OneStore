@@ -48,7 +48,7 @@ class ProductListDept extends React.Component {
             product_id: productId,
             order_id: order.data.id,
             quantity: 1,
-            line_total: 1000,
+            line_total: productPrice,
             unit: productUnit
          };
          console.log('order created successfully from handle create', order);
@@ -62,15 +62,15 @@ class ProductListDept extends React.Component {
    }
 
 
-   handleUpdateOrder(productId, productUnit, orderId, productQuantity, productPrice) {
+   handleUpdateOrder(productId, productUnit, orderId, newProductQuantity, productPrice) {
 
       const { currentOrderLines, createOrderLine, currentOrder, 
          getOrderLinesByOrder, updateOrderLine } = this.props;
 
       let matchingLine = this.getMatchingLine(currentOrderLines, productId);
       if (matchingLine) {
-         let newQuantity = productQuantity + matchingLine.quantity;
-         let newLineTotal = (productQuantity * productPrice) + matchingLine.line_total;
+         let newQuantity = newProductQuantity + matchingLine.quantity;
+         let newLineTotal = (newProductQuantity * productPrice) + matchingLine.line_total;
          // let lineId = matchingLine.id;
          const orderLineInfo = {
             product_id: productId,
@@ -94,12 +94,12 @@ class ProductListDept extends React.Component {
       }
    }
 
-   handleAddToOrder(productId, productUnit, productPrice, productQuantity) {
+   handleAddToOrder(productId, productUnit, productPrice, newProductQuantity) {
       const { currentOrder } = this.props;
       if (currentOrder && currentOrder.id) {
-         this.handleUpdateOrder(productId, productUnit,  currentOrder.id, productQuantity);
+         this.handleUpdateOrder(productId, productUnit,  currentOrder.id, newProductQuantity, productPrice);
       } else {
-         this.handleCreateOrder(productId, productUnit);
+         this.handleCreateOrder(productId, productUnit, productPrice);
       }
    }
    
@@ -108,8 +108,7 @@ class ProductListDept extends React.Component {
       let matchingLine = this.getMatchingLine(currentOrderLines, productId);
       if (matchingLine) {
          let newQuantity =  matchingLine.quantity - 0.5;
-         let newLineTotal = matchingLine.line_total - 500;
-         // let lineId = matchingLine.id;
+         let newLineTotal = matchingLine.line_total - (0.5 * productPrice);
          const orderLineInfo = {
             product_id: productId,
             order_id: matchingLine.order_id,
@@ -117,7 +116,7 @@ class ProductListDept extends React.Component {
             line_total: newLineTotal,
          };
          updateOrderLine(orderLineInfo)
-         .then(() => getOrderLinesByOrder( matchingLine.order_id,));
+         .then(() => getOrderLinesByOrder( matchingLine.order_id ));
       }
    }
 
@@ -152,14 +151,18 @@ class ProductListDept extends React.Component {
 
                         { (currentOrderLines && this.getMatchingLine(currentOrderLines, product.id) && this.getMatchingLine(currentOrderLines, product.id).quantity > 0) && <button
                            className="decrease-quantity-button"
-                           onClick = {() => this.decreaseLineQuantity(product.id)}
+                           onClick = {() => this.decreaseLineQuantity(product.id, product.price)}
                         > - </button> }
                         <button 
-                        onClick = { () => this.handleAddToOrder(product.id, product.unit, null, 0.5)}
+                        onClick = { () => this.handleAddToOrder(product.id, product.unit, product.price, 0.5)}
                         className="add-button">
                            { (currentOrderLines && this.getMatchingLine(currentOrderLines, product.id) && this.getMatchingLine(currentOrderLines, product.id).quantity > 0) 
                               ?
-                              <span> { this.getMatchingLine(currentOrderLines, product.id).quantity }
+                              <span> 
+                              
+                              <span className="quantity-display"> 
+                                 { this.getMatchingLine(currentOrderLines, product.id).quantity }
+                              </span>
                                  <span 
                                  className = "plus-sign"
                                  > + </span>

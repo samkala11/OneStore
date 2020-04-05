@@ -98,8 +98,13 @@
             .plus-sign {
                 display: inline-block;
                 position: absolute;
-                padding-left: 30%;
+                padding-left: 60px;
                 font-size: 55px;
+            }
+
+            .quantity-display {
+                display: inline-block;
+                width: 200px;            
             }
         }
     }

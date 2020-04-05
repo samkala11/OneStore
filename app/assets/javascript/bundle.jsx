@@ -984,7 +984,7 @@ function (_React$Component) {
           product_id: productId,
           order_id: order.data.id,
           quantity: 1,
-          line_total: 1000,
+          line_total: productPrice,
           unit: productUnit
         };
         console.log('order created successfully from handle create', order);
@@ -996,7 +996,7 @@ function (_React$Component) {
     }
   }, {
     key: "handleUpdateOrder",
-    value: function handleUpdateOrder(productId, productUnit, orderId, productQuantity, productPrice) {
+    value: function handleUpdateOrder(productId, productUnit, orderId, newProductQuantity, productPrice) {
       var _this$props2 = this.props,
           currentOrderLines = _this$props2.currentOrderLines,
           createOrderLine = _this$props2.createOrderLine,
@@ -1006,8 +1006,8 @@ function (_React$Component) {
       var matchingLine = this.getMatchingLine(currentOrderLines, productId);
 
       if (matchingLine) {
-        var newQuantity = productQuantity + matchingLine.quantity;
-        var newLineTotal = productQuantity * productPrice + matchingLine.line_total; // let lineId = matchingLine.id;
+        var newQuantity = newProductQuantity + matchingLine.quantity;
+        var newLineTotal = newProductQuantity * productPrice + matchingLine.line_total; // let lineId = matchingLine.id;
 
         var orderLineInfo = {
           product_id: productId,
@@ -1035,13 +1035,13 @@ function (_React$Component) {
     }
   }, {
     key: "handleAddToOrder",
-    value: function handleAddToOrder(productId, productUnit, productPrice, productQuantity) {
+    value: function handleAddToOrder(productId, productUnit, productPrice, newProductQuantity) {
       var currentOrder = this.props.currentOrder;
 
       if (currentOrder && currentOrder.id) {
-        this.handleUpdateOrder(productId, productUnit, currentOrder.id, productQuantity);
+        this.handleUpdateOrder(productId, productUnit, currentOrder.id, newProductQuantity, productPrice);
       } else {
-        this.handleCreateOrder(productId, productUnit);
+        this.handleCreateOrder(productId, productUnit, productPrice);
       }
     }
   }, {
@@ -1055,8 +1055,7 @@ function (_React$Component) {
 
       if (matchingLine) {
         var newQuantity = matchingLine.quantity - 0.5;
-        var newLineTotal = matchingLine.line_total - 500; // let lineId = matchingLine.id;
-
+        var newLineTotal = matchingLine.line_total - 0.5 * productPrice;
         var orderLineInfo = {
           product_id: productId,
           order_id: matchingLine.order_id,
@@ -1104,14 +1103,16 @@ function (_React$Component) {
         }, product.price + '/' + product.unit)), currentOrderLines && _this3.getMatchingLine(currentOrderLines, product.id) && _this3.getMatchingLine(currentOrderLines, product.id).quantity > 0 && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
           className: "decrease-quantity-button",
           onClick: function onClick() {
-            return _this3.decreaseLineQuantity(product.id);
+            return _this3.decreaseLineQuantity(product.id, product.price);
           }
         }, " - "), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
           onClick: function onClick() {
-            return _this3.handleAddToOrder(product.id, product.unit, null, 0.5);
+            return _this3.handleAddToOrder(product.id, product.unit, product.price, 0.5);
           },
           className: "add-button"
-        }, currentOrderLines && _this3.getMatchingLine(currentOrderLines, product.id) && _this3.getMatchingLine(currentOrderLines, product.id).quantity > 0 ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, " ", _this3.getMatchingLine(currentOrderLines, product.id).quantity, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+        }, currentOrderLines && _this3.getMatchingLine(currentOrderLines, product.id) && _this3.getMatchingLine(currentOrderLines, product.id).quantity > 0 ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+          className: "quantity-display"
+        }, _this3.getMatchingLine(currentOrderLines, product.id).quantity), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
           className: "plus-sign"
         }, " + ")) : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, " Add to list ")));
       })));
