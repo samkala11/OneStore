@@ -145,6 +145,9 @@ class ProductListDept extends React.Component {
                            <span className="product-title">
                               {product.name.capitalize()}
                            </span>
+                           <span className="product-title">
+                              {product.price + '/' + product.unit}
+                           </span>
                         </div>
 
                         { (currentOrderLines && this.getMatchingLine(currentOrderLines, product.id) && this.getMatchingLine(currentOrderLines, product.id).quantity > 0) && <button

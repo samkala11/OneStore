@@ -1099,7 +1099,9 @@ function (_React$Component) {
           className: "product-details"
         }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
           className: "product-title"
-        }, product.name.capitalize())), currentOrderLines && _this3.getMatchingLine(currentOrderLines, product.id) && _this3.getMatchingLine(currentOrderLines, product.id).quantity > 0 && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+        }, product.name.capitalize()), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+          className: "product-title"
+        }, product.price + '/' + product.unit)), currentOrderLines && _this3.getMatchingLine(currentOrderLines, product.id) && _this3.getMatchingLine(currentOrderLines, product.id).quantity > 0 && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
           className: "decrease-quantity-button",
           onClick: function onClick() {
             return _this3.decreaseLineQuantity(product.id);
