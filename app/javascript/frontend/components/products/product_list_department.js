@@ -146,7 +146,7 @@ class ProductListDept extends React.Component {
                         </div>
 
                         <button 
-                        onClick = { () => this.handleAddToOrder(product.id, product.unit, null, 1)}
+                        onClick = { () => this.handleAddToOrder(product.id, product.unit, null, 0.5)}
                         className="add-button">
                            { (currentOrderLines && this.getMatchingLine(currentOrderLines, product.id)) 
                               ?
