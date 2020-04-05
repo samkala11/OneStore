@@ -121,6 +121,7 @@ class ProductListDept extends React.Component {
    render() {
       const products = this.state.products;
       window.fruitsState = this.state;
+      const { currentOrderLines } = this.props;
       let key = 0;
 
       String.prototype.capitalize = function() {
@@ -145,9 +146,13 @@ class ProductListDept extends React.Component {
                         </div>
 
                         <button 
-                        onClick = { () => this.handleAddToOrder(product.id, product.unit, null, 5)}
+                        onClick = { () => this.handleAddToOrder(product.id, product.unit, null, 1)}
                         className="add-button">
-                           Add to list
+                           { (currentOrderLines && this.getMatchingLine(currentOrderLines, product.id)) 
+                              ?
+                              <span> { this.getMatchingLine(currentOrderLines, product.id).quantity }</span>
+                              :
+                             <span> Add to list </span>}
                         </button>
                      </div>
                   ))}

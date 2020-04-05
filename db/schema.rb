@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_02_064407) do
+ActiveRecord::Schema.define(version: 2020_04_05_083531) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -41,7 +41,7 @@ ActiveRecord::Schema.define(version: 2020_04_02_064407) do
     t.integer "line_no", null: false
     t.integer "sub_line_no"
     t.integer "product_id", null: false
-    t.integer "quantity", null: false
+    t.float "quantity", null: false
     t.integer "line_total", null: false
     t.string "line_note"
     t.datetime "created_at", precision: 6, null: false

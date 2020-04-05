@@ -1066,6 +1066,7 @@ function (_React$Component) {
 
       var products = this.state.products;
       window.fruitsState = this.state;
+      var currentOrderLines = this.props.currentOrderLines;
       var key = 0;
 
       String.prototype.capitalize = function () {
@@ -1091,10 +1092,10 @@ function (_React$Component) {
           className: "product-title"
         }, product.name.capitalize())), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
           onClick: function onClick() {
-            return _this3.handleAddToOrder(product.id, product.unit, null, 5);
+            return _this3.handleAddToOrder(product.id, product.unit, null, 1);
           },
           className: "add-button"
-        }, "Add to list"));
+        }, currentOrderLines && _this3.getMatchingLine(currentOrderLines, product.id) ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, " ", _this3.getMatchingLine(currentOrderLines, product.id).quantity) : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, " Add to list ")));
       })));
     }
   }]);
