@@ -128,7 +128,7 @@ class ProductListDept extends React.Component {
       let key = 0;
 
       String.prototype.capitalize = function() {
-         return this.charAt(0).toUpperCase() + this.slice(1)
+         return this.charAt(0).toUpperCase() + this.slice(1);
       };
 
       return(<div className="product-show">
