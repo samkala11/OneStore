@@ -1,5 +1,5 @@
 import React from 'react';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 class NavBar extends React.Component {
@@ -40,9 +40,13 @@ class NavBar extends React.Component {
         return(
             <div className="navbar-container">
                 <span className="header"> {title}  </span>
+                   <Link 
+                   className = "cart-link"
+                   to='/ordercheckout'> 
+                        <i className="fas fa-shopping-cart"></i>
+                   </Link> 
 
                 { currentOrder  && currentOrder.id && <span>
-                    <i className="fas fa-shopping-cart"></i>
                     <span> {this.getLinesQuantity()}</span>
                 </span>  }
             </div>

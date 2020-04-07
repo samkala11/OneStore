@@ -1,3 +1,15 @@
 // Place all the styles related to the api/orders controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: https://sass-lang.com/
+
+.order-show-container {
+
+    .quantity-input{
+        font-size: 50px;
+        width: 95px;
+    }
+    
+    .hidden {
+        display: none;
+    }
+}

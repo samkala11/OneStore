@@ -90,16 +90,19 @@
 /*!**********************************************************!*\
   !*** ./app/javascript/frontend/actions/order_actions.js ***!
   \**********************************************************/
-/*! exports provided: RECEIVE_CREATED_ORDER_ACTION, createOrderReduxAjax */
+/*! exports provided: RECEIVE_CREATED_ORDER_ACTION, RECEIVE_UPDATED_ORDER_ACTION, createOrderReduxAjax, updateOrderReduxAjax */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RECEIVE_CREATED_ORDER_ACTION", function() { return RECEIVE_CREATED_ORDER_ACTION; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RECEIVE_UPDATED_ORDER_ACTION", function() { return RECEIVE_UPDATED_ORDER_ACTION; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createOrderReduxAjax", function() { return createOrderReduxAjax; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "updateOrderReduxAjax", function() { return updateOrderReduxAjax; });
 /* harmony import */ var _util_order_api_util__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../util/order_api_util */ "./app/javascript/frontend/util/order_api_util.js");
 
-var RECEIVE_CREATED_ORDER_ACTION = 'RECEIVE_CREATED_ORDER_ACTION'; // Redux Thunk Create order  
+var RECEIVE_CREATED_ORDER_ACTION = 'RECEIVE_CREATED_ORDER_ACTION';
+var RECEIVE_UPDATED_ORDER_ACTION = 'RECEIVE_UPDATED_ORDER_ACTION'; // Redux Thunk Create order  
 
 var createOrderReduxAjax = function createOrderReduxAjax(order) {
   return function (dispatch) {
@@ -113,6 +116,23 @@ var createOrderReduxAjax = function createOrderReduxAjax(order) {
 var receiveCreatedOrder = function receiveCreatedOrder(data) {
   return {
     type: RECEIVE_CREATED_ORDER_ACTION,
+    data: data
+  };
+}; // Redux Thunk update order  
+
+
+var updateOrderReduxAjax = function updateOrderReduxAjax(order) {
+  return function (dispatch) {
+    return Object(_util_order_api_util__WEBPACK_IMPORTED_MODULE_0__["updateOrder"])(order).then(function (order) {
+      console.log('new order updated', order);
+      return dispatch(receiveupdatedOrder(order));
+    });
+  };
+}; // Private receive updated order
+
+var receiveupdatedOrder = function receiveupdatedOrder(data) {
+  return {
+    type: RECEIVE_UPDATED_ORDER_ACTION,
     data: data
   };
 };
@@ -376,6 +396,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _products_product_home__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./products/product_home */ "./app/javascript/frontend/components/products/product_home.js");
 /* harmony import */ var _products_products_by_dept__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./products/products_by_dept */ "./app/javascript/frontend/components/products/products_by_dept.js");
 /* harmony import */ var _session_login_form__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./session/login_form */ "./app/javascript/frontend/components/session/login_form.js");
+/* harmony import */ var _order_order_show_page__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./order/order_show_page */ "./app/javascript/frontend/components/order/order_show_page.js");
+
 
 
 
@@ -401,6 +423,10 @@ var App = function App() {
     exact: true,
     path: "/login",
     component: _session_login_form__WEBPACK_IMPORTED_MODULE_4__["default"]
+  }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Route"], {
+    exact: true,
+    path: "/ordercheckout",
+    component: _order_order_show_page__WEBPACK_IMPORTED_MODULE_5__["default"]
   }));
 };
 
@@ -580,9 +606,12 @@ function (_React$Component) {
         className: "navbar-container"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
         className: "header"
-      }, " ", title, "  "), currentOrder && currentOrder.id && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
+      }, " ", title, "  "), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
+        className: "cart-link",
+        to: "/ordercheckout"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
         className: "fas fa-shopping-cart"
-      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, " ", this.getLinesQuantity())));
+      })), currentOrder && currentOrder.id && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, " ", this.getLinesQuantity())));
     }
   }]);
 
@@ -602,6 +631,189 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (Object(react_redux__WEBPACK_IMPORTED_MODULE_2__["connect"])(mapStateToProps, null)(Object(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["withRouter"])(NavBar)));
+
+/***/ }),
+
+/***/ "./app/javascript/frontend/components/order/order_show_page.js":
+/*!*********************************************************************!*\
+  !*** ./app/javascript/frontend/components/order/order_show_page.js ***!
+  \*********************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
+/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+/* harmony import */ var _util_order_pure_fucntions__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../util/order_pure_fucntions */ "./app/javascript/frontend/util/order_pure_fucntions.js");
+/* harmony import */ var classnames__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! classnames */ "./node_modules/classnames/index.js");
+/* harmony import */ var classnames__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(classnames__WEBPACK_IMPORTED_MODULE_4__);
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+
+
+
+
+
+
+var OrderShowPage =
+/*#__PURE__*/
+function (_React$Component) {
+  _inherits(OrderShowPage, _React$Component);
+
+  function OrderShowPage(props) {
+    var _this;
+
+    _classCallCheck(this, OrderShowPage);
+
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(OrderShowPage).call(this, props));
+    _this.state = {
+      lineQuantities: {},
+      originalLineQuantities: {},
+      displayUpdateButtons: {}
+    };
+    _this.update = _this.update.bind(_assertThisInitialized(_this));
+    _this.stateIncludesLine = _this.stateIncludesLine.bind(_assertThisInitialized(_this));
+    _this.QuantityChanged = _this.QuantityChanged.bind(_assertThisInitialized(_this));
+    return _this;
+  }
+
+  _createClass(OrderShowPage, [{
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      var currentOrderLines = this.props.currentOrderLines;
+      var linesArray = _util_order_pure_fucntions__WEBPACK_IMPORTED_MODULE_3__["objectValuesArray"](currentOrderLines);
+      var lineQuantities = Object.assign({}, this.state.lineQuantities);
+      linesArray.forEach(function (line) {
+        lineQuantities[line.id] = line.quantity;
+      });
+      this.setState({
+        lineQuantities: lineQuantities
+      });
+      this.setState({
+        originalLineQuantities: lineQuantities
+      });
+    }
+  }, {
+    key: "update",
+    value: function update(field) {
+      var _this2 = this;
+
+      var lineQuantities = Object.assign({}, this.state.lineQuantities);
+      return function (e) {
+        lineQuantities[field] = e.currentTarget.value; // debugger;
+
+        _this2.setState({
+          lineQuantities: lineQuantities
+        }); // this.QuantityChanged(field);
+
+
+        setTimeout(function () {
+          _this2.QuantityChanged(field);
+        });
+      };
+    }
+  }, {
+    key: "QuantityChanged",
+    value: function QuantityChanged(lineId) {
+      var _this$state = this.state,
+          originalLineQuantities = _this$state.originalLineQuantities,
+          lineQuantities = _this$state.lineQuantities;
+      var displayUpdateButtons = Object.assign({}, this.state.displayUpdateButtons); // debugger;
+
+      if (originalLineQuantities[lineId] != lineQuantities[lineId]) {
+        displayUpdateButtons[lineId] = true;
+        this.setState({
+          displayUpdateButtons: displayUpdateButtons
+        });
+        console.log('quantity changed and updated in state');
+      } else {
+        displayUpdateButtons[lineId] = false;
+        this.setState({
+          displayUpdateButtons: displayUpdateButtons
+        });
+        console.log('quantity returned back to original and updated in state');
+      }
+    }
+  }, {
+    key: "stateIncludesLine",
+    value: function stateIncludesLine(lineId) {
+      var lineQuantities = this.state.lineQuantities;
+      var linesArray = Object.values(lineQuantities);
+
+      for (var index = 0; index < linesArray.length; index++) {
+        if (linesArray[index].id == lineId) return true;
+      }
+
+      return false;
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      var _this3 = this;
+
+      window.orderShowProps = this.props;
+      window.orderShowstate = this.state;
+      var currentOrderLines = this.props.currentOrderLines;
+      var lineQuantities = this.state.lineQuantities;
+      var currentLinesArray = Object.values(currentOrderLines);
+      var key = 0;
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "order-show-container"
+      }, "Order Summary", currentLinesArray.map(function (line) {
+        return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+          className: "order-line-show",
+          key: key++
+        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, line.productName), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, "quantity: ", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+          // className="quantity-input"
+          className: classnames__WEBPACK_IMPORTED_MODULE_4___default()({
+            'quantity-input': true
+          }),
+          type: "text",
+          value: lineQuantities["".concat(line.id)],
+          onChange: _this3.update(line.id)
+        })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, "Unit price: ", line.productPrice), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, "Line total: ", line.line_total), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+          className: classnames__WEBPACK_IMPORTED_MODULE_4___default()({
+            hidden: !_this3.state.displayUpdateButtons[line.id]
+          })
+        }, " Update "));
+      }));
+    }
+  }]);
+
+  return OrderShowPage;
+}(react__WEBPACK_IMPORTED_MODULE_0___default.a.Component);
+
+var mapStateToProps = function mapStateToProps(state) {
+  return {
+    currentOrderLines: state.orders.currentOrderLines
+  };
+};
+
+var mapDispatchToProps = function mapDispatchToProps(dispatch) {
+  return {//    getAllProducts: () => dispatch(ProductActions.getAllProductsThunk()),
+  };
+};
+
+/* harmony default export */ __webpack_exports__["default"] = (Object(react_redux__WEBPACK_IMPORTED_MODULE_2__["connect"])(mapStateToProps, mapDispatchToProps)(Object(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["withRouter"])(OrderShowPage)));
 
 /***/ }),
 
@@ -944,6 +1156,7 @@ function (_React$Component) {
     };
     _this.handleCreateOrder = _this.handleCreateOrder.bind(_assertThisInitialized(_this));
     _this.handleUpdateOrder = _this.handleUpdateOrder.bind(_assertThisInitialized(_this));
+    _this.updateOrderTotal = _this.updateOrderTotal.bind(_assertThisInitialized(_this));
     return _this;
   }
 
@@ -963,7 +1176,7 @@ function (_React$Component) {
   }, {
     key: "getMatchingLine",
     value: function getMatchingLine(orderLines, productId) {
-      var orderLinesArray = Object.values(orderLines); // debugger;
+      var orderLinesArray = Object.values(orderLines);
 
       for (var index = 0; index < orderLinesArray.length; index++) {
         var orderLine = orderLinesArray[index];
@@ -973,8 +1186,24 @@ function (_React$Component) {
       return false;
     }
   }, {
+    key: "updateOrderTotal",
+    value: function updateOrderTotal(oldOrderTotal, orderId, productPrice, ProductQuantity) {
+      var updateOrder = this.props.updateOrder; // let newOrderTotal = order.data.order_total + productPrice;
+
+      var newOrderTotal = oldOrderTotal + productPrice * ProductQuantity;
+      var updatedOrderInfo = {
+        order_total: newOrderTotal,
+        id: orderId
+      };
+      updateOrder(updatedOrderInfo).then(function (updatedOrder) {
+        return console.log("Order total updated successfully from this.updateOrderTotal", updatedOrder.data.order_total);
+      });
+    }
+  }, {
     key: "handleCreateOrder",
     value: function handleCreateOrder(productId, productUnit, productPrice) {
+      var _this3 = this;
+
       var _this$props = this.props,
           createOrder = _this$props.createOrder,
           createOrderLine = _this$props.createOrderLine,
@@ -991,12 +1220,16 @@ function (_React$Component) {
         createOrderLine(orderLineInfo).then(function (line) {
           console.log('newly line created', line);
           getOrderLinesByOrder(line.data.order_id);
+        }).then(function () {
+          _this3.updateOrderTotal(order.data.order_total, order.data.id, productPrice, 1);
         });
       });
     }
   }, {
     key: "handleUpdateOrder",
-    value: function handleUpdateOrder(productId, productUnit, orderId, newProductQuantity, productPrice) {
+    value: function handleUpdateOrder(productId, productUnit, orderId, newProductQuantity, productPrice, oldOrderTotal) {
+      var _this4 = this;
+
       var _this$props2 = this.props,
           currentOrderLines = _this$props2.currentOrderLines,
           createOrderLine = _this$props2.createOrderLine,
@@ -1017,29 +1250,33 @@ function (_React$Component) {
         };
         updateOrderLine(orderLineInfo).then(function () {
           return getOrderLinesByOrder(currentOrder.id);
+        }).then(function () {
+          _this4.updateOrderTotal(oldOrderTotal, orderId, productPrice, newProductQuantity);
         });
       } else {
         var _orderLineInfo = {
           product_id: productId,
           order_id: orderId,
           quantity: 1,
-          line_total: 1000,
+          line_total: productPrice,
           unit: productUnit
         };
         createOrderLine(_orderLineInfo).then(function () {
           return getOrderLinesByOrder(currentOrder.id);
         }).then(function () {
           return console.log('order updated and orderLine added to order successfully');
+        }).then(function () {
+          _this4.updateOrderTotal(oldOrderTotal, orderId, productPrice, 1);
         });
       }
     }
   }, {
     key: "handleAddToOrder",
-    value: function handleAddToOrder(productId, productUnit, productPrice, newProductQuantity) {
+    value: function handleAddToOrder(productId, productUnit, productPrice, newProductQuantity, oldOrderTotal) {
       var currentOrder = this.props.currentOrder;
 
       if (currentOrder && currentOrder.id) {
-        this.handleUpdateOrder(productId, productUnit, currentOrder.id, newProductQuantity, productPrice);
+        this.handleUpdateOrder(productId, productUnit, currentOrder.id, newProductQuantity, productPrice, oldOrderTotal);
       } else {
         this.handleCreateOrder(productId, productUnit, productPrice);
       }
@@ -1047,10 +1284,13 @@ function (_React$Component) {
   }, {
     key: "decreaseLineQuantity",
     value: function decreaseLineQuantity(productId, productPrice) {
+      var _this5 = this;
+
       var _this$props3 = this.props,
           currentOrderLines = _this$props3.currentOrderLines,
           updateOrderLine = _this$props3.updateOrderLine,
-          getOrderLinesByOrder = _this$props3.getOrderLinesByOrder;
+          getOrderLinesByOrder = _this$props3.getOrderLinesByOrder,
+          currentOrder = _this$props3.currentOrder;
       var matchingLine = this.getMatchingLine(currentOrderLines, productId);
 
       if (matchingLine) {
@@ -1064,17 +1304,21 @@ function (_React$Component) {
         };
         updateOrderLine(orderLineInfo).then(function () {
           return getOrderLinesByOrder(matchingLine.order_id);
+        }).then(function () {
+          _this5.updateOrderTotal(currentOrder.order_total, currentOrder.id, productPrice, -0.5);
         });
       }
     }
   }, {
     key: "render",
     value: function render() {
-      var _this3 = this;
+      var _this6 = this;
 
       var products = this.state.products;
       window.fruitsState = this.state;
-      var currentOrderLines = this.props.currentOrderLines;
+      var _this$props4 = this.props,
+          currentOrderLines = _this$props4.currentOrderLines,
+          currentOrder = _this$props4.currentOrder;
       var key = 0;
 
       String.prototype.capitalize = function () {
@@ -1100,19 +1344,19 @@ function (_React$Component) {
           className: "product-title"
         }, product.name.capitalize()), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
           className: "product-title"
-        }, product.price + '/' + product.unit)), currentOrderLines && _this3.getMatchingLine(currentOrderLines, product.id) && _this3.getMatchingLine(currentOrderLines, product.id).quantity > 0 && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+        }, product.price + '/' + product.unit)), currentOrderLines && _this6.getMatchingLine(currentOrderLines, product.id) && _this6.getMatchingLine(currentOrderLines, product.id).quantity > 0 && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
           className: "decrease-quantity-button",
           onClick: function onClick() {
-            return _this3.decreaseLineQuantity(product.id, product.price);
+            return _this6.decreaseLineQuantity(product.id, product.price);
           }
         }, " - "), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
           onClick: function onClick() {
-            return _this3.handleAddToOrder(product.id, product.unit, product.price, 0.5);
+            return _this6.handleAddToOrder(product.id, product.unit, product.price, 0.5, currentOrder.order_total);
           },
           className: "add-button"
-        }, currentOrderLines && _this3.getMatchingLine(currentOrderLines, product.id) && _this3.getMatchingLine(currentOrderLines, product.id).quantity > 0 ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+        }, currentOrderLines && _this6.getMatchingLine(currentOrderLines, product.id) && _this6.getMatchingLine(currentOrderLines, product.id).quantity > 0 ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
           className: "quantity-display"
-        }, _this3.getMatchingLine(currentOrderLines, product.id).quantity), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+        }, _this6.getMatchingLine(currentOrderLines, product.id).quantity), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
           className: "plus-sign"
         }, " + ")) : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, " Add to list ")));
       })));
@@ -1137,6 +1381,9 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
     },
     createOrder: function createOrder(orderInfo) {
       return dispatch(_actions_order_actions__WEBPACK_IMPORTED_MODULE_4__["createOrderReduxAjax"](orderInfo));
+    },
+    updateOrder: function updateOrder(orderInfo) {
+      return dispatch(_actions_order_actions__WEBPACK_IMPORTED_MODULE_4__["updateOrderReduxAjax"](orderInfo));
     },
     createOrderLine: function createOrderLine(orderLineInfo) {
       return dispatch(_actions_order_line_actions__WEBPACK_IMPORTED_MODULE_5__["createOrderLineReduxAjax"](orderLineInfo));
@@ -1186,11 +1433,10 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
- // import Map from '../Map';
 
 
 
- // import * as ProductActions from '../../actions/product_actions'
+
 
 var ProductsByDepartment =
 /*#__PURE__*/
@@ -1205,14 +1451,7 @@ function (_React$Component) {
     _this = _possibleConstructorReturn(this, _getPrototypeOf(ProductsByDepartment).call(this, props));
     _this.state = {};
     return _this;
-  } //    update(field) {
-  //       let newProductInfo = Object.assign({}, this.state.productInfo) ;
-  //       return e => {
-  //          newProductInfo[field]  = e.currentTarget.value
-  //          this.setState({ productInfo: newProductInfo})
-  //       }
-  //    }
-
+  }
 
   _createClass(ProductsByDepartment, [{
     key: "renderDepartment",
@@ -1229,13 +1468,12 @@ function (_React$Component) {
           {}
 
         default:
-          return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "All departments");
+          return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Oops.. Please return back to the previous page");
       }
     }
   }, {
     key: "render",
     value: function render() {
-      window.heyyyState = this.state;
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "home-page"
       }, this.renderDepartment());
@@ -1465,6 +1703,11 @@ document.addEventListener("DOMContentLoaded", function () {
   react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render(react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_root__WEBPACK_IMPORTED_MODULE_2__["default"], {
     store: store
   }), root);
+  window.store = store;
+
+  window.AppState = function () {
+    return store.getState();
+  };
 });
 
 /***/ }),
@@ -1487,6 +1730,9 @@ __webpack_require__.r(__webpack_exports__);
 
   switch (action.type) {
     case _actions_order_actions__WEBPACK_IMPORTED_MODULE_0__["RECEIVE_CREATED_ORDER_ACTION"]:
+      return action.data;
+
+    case _actions_order_actions__WEBPACK_IMPORTED_MODULE_0__["RECEIVE_UPDATED_ORDER_ACTION"]:
       return action.data;
 
     default:
@@ -1876,6 +2122,22 @@ var getOrderLinesByOrder = function getOrderLinesByOrder(orderId) {
 
 /***/ }),
 
+/***/ "./app/javascript/frontend/util/order_pure_fucntions.js":
+/*!**************************************************************!*\
+  !*** ./app/javascript/frontend/util/order_pure_fucntions.js ***!
+  \**************************************************************/
+/*! exports provided: objectValuesArray */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "objectValuesArray", function() { return objectValuesArray; });
+var objectValuesArray = function objectValuesArray(object) {
+  return Object.values(object);
+};
+
+/***/ }),
+
 /***/ "./app/javascript/frontend/util/product_api_util.js":
 /*!**********************************************************!*\
   !*** ./app/javascript/frontend/util/product_api_util.js ***!
@@ -2072,6 +2334,68 @@ function _inheritsLoose(subClass, superClass) {
 }
 
 module.exports = _inheritsLoose;
+
+/***/ }),
+
+/***/ "./node_modules/classnames/index.js":
+/*!******************************************!*\
+  !*** ./node_modules/classnames/index.js ***!
+  \******************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
+  Copyright (c) 2017 Jed Watson.
+  Licensed under the MIT License (MIT), see
+  http://jedwatson.github.io/classnames
+*/
+/* global define */
+
+(function () {
+	'use strict';
+
+	var hasOwn = {}.hasOwnProperty;
+
+	function classNames () {
+		var classes = [];
+
+		for (var i = 0; i < arguments.length; i++) {
+			var arg = arguments[i];
+			if (!arg) continue;
+
+			var argType = typeof arg;
+
+			if (argType === 'string' || argType === 'number') {
+				classes.push(arg);
+			} else if (Array.isArray(arg) && arg.length) {
+				var inner = classNames.apply(null, arg);
+				if (inner) {
+					classes.push(inner);
+				}
+			} else if (argType === 'object') {
+				for (var key in arg) {
+					if (hasOwn.call(arg, key) && arg[key]) {
+						classes.push(key);
+					}
+				}
+			}
+		}
+
+		return classes.join(' ');
+	}
+
+	if ( true && module.exports) {
+		classNames.default = classNames;
+		module.exports = classNames;
+	} else if (true) {
+		// register as 'classnames', consistent with npm package name
+		!(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = (function () {
+			return classNames;
+		}).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+	} else {}
+}());
+
 
 /***/ }),
 

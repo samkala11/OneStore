@@ -1,12 +1,9 @@
 import React from 'react';
-// import Map from '../Map';
 import {withRouter} from 'react-router-dom';
 import {connect} from 'react-redux';
 import ProductListDepartment from './product_list_department';
-// import * as ProductActions from '../../actions/product_actions'
 
 class ProductsByDepartment extends React.Component {
-
     constructor(props){
         super(props);
         this.state = {
@@ -14,13 +11,6 @@ class ProductsByDepartment extends React.Component {
         }
     }
 
-//    update(field) {
-//       let newProductInfo = Object.assign({}, this.state.productInfo) ;
-//       return e => {
-//          newProductInfo[field]  = e.currentTarget.value
-//          this.setState({ productInfo: newProductInfo})
-//       }
-//    }
    renderDepartment() {
        let params = this.props.match.params.department;
        switch(params){
@@ -31,12 +21,11 @@ class ProductsByDepartment extends React.Component {
 
            }
            default:
-               return <p>All departments</p>
+               return <p>Oops.. Please return back to the previous page</p>
        }
    }
 
    render() {
-      window.heyyyState = this.state;
       return(
          <div className="home-page">
                 {this.renderDepartment()}
@@ -44,7 +33,6 @@ class ProductsByDepartment extends React.Component {
       )
    }
 }
-
 
 
 const mapStateToProps = state => ({

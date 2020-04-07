@@ -12,7 +12,7 @@ class Api::OrdersController < ApplicationController
         @order.order_number = ((Time.now.to_s.delete("-").delete(":").delete(" ")[2..-9] + rand(1000..9999).to_s)[2..-1].to_i * 22 / 50).to_s[1..-1]
         @order.order_type = 1
         @order.status = 1000
-        # @order.order_total = 1500
+        @order.order_total = 1500
         @order.pending_total = 1500
         if @order.save
             p "order #{@order.order_number} created successfuly"
@@ -23,7 +23,8 @@ class Api::OrdersController < ApplicationController
     end
 
     def update_order
-        @order = Order.where("order_number = #{params[:order][:order_number]}")[0]
+        order_id = params[:order][:id]
+        @order = Order.find(order_id);
         # @order = Song.where("lower(order_no) like '#{query.to_i}' ")
         #  + Song.joins(:artist).where("lower(artists.name) like '#{query}' ")
         if @order.update(order_params)
