@@ -650,6 +650,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _util_order_pure_fucntions__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../util/order_pure_fucntions */ "./app/javascript/frontend/util/order_pure_fucntions.js");
 /* harmony import */ var classnames__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! classnames */ "./node_modules/classnames/index.js");
 /* harmony import */ var classnames__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(classnames__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _actions_order_line_actions__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../actions/order_line_actions */ "./app/javascript/frontend/actions/order_line_actions.js");
+/* harmony import */ var _actions_order_actions__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../actions/order_actions */ "./app/javascript/frontend/actions/order_actions.js");
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -667,6 +669,8 @@ function _assertThisInitialized(self) { if (self === void 0) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+
 
 
 
@@ -693,6 +697,9 @@ function (_React$Component) {
     _this.update = _this.update.bind(_assertThisInitialized(_this));
     _this.stateIncludesLine = _this.stateIncludesLine.bind(_assertThisInitialized(_this));
     _this.QuantityChanged = _this.QuantityChanged.bind(_assertThisInitialized(_this));
+    _this.handleUpdateLine = _this.handleUpdateLine.bind(_assertThisInitialized(_this));
+    _this.updateOrderTotal = _this.updateOrderTotal.bind(_assertThisInitialized(_this));
+    _this.updateStateOriginalLines = _this.updateStateOriginalLines.bind(_assertThisInitialized(_this));
     return _this;
   }
 
@@ -766,35 +773,104 @@ function (_React$Component) {
       return false;
     }
   }, {
+    key: "updateStateOriginalLines",
+    value: function updateStateOriginalLines() {
+      var _this$state2 = this.state,
+          lineQuantities = _this$state2.lineQuantities,
+          originalLineQuantities = _this$state2.originalLineQuantities;
+      var updatedQuantities = Object.assign({}, lineQuantities);
+      this.setState({
+        originalLineQuantities: updatedQuantities
+      });
+    }
+  }, {
+    key: "handleUpdateLine",
+    value: function handleUpdateLine(productId, orderId, newProductQuantity, productPrice, oldLineQuantity, lineId) {
+      var _this3 = this;
+
+      var _this$props = this.props,
+          currentOrder = _this$props.currentOrder,
+          getOrderLinesByOrder = _this$props.getOrderLinesByOrder,
+          updateOrderLine = _this$props.updateOrderLine;
+      var newQuantity = parseInt(newProductQuantity);
+      var newLineTotal = parseInt(newProductQuantity) * productPrice;
+      var oldOrderTotal = currentOrder.order_total;
+      var quantityDifference = newProductQuantity - oldLineQuantity; // debugger;
+
+      var orderLineInfo = {
+        product_id: productId,
+        order_id: orderId,
+        quantity: newQuantity,
+        line_total: newLineTotal
+      }; // debugger;
+
+      updateOrderLine(orderLineInfo).then(function () {
+        return getOrderLinesByOrder(currentOrder.id);
+      }).then(function () {
+        _this3.updateOrderTotal(oldOrderTotal, orderId, productPrice, quantityDifference);
+      }).then(function () {
+        _this3.updateStateOriginalLines();
+      }).then(function () {
+        return _this3.QuantityChanged(lineId);
+      });
+    }
+  }, {
+    key: "updateOrderTotal",
+    value: function updateOrderTotal(oldOrderTotal, orderId, productPrice, ProductQuantity) {
+      var updateOrder = this.props.updateOrder; // let newOrderTotal = order.data.order_total + productPrice;
+
+      var newOrderTotal = oldOrderTotal + productPrice * ProductQuantity;
+      var updatedOrderInfo = {
+        order_total: newOrderTotal,
+        pending_total: newOrderTotal,
+        id: orderId
+      };
+      updateOrder(updatedOrderInfo).then(function (updatedOrder) {
+        return console.log("Order total updated successfully from this.updateOrderTotal", updatedOrder.data.order_total);
+      });
+    }
+  }, {
     key: "render",
     value: function render() {
-      var _this3 = this;
+      var _this4 = this;
 
       window.orderShowProps = this.props;
       window.orderShowstate = this.state;
-      var currentOrderLines = this.props.currentOrderLines;
-      var lineQuantities = this.state.lineQuantities;
+      var _this$props2 = this.props,
+          currentOrderLines = _this$props2.currentOrderLines,
+          currentOrder = _this$props2.currentOrder;
+      var _this$state3 = this.state,
+          lineQuantities = _this$state3.lineQuantities,
+          originalLineQuantities = _this$state3.originalLineQuantities;
       var currentLinesArray = Object.values(currentOrderLines);
       var key = 0;
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "order-show-container"
-      }, "Order Summary", currentLinesArray.map(function (line) {
+      }, "Order Summary ", currentOrder.order_total, currentLinesArray.map(function (line) {
         return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
           className: "order-line-show",
           key: key++
-        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, line.productName), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, "quantity: ", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("img", {
+          className: "product-image",
+          src: "https://onestorebucket.s3.eu-west-3.amazonaws.com/tomato.jpg"
+        }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+          className: "line-details"
+        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, line.productName), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, line.productPrice, " / ", line.unit)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
           // className="quantity-input"
           className: classnames__WEBPACK_IMPORTED_MODULE_4___default()({
             'quantity-input': true
           }),
           type: "text",
           value: lineQuantities["".concat(line.id)],
-          onChange: _this3.update(line.id)
-        })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, "Unit price: ", line.productPrice), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, "Line total: ", line.line_total), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+          onChange: _this4.update(line.id)
+        }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
           className: classnames__WEBPACK_IMPORTED_MODULE_4___default()({
-            hidden: !_this3.state.displayUpdateButtons[line.id]
-          })
-        }, " Update "));
+            hidden: !_this4.state.displayUpdateButtons[line.id]
+          }),
+          onClick: function onClick() {
+            return _this4.handleUpdateLine(line.product_id, line.order_id, lineQuantities[line.id], line.productPrice, line.quantity, line.id);
+          }
+        }, " Update ")));
       }));
     }
   }]);
@@ -804,12 +880,22 @@ function (_React$Component) {
 
 var mapStateToProps = function mapStateToProps(state) {
   return {
-    currentOrderLines: state.orders.currentOrderLines
+    currentOrderLines: state.orders.currentOrderLines,
+    currentOrder: state.orders.currentOrder
   };
 };
 
 var mapDispatchToProps = function mapDispatchToProps(dispatch) {
-  return {//    getAllProducts: () => dispatch(ProductActions.getAllProductsThunk()),
+  return {
+    getOrderLinesByOrder: function getOrderLinesByOrder(orderId) {
+      return dispatch(_actions_order_line_actions__WEBPACK_IMPORTED_MODULE_5__["getOrderLinesByOrderReduxAjax"](orderId));
+    },
+    updateOrderLine: function updateOrderLine(orderLineInfo) {
+      return dispatch(_actions_order_line_actions__WEBPACK_IMPORTED_MODULE_5__["updateOrderLineReduxAjax"](orderLineInfo));
+    },
+    updateOrder: function updateOrder(orderInfo) {
+      return dispatch(_actions_order_actions__WEBPACK_IMPORTED_MODULE_6__["updateOrderReduxAjax"](orderInfo));
+    }
   };
 };
 
@@ -1193,6 +1279,7 @@ function (_React$Component) {
       var newOrderTotal = oldOrderTotal + productPrice * ProductQuantity;
       var updatedOrderInfo = {
         order_total: newOrderTotal,
+        pending_total: newOrderTotal,
         id: orderId
       };
       updateOrder(updatedOrderInfo).then(function (updatedOrder) {

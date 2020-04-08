@@ -15,7 +15,7 @@ class ProductListDept extends React.Component {
          order: {
             order_total: 1500,
          },
-         orderLine : {
+         orderLine : { 
             quantity: 1
          }
       }
@@ -46,6 +46,7 @@ class ProductListDept extends React.Component {
 
          const updatedOrderInfo = {
             order_total: newOrderTotal,
+            pending_total: newOrderTotal,
             id: orderId
          }
          updateOrder(updatedOrderInfo)
@@ -91,7 +92,7 @@ class ProductListDept extends React.Component {
             product_id: productId,
             order_id: orderId,
             quantity: newQuantity,
-            line_total: newLineTotal,
+            line_total: newLineTotal
          };
          updateOrderLine(orderLineInfo)
          .then(() => getOrderLinesByOrder(currentOrder.id))

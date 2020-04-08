@@ -3,6 +3,9 @@ import {withRouter} from 'react-router-dom';
 import {connect} from 'react-redux';
 import * as OrderPureFunctions from '../../util/order_pure_fucntions';
 import classNames from 'classnames';
+import * as LineActions from '../../actions/order_line_actions';
+import * as OrderActions from '../../actions/order_actions';
+
 
 class OrderShowPage extends React.Component {
 
@@ -22,6 +25,9 @@ class OrderShowPage extends React.Component {
         this.update = this.update.bind(this);
         this.stateIncludesLine = this.stateIncludesLine.bind(this);
         this.QuantityChanged = this.QuantityChanged.bind(this);
+        this.handleUpdateLine = this.handleUpdateLine.bind(this);
+        this.updateOrderTotal = this.updateOrderTotal.bind(this);
+        this.updateStateOriginalLines = this.updateStateOriginalLines.bind(this);
     }
 
     componentDidMount(){
@@ -73,45 +79,95 @@ class OrderShowPage extends React.Component {
         return false;
     }
 
+    updateStateOriginalLines() {
+        const { lineQuantities, originalLineQuantities } = this.state;
+        let updatedQuantities = Object.assign( {}, lineQuantities);
+        this.setState({ originalLineQuantities: updatedQuantities});
+    }
+    
+
+    handleUpdateLine(productId, orderId, newProductQuantity, productPrice, oldLineQuantity, lineId) {
+        const { currentOrder, getOrderLinesByOrder, updateOrderLine } = this.props;
+        let newQuantity = parseInt(newProductQuantity);
+        let newLineTotal = ( parseInt(newProductQuantity) * productPrice) ;
+        let oldOrderTotal = currentOrder.order_total;
+        let quantityDifference = newProductQuantity - oldLineQuantity;
+        // debugger;
+        const orderLineInfo = {
+            product_id: productId,
+            order_id: orderId,
+            quantity: newQuantity,
+            line_total: newLineTotal,
+        };
+        // debugger;
+        updateOrderLine(orderLineInfo)
+        .then(() => getOrderLinesByOrder(currentOrder.id))
+        .then(() => {
+            this.updateOrderTotal(oldOrderTotal, orderId, productPrice, quantityDifference)
+        })
+        .then(() => { this.updateStateOriginalLines() })
+        .then(() => this.QuantityChanged(lineId))
+    }
+
+    updateOrderTotal(oldOrderTotal, orderId, productPrice, ProductQuantity) {
+        const { updateOrder } = this.props;
+        // let newOrderTotal = order.data.order_total + productPrice;
+        let newOrderTotal = oldOrderTotal + (productPrice * ProductQuantity);
+  
+        const updatedOrderInfo = {
+            order_total: newOrderTotal,
+            pending_total: newOrderTotal,
+            id: orderId
+        }
+        updateOrder(updatedOrderInfo)
+        .then((updatedOrder) => console.log(`Order total updated successfully from this.updateOrderTotal`, updatedOrder.data.order_total ));
+    }
 
    render() {
       window.orderShowProps = this.props;
       window.orderShowstate = this.state;
 
-      const { currentOrderLines } = this.props;
-      const { lineQuantities } = this.state;
+      const { currentOrderLines, currentOrder } = this.props;
+      const { lineQuantities, originalLineQuantities } = this.state;
       const currentLinesArray = Object.values(currentOrderLines);
       let key = 0;
       return(
          <div className="order-show-container">
-                    Order Summary
+                    Order Summary {currentOrder.order_total}
                 { 
                     currentLinesArray.map(line => (
                         <div className="order-line-show"
                             key = {key++}
                             >
-                            <span> 
-                                {line.productName}
-                            </span>
-                            <span> 
-                                quantity: <input
+                            <img className="product-image" 
+                              src="https://onestorebucket.s3.eu-west-3.amazonaws.com/tomato.jpg"
+                            />
+                            <div className="line-details"> 
+                                <span> 
+                                    {line.productName}
+                                </span>
+                                <span> 
+                                    {line.productPrice} / {line.unit}
+                                </span>
+                            </div>
+                            <div> 
+                                <input
                                     // className="quantity-input"
                                     className={classNames({ 'quantity-input': true })}
                                     type="text"
                                     value = { lineQuantities[`${line.id}`] }
                                     onChange = {this.update(line.id)}
-                                />
-                            </span>
-                            <span> 
-                                Unit price: {line.productPrice}
-                            </span>
-                            <span> 
-                                Line total: {line.line_total}
-                            </span>
-                            <button
-                                className={classNames({ hidden: !this.state.displayUpdateButtons[line.id] }) }
-                            > Update </button>
-                         </div>
+                                />  
+                                {/* <span> 
+                                    Line total: {line.line_total}
+                                </span> */}
+                                <button
+                                    className={classNames({ hidden: !this.state.displayUpdateButtons[line.id] }) }
+                                    onClick={() => this.handleUpdateLine(line.product_id, line.order_id, lineQuantities[line.id], line.productPrice, line.quantity, line.id )}
+                                > Update </button>
+                             </div>
+                            
+                        </div>
                     ))
                 }
          </div>
@@ -122,11 +178,15 @@ class OrderShowPage extends React.Component {
 
 
 const mapStateToProps = state => ({
-   currentOrderLines: state.orders.currentOrderLines
+   currentOrderLines: state.orders.currentOrderLines,
+   currentOrder: state.orders.currentOrder,
+
  });
  
  const mapDispatchToProps = dispatch => ({
-//    getAllProducts: () => dispatch(ProductActions.getAllProductsThunk()),
+    getOrderLinesByOrder: (orderId) => dispatch(LineActions.getOrderLinesByOrderReduxAjax(orderId)),
+    updateOrderLine: (orderLineInfo) => dispatch(LineActions.updateOrderLineReduxAjax(orderLineInfo)),
+    updateOrder: (orderInfo) => dispatch(OrderActions.updateOrderReduxAjax(orderInfo)),
 });
  
  

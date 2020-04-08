@@ -4,6 +4,10 @@
 
 .order-show-container {
 
+    button{
+        font-size: 50px;
+    }
+    
     .quantity-input{
         font-size: 50px;
         width: 95px;
@@ -12,4 +16,19 @@
     .hidden {
         display: none;
     }
+    
+    .order-line-show {
+        display: flex;
+
+        .product-image {
+            width: 230px;
+        }
+        
+        .line-details {
+            span {
+                display: block;
+            }
+        }
+    }
+
 }
