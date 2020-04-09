@@ -9,7 +9,9 @@ class Api::OrdersController < ApplicationController
         # debugger
         @order = Order.new(order_params)
         # @order = Order.new()
-        @order.order_number = ((Time.now.to_s.delete("-").delete(":").delete(" ")[2..-9] + rand(1000..9999).to_s)[2..-1].to_i * 22 / 50).to_s[1..-1]
+        # @order.order_number = ((Time.now.to_s.delete("-").delete(":").delete(" ")[2..-9] + rand(1000..9999).to_s)[2..-1].to_i * 22 / 50).to_s[1..-1]
+        # @order.order_number = ((Time.now.to_s.delete("-").delete(":").delete(" ")[2..-12].to_i * 22 / 6 ) + Order.last.id).to_s
+        @order.order_number = (Order.last.order_number.to_i + 1).to_s
         @order.order_type = 1
         @order.status = 1000
         @order.order_total = 1500

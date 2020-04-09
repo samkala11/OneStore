@@ -133,7 +133,9 @@ class OrderShowPage extends React.Component {
       let key = 0;
       return(
          <div className="order-show-container">
-                    Order Summary {currentOrder.order_total}
+                    <div class="order-header"> 
+                        Order Summary {currentOrder.order_total}
+                    </div>
                 { 
                     currentLinesArray.map(line => (
                         <div className="order-line-show"
@@ -143,7 +145,7 @@ class OrderShowPage extends React.Component {
                               src="https://onestorebucket.s3.eu-west-3.amazonaws.com/tomato.jpg"
                             />
                             <div className="line-details"> 
-                                <span> 
+                                <span className="product-name"> 
                                     {line.productName}
                                 </span>
                                 <span> 

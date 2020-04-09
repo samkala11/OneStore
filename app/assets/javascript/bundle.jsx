@@ -846,7 +846,9 @@ function (_React$Component) {
       var key = 0;
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "order-show-container"
-      }, "Order Summary ", currentOrder.order_total, currentLinesArray.map(function (line) {
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        "class": "order-header"
+      }, "Order Summary ", currentOrder.order_total), currentLinesArray.map(function (line) {
         return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
           className: "order-line-show",
           key: key++
@@ -855,7 +857,9 @@ function (_React$Component) {
           src: "https://onestorebucket.s3.eu-west-3.amazonaws.com/tomato.jpg"
         }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
           className: "line-details"
-        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, line.productName), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, line.productPrice, " / ", line.unit)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+          className: "product-name"
+        }, line.productName), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, line.productPrice, " / ", line.unit)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
           // className="quantity-input"
           className: classnames__WEBPACK_IMPORTED_MODULE_4___default()({
             'quantity-input': true
