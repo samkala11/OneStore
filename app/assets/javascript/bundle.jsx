@@ -847,7 +847,7 @@ function (_React$Component) {
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "order-show-container"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        "class": "order-header"
+        className: "order-header"
       }, "Order Summary ", currentOrder.order_total), currentLinesArray.map(function (line) {
         return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
           className: "order-line-show",
@@ -859,7 +859,11 @@ function (_React$Component) {
           className: "line-details"
         }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
           className: "product-name"
-        }, line.productName), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, line.productPrice, " / ", line.unit)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        }, line.productName), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+          className: "product-price"
+        }, line.productPrice, "/", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+          className: "product-unit"
+        }, " ", line.unit, " "))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
           // className="quantity-input"
           className: classnames__WEBPACK_IMPORTED_MODULE_4___default()({
             'quantity-input': true
@@ -874,7 +878,7 @@ function (_React$Component) {
           onClick: function onClick() {
             return _this4.handleUpdateLine(line.product_id, line.order_id, lineQuantities[line.id], line.productPrice, line.quantity, line.id);
           }
-        }, " Update ")));
+        }, " Save ")));
       }));
     }
   }]);
@@ -1434,7 +1438,7 @@ function (_React$Component) {
         }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
           className: "product-title"
         }, product.name.capitalize()), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
-          className: "product-title"
+          className: "product-price"
         }, product.price + '/' + product.unit)), currentOrderLines && _this6.getMatchingLine(currentOrderLines, product.id) && _this6.getMatchingLine(currentOrderLines, product.id).quantity > 0 && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
           className: "decrease-quantity-button",
           onClick: function onClick() {
@@ -1449,7 +1453,7 @@ function (_React$Component) {
           className: "quantity-display"
         }, _this6.getMatchingLine(currentOrderLines, product.id).quantity), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
           className: "plus-sign"
-        }, " + ")) : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, " Add to list ")));
+        }, " + ")) : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, " Add to order ")));
       })));
     }
   }]);

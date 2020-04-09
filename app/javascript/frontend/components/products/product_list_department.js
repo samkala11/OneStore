@@ -170,7 +170,7 @@ class ProductListDept extends React.Component {
                            <span className="product-title">
                               {product.name.capitalize()}
                            </span>
-                           <span className="product-title">
+                           <span className="product-price">
                               {product.price + '/' + product.unit}
                            </span>
                         </div>
@@ -194,7 +194,7 @@ class ProductListDept extends React.Component {
                                  > + </span>
                               </span>
                               :
-                             <span> Add to list </span>}
+                             <span> Add to order </span>}
                         </button>
                      </div>
                   ))}              

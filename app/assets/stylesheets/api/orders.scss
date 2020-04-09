@@ -10,13 +10,17 @@
     }
 
     button{
-        font-size: 50px;
+        font-size: 39px;
+        box-shadow: 1px 1px 1px 1px lightgrey;
+        background: deepskyblue;
+        color: white;
+        margin-left: 20px;
     }
     
     .quantity-input {
-        font-size: 50px;
+        font-size: 44px;
         width: 96px;
-        margin-left: 161px;
+        margin-left: 100px;
         text-align: center;
         box-shadow: 1px 1px 1px 1px aliceblue;
         margin-top: 11px;
@@ -34,18 +38,30 @@
         .product-image {
             width: 230px;
             height: 188px;
-            margin-top: 11px;
+            margin-top: 6px;
         }
 
         .line-details {
             margin-left: 50px;
-
-            span {
-                display: block;
-            }
+            width: 250px;
 
             .product-name {
                 text-transform: capitalize;
+                font-weight: 600;
+                font-size: 35px;
+                display: block;
+            }
+
+            .product-price {
+                font-size: 35px;
+                display: block;
+                font-style: italic;
+            }
+
+            .product-unit {
+                font-size: 32px;
+                margin-left: -5px;
+                font-style: italic;
             }
         }
     }

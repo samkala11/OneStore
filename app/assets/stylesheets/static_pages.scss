@@ -22,6 +22,7 @@
 
     .header {
         height: 152px;
+        display: inline-block;
     }
     
     .product-show {
@@ -60,6 +61,21 @@
                 // text-align: center;
                 font-size: 44px;
                 height: 115px;
+
+                .product-title {
+                    margin-top: 20px;
+                    box-sizing: border-box;
+                    text-transform: capitalize;
+                    font-weight: 600;
+                    font-size: 35px;
+                    display: block;
+                }
+
+                .product-price {
+                    font-size: 33px;
+                    display: block;
+                    font-style: italic;
+                }
             }
 
             .add-button {
@@ -79,11 +95,11 @@
                 position: relative;
             }
 
-            .product-title {
-                display: block;
-                margin-top: 20px;
-                box-sizing: border-box;
-            }
+            // .product-title {
+            //     display: block;
+            //     margin-top: 20px;
+            //     box-sizing: border-box;
+            // }
 
             .decrease-quantity-button {
                 position: absolute;

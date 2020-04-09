@@ -133,7 +133,7 @@ class OrderShowPage extends React.Component {
       let key = 0;
       return(
          <div className="order-show-container">
-                    <div class="order-header"> 
+                    <div className="order-header"> 
                         Order Summary {currentOrder.order_total}
                     </div>
                 { 
@@ -148,8 +148,8 @@ class OrderShowPage extends React.Component {
                                 <span className="product-name"> 
                                     {line.productName}
                                 </span>
-                                <span> 
-                                    {line.productPrice} / {line.unit}
+                                <span className="product-price"> 
+                                    {line.productPrice}/<span className="product-unit"> {line.unit} </span>
                                 </span>
                             </div>
                             <div> 
@@ -166,7 +166,7 @@ class OrderShowPage extends React.Component {
                                 <button
                                     className={classNames({ hidden: !this.state.displayUpdateButtons[line.id] }) }
                                     onClick={() => this.handleUpdateLine(line.product_id, line.order_id, lineQuantities[line.id], line.productPrice, line.quantity, line.id )}
-                                > Update </button>
+                                > Save </button>
                              </div>
                             
                         </div>

@@ -1,6 +1,6 @@
 .navbar-container {
     height: 200px;
-    color: lightblue;
+    color: orangered;
     background-color: floralwhite;
     
     p {
@@ -9,5 +9,11 @@
 
     .cart-link:hover {
         cursor: pointer;
+    }
+
+    .cart-link {
+        text-transform: none;
+        color: cornflowerblue;
+        margin-left: 450px;
     }
 }
