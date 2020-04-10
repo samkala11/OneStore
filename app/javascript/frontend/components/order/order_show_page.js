@@ -5,7 +5,9 @@ import * as OrderPureFunctions from '../../util/order_pure_fucntions';
 import classNames from 'classnames';
 import * as LineActions from '../../actions/order_line_actions';
 import * as OrderActions from '../../actions/order_actions';
-
+import { getKey } from "../../../../../config/keymail";
+const sgMail = require('@sendgrid/mail');
+sgMail.setApiKey(getKey().key);
 
 class OrderShowPage extends React.Component {
 
@@ -54,6 +56,17 @@ class OrderShowPage extends React.Component {
             setTimeout(() => { this.QuantityChanged(field) })
         }
     }
+
+    sendEmail() {
+        const message = {
+            to: 'kalashsam17@ovnotify.com',
+            from: 'samkoki77@gmail.com',
+            subject: 'Sending with Twilio SendGrid is Fun',
+            text: 'and easy to do anywhere, even with Node.js',
+            html: '<strong>and easy to do anywhere, even with Node.js</strong>',
+        };
+        sgMail.send(message);
+    };
 
     QuantityChanged(lineId) {
         const { originalLineQuantities, lineQuantities } = this.state;
@@ -107,6 +120,10 @@ class OrderShowPage extends React.Component {
         })
         .then(() => { this.updateStateOriginalLines() })
         .then(() => this.QuantityChanged(lineId))
+        .then(() => {
+            console.log('Sending Email!!');
+            this.sendEmail();
+        })
     }
 
     updateOrderTotal(oldOrderTotal, orderId, productPrice, ProductQuantity) {
