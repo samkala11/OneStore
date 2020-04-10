@@ -643,7 +643,7 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* WEBPACK VAR INJECTION */(function(process) {/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
 /* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
@@ -652,7 +652,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var classnames__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(classnames__WEBPACK_IMPORTED_MODULE_4__);
 /* harmony import */ var _actions_order_line_actions__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../actions/order_line_actions */ "./app/javascript/frontend/actions/order_line_actions.js");
 /* harmony import */ var _actions_order_actions__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../actions/order_actions */ "./app/javascript/frontend/actions/order_actions.js");
-/* harmony import */ var _config_keymail__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../../../../config/keymail */ "./config/keymail.js");
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -677,12 +676,11 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 
 
-
-
+ // import { getKey } from "../../../../../config/keymail";
 
 var sgMail = __webpack_require__(/*! @sendgrid/mail */ "./node_modules/@sendgrid/mail/index.js");
 
-sgMail.setApiKey(Object(_config_keymail__WEBPACK_IMPORTED_MODULE_7__["getKey"])().key);
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 var OrderShowPage =
 /*#__PURE__*/
@@ -930,6 +928,7 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (Object(react_redux__WEBPACK_IMPORTED_MODULE_2__["connect"])(mapStateToProps, mapDispatchToProps)(Object(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["withRouter"])(OrderShowPage)));
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../../../node_modules/process/browser.js */ "./node_modules/process/browser.js")))
 
 /***/ }),
 
@@ -2359,24 +2358,6 @@ var logout = function logout() {
 //     };
 //     return fetch(`api/session`, options)
 //   }
-
-/***/ }),
-
-/***/ "./config/keymail.js":
-/*!***************************!*\
-  !*** ./config/keymail.js ***!
-  \***************************/
-/*! exports provided: getKey */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getKey", function() { return getKey; });
-var getKey = function getKey() {
-  return {
-    key: "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"
-  };
-};
 
 /***/ }),
 

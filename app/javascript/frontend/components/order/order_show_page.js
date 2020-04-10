@@ -5,9 +5,9 @@ import * as OrderPureFunctions from '../../util/order_pure_fucntions';
 import classNames from 'classnames';
 import * as LineActions from '../../actions/order_line_actions';
 import * as OrderActions from '../../actions/order_actions';
-import { getKey } from "../../../../../config/keymail";
+// import { getKey } from "../../../../../config/keymail";
 const sgMail = require('@sendgrid/mail');
-sgMail.setApiKey(getKey().key);
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 class OrderShowPage extends React.Component {
 
