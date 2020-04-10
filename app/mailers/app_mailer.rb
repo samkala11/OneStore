@@ -1,9 +1,9 @@
 class AppMailer < ApplicationMailer
-    default :from => 'onestore@team.com'
+    default :from => 'kalashsam17@gmail.com'
     
     def new_order_email(order)
         mail(
-        to: 'kalashsam17@gmail.com',
+        to: 'samkoki77@gmail.com',
         subject: 'New Order',
         body: 'a new order is created'
         )
