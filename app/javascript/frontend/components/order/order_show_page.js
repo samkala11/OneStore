@@ -5,9 +5,18 @@ import * as OrderPureFunctions from '../../util/order_pure_fucntions';
 import classNames from 'classnames';
 import * as LineActions from '../../actions/order_line_actions';
 import * as OrderActions from '../../actions/order_actions';
-// import { getKey } from "../../../../../config/keymail";
+import jsonobj from "../../../../../config/keymail.json";
 const sgMail = require('@sendgrid/mail');
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+
+
+const client = require('@sendgrid/client');
+// client.setApiKey('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');
+client.setApiKey(jsonobj['key']);
+// debugger;
+// client.setDefaultHeader('User-Agent', 'Some user agent string');
+// client.setDefaultHeader("X-Requested-With", "XMLHttpRequest");
+// client.setDefaultRequest('proxy', 'https://proxy.sendgrid.com/');
 
 class OrderShowPage extends React.Component {
 
@@ -58,14 +67,77 @@ class OrderShowPage extends React.Component {
     }
 
     sendEmail() {
-        const message = {
-            to: 'kalashsam17@ovnotify.com',
-            from: 'samkoki77@gmail.com',
-            subject: 'Sending with Twilio SendGrid is Fun',
-            text: 'and easy to do anywhere, even with Node.js',
-            html: '<strong>and easy to do anywhere, even with Node.js</strong>',
+        // const message = {
+        //     to: 'kalashsam17@ovnotify.com',
+        //     from: 'samkoki77@gmail.com',
+        //     subject: 'Sending with Twilio SendGrid is Fun',
+        //     text: 'and easy to do anywhere, even with Node.js',
+        //     html: '<strong>and easy to do anywhere, even with Node.js</strong>',
+        // };
+        // sgMail.send(message);
+        // const proxy = "https://cors-anywhere.herokuapp.com/"
+        // const request = {
+        //   "async": true,
+		//   "crossDomain": true,
+		//   "url": `${proxy}https://api.sendgrid.com/v3/mail/send`,
+		//   "method": "POST",
+		//   "headers": {
+        //     "Access-Control-Allow-Origin": '*',
+        //     "content-type": "application/json"
+		//   },
+		//   "processData": false,
+		//   "data": "{\"personalizations\":[{\"to\":[{\"email\":\"Test@Test.nl\",\"name\":\"Test\"}],\"subject\":\"Hello, World!\"}],\"from\":{\"email\":\"Test@Test.nl\",\"name\":\"Test\"},\"reply_to\":{\"email\":\"Test@Test.nl\",\"name\":\"Test\"}}"
+        //   };
+        //   client.request(request)
+        //   .then(([response, body]) => {
+        //     console.log(response.statusCode);
+        //     console.log(body);
+        // })
+
+        // client.setApiKey(process.env.SENDGRID_API_KEY);
+
+        const proxy = "https://cors-anywhere.herokuapp.com/";
+        const emailData = {
+            "content": [
+              {
+                "type": "text/html", 
+                "value": "<html><p>A new order is created 3aaam!</p></html>"
+              }
+            ], 
+            "from": {
+              "email": "Unostore1279@ovnotifications88.com", 
+              "name": "Uno Store"
+            }, 
+            "personalizations": [
+              {
+                "subject": "A new order is created Esketiit!", 
+                "to": [
+                  {
+                    "email": "samkoki77@gmail.com", 
+                    "name": "Nans"
+                  }
+                ]
+              }
+            ], 
+            "reply_to": {
+              "email": "sam.smith@example.com", 
+              "name": "Sam Smith"
+            }, 
+            "subject": "Hello, World!"
         };
-        sgMail.send(message);
+
+        let request = {};
+        request.body = emailData;
+        request.method = 'POST';
+        // request.url = '/v3/mail/send';
+        request.url = `${proxy}https://api.sendgrid.com/v3/mail/send`;
+        client.request(request)
+        .then(([response, body]) => {
+            console.log(response);
+            // console.log(response.body);
+        })
+
+
     };
 
     QuantityChanged(lineId) {

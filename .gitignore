@@ -36,6 +36,6 @@ yarn-debug.log*
 
 # Ignore application configuration
 /config/application.yml
-/config/keymail.js
+/config/keymail.json
 sendgrid.env
-sendgrid.env
+

@@ -1,4 +1,5 @@
 const path = require('path');
+var webpack = require('webpack');
 
 module.exports = {
   context: __dirname,
@@ -32,5 +33,17 @@ module.exports = {
     net: 'empty',      
     fs: 'empty',
     tls: 'empty'
-  } 
+  },
+  plugins : [
+    new webpack.DefinePlugin({ 
+      'process.env.SENDGRID_API_KEY': JSON.stringify(process.env.SENDGRID_API_KEY) 
+    })
+  ]
 };
+
+
+// module.exports.plugins.push(
+  // new webpack.DefinePlugin(
+  //   { 'process.env.NODE_ENV': JSON.stringify('production') },
+  // ),
+// );

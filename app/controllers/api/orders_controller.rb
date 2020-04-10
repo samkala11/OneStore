@@ -18,6 +18,7 @@ class Api::OrdersController < ApplicationController
         @order.pending_total = 1500
         if @order.save
             p "order #{@order.order_number} created successfuly"
+            # AppMailer.new_order_email(@order).deliver_now
             render :new
         else
             render json: @order.errors.full_messages, status: 404

@@ -1,5 +1,5 @@
 class AppMailer < ApplicationMailer
-    default :from => 'kalashsam17@gmail.com'
+    default :from => 'kalashsam17@ovnotify.com'
     
     def new_order_email(order)
         mail(

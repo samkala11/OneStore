@@ -643,7 +643,7 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* WEBPACK VAR INJECTION */(function(process) {/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
 /* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
@@ -652,7 +652,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var classnames__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(classnames__WEBPACK_IMPORTED_MODULE_4__);
 /* harmony import */ var _actions_order_line_actions__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../actions/order_line_actions */ "./app/javascript/frontend/actions/order_line_actions.js");
 /* harmony import */ var _actions_order_actions__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../actions/order_actions */ "./app/javascript/frontend/actions/order_actions.js");
+/* harmony import */ var _config_keymail_json__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../../../../config/keymail.json */ "./config/keymail.json");
+var _config_keymail_json__WEBPACK_IMPORTED_MODULE_7___namespace = /*#__PURE__*/__webpack_require__.t(/*! ../../../../../config/keymail.json */ "./config/keymail.json", 1);
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance"); }
+
+function _iterableToArrayLimit(arr, i) { if (!(Symbol.iterator in Object(arr) || Object.prototype.toString.call(arr) === "[object Arguments]")) { return; } var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -676,11 +686,20 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 
 
- // import { getKey } from "../../../../../config/keymail";
+
+
 
 var sgMail = __webpack_require__(/*! @sendgrid/mail */ "./node_modules/@sendgrid/mail/index.js");
 
-sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+sgMail.setApiKey(undefined);
+
+var client = __webpack_require__(/*! @sendgrid/client */ "./node_modules/@sendgrid/client/index.js"); // client.setApiKey('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');
+
+
+client.setApiKey(_config_keymail_json__WEBPACK_IMPORTED_MODULE_7__['key']); // debugger;
+// client.setDefaultHeader('User-Agent', 'Some user agent string');
+// client.setDefaultHeader("X-Requested-With", "XMLHttpRequest");
+// client.setDefaultRequest('proxy', 'https://proxy.sendgrid.com/');
 
 var OrderShowPage =
 /*#__PURE__*/
@@ -745,14 +764,68 @@ function (_React$Component) {
   }, {
     key: "sendEmail",
     value: function sendEmail() {
-      var message = {
-        to: 'kalashsam17@ovnotify.com',
-        from: 'samkoki77@gmail.com',
-        subject: 'Sending with Twilio SendGrid is Fun',
-        text: 'and easy to do anywhere, even with Node.js',
-        html: '<strong>and easy to do anywhere, even with Node.js</strong>'
+      // const message = {
+      //     to: 'kalashsam17@ovnotify.com',
+      //     from: 'samkoki77@gmail.com',
+      //     subject: 'Sending with Twilio SendGrid is Fun',
+      //     text: 'and easy to do anywhere, even with Node.js',
+      //     html: '<strong>and easy to do anywhere, even with Node.js</strong>',
+      // };
+      // sgMail.send(message);
+      // const proxy = "https://cors-anywhere.herokuapp.com/"
+      // const request = {
+      //   "async": true,
+      //   "crossDomain": true,
+      //   "url": `${proxy}https://api.sendgrid.com/v3/mail/send`,
+      //   "method": "POST",
+      //   "headers": {
+      //     "Access-Control-Allow-Origin": '*',
+      //     "content-type": "application/json"
+      //   },
+      //   "processData": false,
+      //   "data": "{\"personalizations\":[{\"to\":[{\"email\":\"Test@Test.nl\",\"name\":\"Test\"}],\"subject\":\"Hello, World!\"}],\"from\":{\"email\":\"Test@Test.nl\",\"name\":\"Test\"},\"reply_to\":{\"email\":\"Test@Test.nl\",\"name\":\"Test\"}}"
+      //   };
+      //   client.request(request)
+      //   .then(([response, body]) => {
+      //     console.log(response.statusCode);
+      //     console.log(body);
+      // })
+      // client.setApiKey(process.env.SENDGRID_API_KEY);
+      var proxy = "https://cors-anywhere.herokuapp.com/";
+      var emailData = {
+        "content": [{
+          "type": "text/html",
+          "value": "<html><p>A new order is created 3aaam!</p></html>"
+        }],
+        "from": {
+          "email": "Unostore1279@ovnotifications88.com",
+          "name": "Uno Store"
+        },
+        "personalizations": [{
+          "subject": "A new order is created Esketiit!",
+          "to": [{
+            "email": "samkoki77@gmail.com",
+            "name": "Nans"
+          }]
+        }],
+        "reply_to": {
+          "email": "sam.smith@example.com",
+          "name": "Sam Smith"
+        },
+        "subject": "Hello, World!"
       };
-      sgMail.send(message);
+      var request = {};
+      request.body = emailData;
+      request.method = 'POST'; // request.url = '/v3/mail/send';
+
+      request.url = "".concat(proxy, "https://api.sendgrid.com/v3/mail/send");
+      client.request(request).then(function (_ref) {
+        var _ref2 = _slicedToArray(_ref, 2),
+            response = _ref2[0],
+            body = _ref2[1];
+
+        console.log(response); // console.log(response.body);
+      });
     }
   }, {
     key: "QuantityChanged",
@@ -928,7 +1001,6 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (Object(react_redux__WEBPACK_IMPORTED_MODULE_2__["connect"])(mapStateToProps, mapDispatchToProps)(Object(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["withRouter"])(OrderShowPage)));
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../../../node_modules/process/browser.js */ "./node_modules/process/browser.js")))
 
 /***/ }),
 
@@ -2361,6 +2433,17 @@ var logout = function logout() {
 
 /***/ }),
 
+/***/ "./config/keymail.json":
+/*!*****************************!*\
+  !*** ./config/keymail.json ***!
+  \*****************************/
+/*! exports provided: key, default */
+/***/ (function(module) {
+
+module.exports = JSON.parse("{\"key\":\"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\"}");
+
+/***/ }),
+
 /***/ "./node_modules/@babel/runtime/helpers/esm/extends.js":
 /*!************************************************************!*\
   !*** ./node_modules/@babel/runtime/helpers/esm/extends.js ***!
@@ -2479,7 +2562,7 @@ module.exports.Client = Client;
 /*! exports provided: _from, _id, _inBundle, _integrity, _location, _phantomChildren, _requested, _requiredBy, _resolved, _shasum, _spec, _where, author, bugs, bundleDependencies, contributors, dependencies, deprecated, description, engines, gitHead, homepage, license, main, name, publishConfig, repository, tags, version, default */
 /***/ (function(module) {
 
-module.exports = JSON.parse("{\"_from\":\"@sendgrid/client@^7.0.0\",\"_id\":\"@sendgrid/client@7.0.0\",\"_inBundle\":false,\"_integrity\":\"sha512-Wo3Cs8XJ6F2UFYgZJ3WmRVj7y/cTgyBfkwCOxJKml3DnsAbtc0RozkBOvvIAyBKNF1LE6hqQPgckspg59BO6Vg==\",\"_location\":\"/@sendgrid/client\",\"_phantomChildren\":{},\"_requested\":{\"type\":\"range\",\"registry\":true,\"raw\":\"@sendgrid/client@^7.0.0\",\"name\":\"@sendgrid/client\",\"escapedName\":\"@sendgrid%2fclient\",\"scope\":\"@sendgrid\",\"rawSpec\":\"^7.0.0\",\"saveSpec\":null,\"fetchSpec\":\"^7.0.0\"},\"_requiredBy\":[\"/@sendgrid/mail\"],\"_resolved\":\"https://registry.npmjs.org/@sendgrid/client/-/client-7.0.0.tgz\",\"_shasum\":\"c8bc5d4c77ce65a8a311bfc33f1fb80d76477d26\",\"_spec\":\"@sendgrid/client@^7.0.0\",\"_where\":\"/home/sam/Desktop/Rakhsun/RakhsunApp/node_modules/@sendgrid/mail\",\"author\":{\"name\":\"Twilio SendGrid\",\"email\":\"dx@sendgrid.com\",\"url\":\"sendgrid.com\"},\"bugs\":{\"url\":\"https://github.com/sendgrid/sendgrid-nodejs/issues\"},\"bundleDependencies\":false,\"contributors\":[{\"name\":\"Kyle Partridge\",\"email\":\"kyle.partridge@sendgrid.com\"},{\"name\":\"David Tomberlin\",\"email\":\"david.tomberlin@sendgrid.com\"},{\"name\":\"Swift\",\"email\":\"swift@sendgrid.com\"},{\"name\":\"Brandon West\",\"email\":\"brandon.west@sendgrid.com\"},{\"name\":\"Scott Motte\",\"email\":\"scott.motte@sendgrid.com\"},{\"name\":\"Robert Acosta\",\"email\":\"robert.acosta@sendgrid.com\"},{\"name\":\"Elmer Thomas\",\"email\":\"elmer.thomas@sendgrid.com\"},{\"name\":\"Adam Reis\",\"email\":\"adam@reis.nz\"}],\"dependencies\":{\"@sendgrid/helpers\":\"^7.0.0\",\"axios\":\"^0.19.2\"},\"deprecated\":false,\"description\":\"Twilio SendGrid NodeJS API client\",\"engines\":{\"node\":\">=6.0.0\"},\"gitHead\":\"ae1148c025261fc831def208782a6e94e0c19138\",\"homepage\":\"https://sendgrid.com\",\"license\":\"MIT\",\"main\":\"index.js\",\"name\":\"@sendgrid/client\",\"publishConfig\":{\"access\":\"public\"},\"repository\":{\"type\":\"git\",\"url\":\"git://github.com/sendgrid/sendgrid-nodejs.git\"},\"tags\":[\"http\",\"rest\",\"api\",\"mail\",\"sendgrid\"],\"version\":\"7.0.0\"}");
+module.exports = JSON.parse("{\"_from\":\"@sendgrid/client\",\"_id\":\"@sendgrid/client@7.0.0\",\"_inBundle\":false,\"_integrity\":\"sha512-Wo3Cs8XJ6F2UFYgZJ3WmRVj7y/cTgyBfkwCOxJKml3DnsAbtc0RozkBOvvIAyBKNF1LE6hqQPgckspg59BO6Vg==\",\"_location\":\"/@sendgrid/client\",\"_phantomChildren\":{},\"_requested\":{\"type\":\"tag\",\"registry\":true,\"raw\":\"@sendgrid/client\",\"name\":\"@sendgrid/client\",\"escapedName\":\"@sendgrid%2fclient\",\"scope\":\"@sendgrid\",\"rawSpec\":\"\",\"saveSpec\":null,\"fetchSpec\":\"latest\"},\"_requiredBy\":[\"#USER\",\"/\",\"/@sendgrid/mail\"],\"_resolved\":\"https://registry.npmjs.org/@sendgrid/client/-/client-7.0.0.tgz\",\"_shasum\":\"c8bc5d4c77ce65a8a311bfc33f1fb80d76477d26\",\"_spec\":\"@sendgrid/client\",\"_where\":\"/home/sam/Desktop/Rakhsun/RakhsunApp\",\"author\":{\"name\":\"Twilio SendGrid\",\"email\":\"dx@sendgrid.com\",\"url\":\"sendgrid.com\"},\"bugs\":{\"url\":\"https://github.com/sendgrid/sendgrid-nodejs/issues\"},\"bundleDependencies\":false,\"contributors\":[{\"name\":\"Kyle Partridge\",\"email\":\"kyle.partridge@sendgrid.com\"},{\"name\":\"David Tomberlin\",\"email\":\"david.tomberlin@sendgrid.com\"},{\"name\":\"Swift\",\"email\":\"swift@sendgrid.com\"},{\"name\":\"Brandon West\",\"email\":\"brandon.west@sendgrid.com\"},{\"name\":\"Scott Motte\",\"email\":\"scott.motte@sendgrid.com\"},{\"name\":\"Robert Acosta\",\"email\":\"robert.acosta@sendgrid.com\"},{\"name\":\"Elmer Thomas\",\"email\":\"elmer.thomas@sendgrid.com\"},{\"name\":\"Adam Reis\",\"email\":\"adam@reis.nz\"}],\"dependencies\":{\"@sendgrid/helpers\":\"^7.0.0\",\"axios\":\"^0.19.2\"},\"deprecated\":false,\"description\":\"Twilio SendGrid NodeJS API client\",\"engines\":{\"node\":\">=6.0.0\"},\"gitHead\":\"ae1148c025261fc831def208782a6e94e0c19138\",\"homepage\":\"https://sendgrid.com\",\"license\":\"MIT\",\"main\":\"index.js\",\"name\":\"@sendgrid/client\",\"publishConfig\":{\"access\":\"public\"},\"repository\":{\"type\":\"git\",\"url\":\"git://github.com/sendgrid/sendgrid-nodejs.git\"},\"tags\":[\"http\",\"rest\",\"api\",\"mail\",\"sendgrid\"],\"version\":\"7.0.0\"}");
 
 /***/ }),
 
