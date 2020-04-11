@@ -39,7 +39,9 @@ class NavBar extends React.Component {
         window.navprops = this.props;
         return(
             <div className="navbar-container">
-                <span className="header"> {title}  </span>
+                <span className="header"
+                    id="header"
+                > {title}  </span>
                    <Link 
                    className = "cart-link"
                    to='/ordercheckout'> 
@@ -47,7 +49,7 @@ class NavBar extends React.Component {
                    </Link> 
 
                 { currentOrder  && currentOrder.id && <span>
-                    <span> {this.getLinesQuantity()}</span>
+                    <span className="navbar-quantity"> {this.getLinesQuantity()}</span>
                 </span>  }
             </div>
         )

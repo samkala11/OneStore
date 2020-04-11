@@ -625,13 +625,16 @@ function (_React$Component) {
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "navbar-container"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
-        className: "header"
+        className: "header",
+        id: "header"
       }, " ", title, "  "), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
         className: "cart-link",
         to: "/ordercheckout"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
         className: "fas fa-shopping-cart"
-      })), currentOrder && currentOrder.id && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, " ", this.getLinesQuantity())));
+      })), currentOrder && currentOrder.id && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+        className: "navbar-quantity"
+      }, " ", this.getLinesQuantity())));
     }
   }]);
 
@@ -1201,9 +1204,9 @@ function (_React$Component) {
         className: "loader-div green-border"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "loader-div red-border"
-      })))))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_navbar_navbar__WEBPACK_IMPORTED_MODULE_2__["default"], null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "header"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h4", null, " Beirut Market ")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      })))))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_navbar_navbar__WEBPACK_IMPORTED_MODULE_2__["default"], {
+        title: "Beirut Market"
+      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "search-bar"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
         placeholder: "search",

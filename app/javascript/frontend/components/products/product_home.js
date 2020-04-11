@@ -112,10 +112,12 @@ class App extends React.Component {
                </div>
            </div> 
            </div>}
-            <NavBar/>
-            <div className="header">
+            <NavBar
+               title = 'Beirut Market'
+            />
+            {/* <div className="header">
                <h4> Beirut Market </h4>
-            </div>
+            </div> */}
 
             {/* <Map/> */}
             
