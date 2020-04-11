@@ -114,6 +114,7 @@ class App extends React.Component {
            </div>}
             <NavBar
                title = 'Beirut Market'
+               isHomeNavBar = { true }
             />
             {/* <div className="header">
                <h4> Beirut Market </h4>

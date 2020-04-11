@@ -1,6 +1,8 @@
 import React from 'react';
 import { withRouter, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
+import classNames from 'classnames';
+
 
 class NavBar extends React.Component {
 
@@ -34,12 +36,14 @@ class NavBar extends React.Component {
 
    render() {
         const { newOrderExist } = this.state;
-        const { currentOrder, title } = this.props;
+        const { currentOrder, title, isHomeNavBar } = this.props;
         window.heyyyState = this.state;
         window.navprops = this.props;
         return(
             <div className="navbar-container">
-                <span className="header"
+                <span 
+                className={classNames({ 'header': true, 'header-home': isHomeNavBar })}
+                // className="header"
                     id="header"
                 > {title}  </span>
                    <Link 

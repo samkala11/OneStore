@@ -8,10 +8,17 @@
     top: 0;
     display: flex;
     justify-content: center;
-    
+
     .header {
+        font-size: 80px;
+        text-align: center;
+        margin: 25px;
+        height: 152px;
+    }
+    
+    .header-home {
         font-family: 'Dancing Script', cursive;
-        
+        font-size: 94px;
     }
 
     #header {
@@ -29,13 +36,13 @@
         text-transform: none;
         color: white;
         position: fixed;
-        top: 55px;
+        top: 63px;
         left: 82%;
     }
 
     .navbar-quantity {
         position: fixed;
-        top: 62px;
+        top: 69px;
         left: 89%;
         font-size: 40px;
     }
