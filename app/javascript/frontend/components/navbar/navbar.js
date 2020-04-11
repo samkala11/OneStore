@@ -52,9 +52,10 @@ class NavBar extends React.Component {
                         <i className="fas fa-shopping-cart"></i>
                    </Link> 
 
-                { currentOrder  && currentOrder.id && <span>
-                    <span className="navbar-quantity"> {this.getLinesQuantity()}</span>
-                </span>  }
+                { currentOrder  && currentOrder.id && <span className="navbar-quantity"> 
+                    {this.getLinesQuantity()}
+                </span>}
+                
             </div>
         )
    }

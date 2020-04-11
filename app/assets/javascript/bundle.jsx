@@ -640,9 +640,9 @@ function (_React$Component) {
         to: "/ordercheckout"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
         className: "fas fa-shopping-cart"
-      })), currentOrder && currentOrder.id && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+      })), currentOrder && currentOrder.id && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
         className: "navbar-quantity"
-      }, " ", this.getLinesQuantity())));
+      }, this.getLinesQuantity()));
     }
   }]);
 
