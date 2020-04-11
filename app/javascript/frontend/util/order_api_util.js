@@ -15,3 +15,11 @@ export const updateOrder = order => (
       data: { order }
     })
 );
+
+export const getCurrentOrder = order => (
+  $.ajax({
+    method: 'GET',
+    url: '/api/orders/current',
+    data: { order }
+  })
+);

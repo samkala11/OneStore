@@ -36,14 +36,10 @@ module.exports = {
   },
   plugins : [
     new webpack.DefinePlugin({ 
-      'process.env.SENDGRID_API_KEY': JSON.stringify(process.env.SENDGRID_API_KEY) 
+      'process.env': {
+          SENDGRID_API_KEY: JSON.stringify(process.env.SENDGRID_API_KEY)
+      }
+      // "process.env.SENDGRID_API_KEY" : JSON.stringify(process.env.SENDGRID_API_KEY) 
     })
   ]
 };
-
-
-// module.exports.plugins.push(
-  // new webpack.DefinePlugin(
-  //   { 'process.env.NODE_ENV': JSON.stringify('production') },
-  // ),
-// );

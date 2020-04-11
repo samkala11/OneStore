@@ -1,7 +1,8 @@
-import { createOrder, updateOrder } from '../util/order_api_util';
+import { createOrder, updateOrder, getCurrentOrder } from '../util/order_api_util';
 
 export const RECEIVE_CREATED_ORDER_ACTION = 'RECEIVE_CREATED_ORDER_ACTION';
 export const RECEIVE_UPDATED_ORDER_ACTION = 'RECEIVE_UPDATED_ORDER_ACTION';
+export const RECEIVE_CURRENT_ORDER_ACTION = 'RECEIVE_CURRENT_ORDER_ACTION';
 
 
 // Redux Thunk Create order  
@@ -30,4 +31,17 @@ const receiveupdatedOrder = (data) => ({
   type: RECEIVE_UPDATED_ORDER_ACTION,
   data
 });
-  
+
+
+// Redux Thunk get current order  
+export const getCurrentOrderReduxAjax = (order) => dispatch => getCurrentOrder(order)
+.then((order) => {
+  console.log( 'current pending order received', order );
+  return dispatch(receiveCurrentOrder(order));
+});
+
+// Private receive current order
+const receiveCurrentOrder = (data) => ({
+  type: RECEIVE_CURRENT_ORDER_ACTION,
+  data
+});

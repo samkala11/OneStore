@@ -13,6 +13,8 @@ sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 const client = require('@sendgrid/client');
 // client.setApiKey('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');
 client.setApiKey(jsonobj['key']);
+// client.setApiKey(process.env.SENDGRID_API_KEY);
+
 // debugger;
 // client.setDefaultHeader('User-Agent', 'Some user agent string');
 // client.setDefaultHeader("X-Requested-With", "XMLHttpRequest");
@@ -42,9 +44,8 @@ class OrderShowPage extends React.Component {
     }
 
     componentDidMount(){
-        const { currentOrderLines }  = this.props;
+        const { currentOrderLines, currentOrder, getCurrentOrder, getOrderLinesByOrder }  = this.props;
         let linesArray = OrderPureFunctions.objectValuesArray(currentOrderLines);
-
         let lineQuantities = Object.assign({}, this.state.lineQuantities) ;
 
         linesArray.forEach(line => {
@@ -52,6 +53,28 @@ class OrderShowPage extends React.Component {
         });
         this.setState({ lineQuantities: lineQuantities });
         this.setState({ originalLineQuantities: lineQuantities });
+
+        let currentOrderId = localStorage.getItem('currentOrderId');
+        if ( !currentOrder.id && currentOrderId ) {
+           let orderInfo = {
+              id: currentOrderId
+           };
+           getCurrentOrder(orderInfo)
+           .then(() => getOrderLinesByOrder(currentOrderId))
+           .then((orderLines) => {
+               
+                let linesArray = OrderPureFunctions.objectValuesArray(orderLines.data);
+                let lineQuantities = Object.assign({}, this.state.lineQuantities) ;
+        
+                linesArray.forEach(line => {
+                    lineQuantities[line.id]  = line.quantity
+                });
+                console.log('setting state quantity')
+                this.setState({ lineQuantities: lineQuantities });
+                this.setState({ originalLineQuantities: lineQuantities });
+           })
+        }
+        
     }
 
     update(field) {
@@ -67,41 +90,13 @@ class OrderShowPage extends React.Component {
     }
 
     sendEmail() {
-        // const message = {
-        //     to: 'kalashsam17@ovnotify.com',
-        //     from: 'samkoki77@gmail.com',
-        //     subject: 'Sending with Twilio SendGrid is Fun',
-        //     text: 'and easy to do anywhere, even with Node.js',
-        //     html: '<strong>and easy to do anywhere, even with Node.js</strong>',
-        // };
-        // sgMail.send(message);
-        // const proxy = "https://cors-anywhere.herokuapp.com/"
-        // const request = {
-        //   "async": true,
-		//   "crossDomain": true,
-		//   "url": `${proxy}https://api.sendgrid.com/v3/mail/send`,
-		//   "method": "POST",
-		//   "headers": {
-        //     "Access-Control-Allow-Origin": '*',
-        //     "content-type": "application/json"
-		//   },
-		//   "processData": false,
-		//   "data": "{\"personalizations\":[{\"to\":[{\"email\":\"Test@Test.nl\",\"name\":\"Test\"}],\"subject\":\"Hello, World!\"}],\"from\":{\"email\":\"Test@Test.nl\",\"name\":\"Test\"},\"reply_to\":{\"email\":\"Test@Test.nl\",\"name\":\"Test\"}}"
-        //   };
-        //   client.request(request)
-        //   .then(([response, body]) => {
-        //     console.log(response.statusCode);
-        //     console.log(body);
-        // })
-
-        // client.setApiKey(process.env.SENDGRID_API_KEY);
-
+        const { currentOrder } = this.props;
         const proxy = "https://cors-anywhere.herokuapp.com/";
         const emailData = {
             "content": [
               {
                 "type": "text/html", 
-                "value": "<html><p>A new order is created 3aaam!</p></html>"
+                "value": `<html><p>A new order ${currentOrder.order_number} is created</p></html>`
               }
             ], 
             "from": {
@@ -110,7 +105,7 @@ class OrderShowPage extends React.Component {
             }, 
             "personalizations": [
               {
-                "subject": "A new order is created Esketiit!", 
+                "subject": `new order #${currentOrder.order_number} created! ${currentOrder.order_total}`, 
                 "to": [
                   {
                     "email": "samkoki77@gmail.com", 
@@ -120,24 +115,19 @@ class OrderShowPage extends React.Component {
               }
             ], 
             "reply_to": {
-              "email": "sam.smith@example.com", 
-              "name": "Sam Smith"
+              "email": "Unostore1279@ovnotifications88.com", 
+              "name": "Uno Store"
             }, 
-            "subject": "Hello, World!"
+            "subject": `new order #${currentOrder.order_number} created! ${currentOrder.order_total}`
         };
-
         let request = {};
         request.body = emailData;
         request.method = 'POST';
-        // request.url = '/v3/mail/send';
         request.url = `${proxy}https://api.sendgrid.com/v3/mail/send`;
         client.request(request)
         .then(([response, body]) => {
-            console.log(response);
-            // console.log(response.body);
+            console.log(`email sent response: ${response}`);
         })
-
-
     };
 
     QuantityChanged(lineId) {
@@ -192,15 +182,14 @@ class OrderShowPage extends React.Component {
         })
         .then(() => { this.updateStateOriginalLines() })
         .then(() => this.QuantityChanged(lineId))
-        .then(() => {
-            console.log('Sending Email!!');
-            this.sendEmail();
-        })
+        // .then(() => {
+        //     console.log('Sending Email!!');
+        //     this.sendEmail();
+        // })
     }
 
     updateOrderTotal(oldOrderTotal, orderId, productPrice, ProductQuantity) {
         const { updateOrder } = this.props;
-        // let newOrderTotal = order.data.order_total + productPrice;
         let newOrderTotal = oldOrderTotal + (productPrice * ProductQuantity);
   
         const updatedOrderInfo = {
@@ -278,6 +267,7 @@ const mapStateToProps = state => ({
     getOrderLinesByOrder: (orderId) => dispatch(LineActions.getOrderLinesByOrderReduxAjax(orderId)),
     updateOrderLine: (orderLineInfo) => dispatch(LineActions.updateOrderLineReduxAjax(orderLineInfo)),
     updateOrder: (orderInfo) => dispatch(OrderActions.updateOrderReduxAjax(orderInfo)),
+    getCurrentOrder: (orderInfo) => dispatch(OrderActions.getCurrentOrderReduxAjax(orderInfo)),
 });
  
  

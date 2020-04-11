@@ -3,6 +3,16 @@ class Api::OrdersController < ApplicationController
     def index 
         @orders = Order.all
     end
+
+    def current_order
+        order_id = params[:order][:id]
+        @order = Order.find(order_id)
+        if @order
+            render :current
+        else
+            render json: @order.errors.full_messages, status: 404
+        end
+    end
     
 
     def create_order
@@ -27,7 +37,7 @@ class Api::OrdersController < ApplicationController
 
     def update_order
         order_id = params[:order][:id]
-        @order = Order.find(order_id);
+        @order = Order.find(order_id)
         # @order = Song.where("lower(order_no) like '#{query.to_i}' ")
         #  + Song.joins(:artist).where("lower(artists.name) like '#{query}' ")
         if @order.update(order_params)

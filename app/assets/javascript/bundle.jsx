@@ -90,19 +90,22 @@
 /*!**********************************************************!*\
   !*** ./app/javascript/frontend/actions/order_actions.js ***!
   \**********************************************************/
-/*! exports provided: RECEIVE_CREATED_ORDER_ACTION, RECEIVE_UPDATED_ORDER_ACTION, createOrderReduxAjax, updateOrderReduxAjax */
+/*! exports provided: RECEIVE_CREATED_ORDER_ACTION, RECEIVE_UPDATED_ORDER_ACTION, RECEIVE_CURRENT_ORDER_ACTION, createOrderReduxAjax, updateOrderReduxAjax, getCurrentOrderReduxAjax */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RECEIVE_CREATED_ORDER_ACTION", function() { return RECEIVE_CREATED_ORDER_ACTION; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RECEIVE_UPDATED_ORDER_ACTION", function() { return RECEIVE_UPDATED_ORDER_ACTION; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RECEIVE_CURRENT_ORDER_ACTION", function() { return RECEIVE_CURRENT_ORDER_ACTION; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createOrderReduxAjax", function() { return createOrderReduxAjax; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "updateOrderReduxAjax", function() { return updateOrderReduxAjax; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getCurrentOrderReduxAjax", function() { return getCurrentOrderReduxAjax; });
 /* harmony import */ var _util_order_api_util__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../util/order_api_util */ "./app/javascript/frontend/util/order_api_util.js");
 
 var RECEIVE_CREATED_ORDER_ACTION = 'RECEIVE_CREATED_ORDER_ACTION';
-var RECEIVE_UPDATED_ORDER_ACTION = 'RECEIVE_UPDATED_ORDER_ACTION'; // Redux Thunk Create order  
+var RECEIVE_UPDATED_ORDER_ACTION = 'RECEIVE_UPDATED_ORDER_ACTION';
+var RECEIVE_CURRENT_ORDER_ACTION = 'RECEIVE_CURRENT_ORDER_ACTION'; // Redux Thunk Create order  
 
 var createOrderReduxAjax = function createOrderReduxAjax(order) {
   return function (dispatch) {
@@ -133,6 +136,23 @@ var updateOrderReduxAjax = function updateOrderReduxAjax(order) {
 var receiveupdatedOrder = function receiveupdatedOrder(data) {
   return {
     type: RECEIVE_UPDATED_ORDER_ACTION,
+    data: data
+  };
+}; // Redux Thunk get current order  
+
+
+var getCurrentOrderReduxAjax = function getCurrentOrderReduxAjax(order) {
+  return function (dispatch) {
+    return Object(_util_order_api_util__WEBPACK_IMPORTED_MODULE_0__["getCurrentOrder"])(order).then(function (order) {
+      console.log('current pending order received', order);
+      return dispatch(receiveCurrentOrder(order));
+    });
+  };
+}; // Private receive current order
+
+var receiveCurrentOrder = function receiveCurrentOrder(data) {
+  return {
+    type: RECEIVE_CURRENT_ORDER_ACTION,
     data: data
   };
 };
@@ -696,7 +716,8 @@ sgMail.setApiKey(undefined);
 var client = __webpack_require__(/*! @sendgrid/client */ "./node_modules/@sendgrid/client/index.js"); // client.setApiKey('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');
 
 
-client.setApiKey(_config_keymail_json__WEBPACK_IMPORTED_MODULE_7__['key']); // debugger;
+client.setApiKey(_config_keymail_json__WEBPACK_IMPORTED_MODULE_7__['key']); // client.setApiKey(process.env.SENDGRID_API_KEY);
+// debugger;
 // client.setDefaultHeader('User-Agent', 'Some user agent string');
 // client.setDefaultHeader("X-Requested-With", "XMLHttpRequest");
 // client.setDefaultRequest('proxy', 'https://proxy.sendgrid.com/');
@@ -729,7 +750,13 @@ function (_React$Component) {
   _createClass(OrderShowPage, [{
     key: "componentDidMount",
     value: function componentDidMount() {
-      var currentOrderLines = this.props.currentOrderLines;
+      var _this2 = this;
+
+      var _this$props = this.props,
+          currentOrderLines = _this$props.currentOrderLines,
+          currentOrder = _this$props.currentOrder,
+          getCurrentOrder = _this$props.getCurrentOrder,
+          getOrderLinesByOrder = _this$props.getOrderLinesByOrder;
       var linesArray = _util_order_pure_fucntions__WEBPACK_IMPORTED_MODULE_3__["objectValuesArray"](currentOrderLines);
       var lineQuantities = Object.assign({}, this.state.lineQuantities);
       linesArray.forEach(function (line) {
@@ -741,90 +768,88 @@ function (_React$Component) {
       this.setState({
         originalLineQuantities: lineQuantities
       });
+      var currentOrderId = localStorage.getItem('currentOrderId');
+
+      if (!currentOrder.id && currentOrderId) {
+        var orderInfo = {
+          id: currentOrderId
+        };
+        getCurrentOrder(orderInfo).then(function () {
+          return getOrderLinesByOrder(currentOrderId);
+        }).then(function (orderLines) {
+          var linesArray = _util_order_pure_fucntions__WEBPACK_IMPORTED_MODULE_3__["objectValuesArray"](orderLines.data);
+          var lineQuantities = Object.assign({}, _this2.state.lineQuantities);
+          linesArray.forEach(function (line) {
+            lineQuantities[line.id] = line.quantity;
+          });
+          console.log('setting state quantity');
+
+          _this2.setState({
+            lineQuantities: lineQuantities
+          });
+
+          _this2.setState({
+            originalLineQuantities: lineQuantities
+          });
+        });
+      }
     }
   }, {
     key: "update",
     value: function update(field) {
-      var _this2 = this;
+      var _this3 = this;
 
       var lineQuantities = Object.assign({}, this.state.lineQuantities);
       return function (e) {
         lineQuantities[field] = e.currentTarget.value; // debugger;
 
-        _this2.setState({
+        _this3.setState({
           lineQuantities: lineQuantities
         }); // this.QuantityChanged(field);
 
 
         setTimeout(function () {
-          _this2.QuantityChanged(field);
+          _this3.QuantityChanged(field);
         });
       };
     }
   }, {
     key: "sendEmail",
     value: function sendEmail() {
-      // const message = {
-      //     to: 'kalashsam17@ovnotify.com',
-      //     from: 'samkoki77@gmail.com',
-      //     subject: 'Sending with Twilio SendGrid is Fun',
-      //     text: 'and easy to do anywhere, even with Node.js',
-      //     html: '<strong>and easy to do anywhere, even with Node.js</strong>',
-      // };
-      // sgMail.send(message);
-      // const proxy = "https://cors-anywhere.herokuapp.com/"
-      // const request = {
-      //   "async": true,
-      //   "crossDomain": true,
-      //   "url": `${proxy}https://api.sendgrid.com/v3/mail/send`,
-      //   "method": "POST",
-      //   "headers": {
-      //     "Access-Control-Allow-Origin": '*',
-      //     "content-type": "application/json"
-      //   },
-      //   "processData": false,
-      //   "data": "{\"personalizations\":[{\"to\":[{\"email\":\"Test@Test.nl\",\"name\":\"Test\"}],\"subject\":\"Hello, World!\"}],\"from\":{\"email\":\"Test@Test.nl\",\"name\":\"Test\"},\"reply_to\":{\"email\":\"Test@Test.nl\",\"name\":\"Test\"}}"
-      //   };
-      //   client.request(request)
-      //   .then(([response, body]) => {
-      //     console.log(response.statusCode);
-      //     console.log(body);
-      // })
-      // client.setApiKey(process.env.SENDGRID_API_KEY);
+      var currentOrder = this.props.currentOrder;
       var proxy = "https://cors-anywhere.herokuapp.com/";
       var emailData = {
         "content": [{
           "type": "text/html",
-          "value": "<html><p>A new order is created 3aaam!</p></html>"
+          "value": "<html><p>A new order ".concat(currentOrder.order_number, " is created</p></html>")
         }],
         "from": {
           "email": "Unostore1279@ovnotifications88.com",
           "name": "Uno Store"
         },
         "personalizations": [{
-          "subject": "A new order is created Esketiit!",
+          "subject": "new order #".concat(currentOrder.order_number, " created! ").concat(currentOrder.order_total),
           "to": [{
             "email": "samkoki77@gmail.com",
             "name": "Nans"
           }]
         }],
         "reply_to": {
-          "email": "sam.smith@example.com",
-          "name": "Sam Smith"
+          "email": "Unostore1279@ovnotifications88.com",
+          "name": "Uno Store"
         },
-        "subject": "Hello, World!"
+        "subject": "new order #".concat(currentOrder.order_number, " created! ").concat(currentOrder.order_total)
       };
       var request = {};
       request.body = emailData;
-      request.method = 'POST'; // request.url = '/v3/mail/send';
-
+      request.method = 'POST';
       request.url = "".concat(proxy, "https://api.sendgrid.com/v3/mail/send");
       client.request(request).then(function (_ref) {
         var _ref2 = _slicedToArray(_ref, 2),
             response = _ref2[0],
             body = _ref2[1];
 
-        console.log(response); // console.log(response.body);
+        console.log("email sent response: ".concat(response));
       });
     }
   }, {
@@ -875,12 +900,12 @@ function (_React$Component) {
   }, {
     key: "handleUpdateLine",
     value: function handleUpdateLine(productId, orderId, newProductQuantity, productPrice, oldLineQuantity, lineId) {
-      var _this3 = this;
+      var _this4 = this;
 
-      var _this$props = this.props,
-          currentOrder = _this$props.currentOrder,
-          getOrderLinesByOrder = _this$props.getOrderLinesByOrder,
-          updateOrderLine = _this$props.updateOrderLine;
+      var _this$props2 = this.props,
+          currentOrder = _this$props2.currentOrder,
+          getOrderLinesByOrder = _this$props2.getOrderLinesByOrder,
+          updateOrderLine = _this$props2.updateOrderLine;
       var newQuantity = parseInt(newProductQuantity);
       var newLineTotal = parseInt(newProductQuantity) * productPrice;
       var oldOrderTotal = currentOrder.order_total;
@@ -896,22 +921,20 @@ function (_React$Component) {
       updateOrderLine(orderLineInfo).then(function () {
         return getOrderLinesByOrder(currentOrder.id);
       }).then(function () {
-        _this3.updateOrderTotal(oldOrderTotal, orderId, productPrice, quantityDifference);
+        _this4.updateOrderTotal(oldOrderTotal, orderId, productPrice, quantityDifference);
       }).then(function () {
-        _this3.updateStateOriginalLines();
+        _this4.updateStateOriginalLines();
       }).then(function () {
-        return _this3.QuantityChanged(lineId);
-      }).then(function () {
-        console.log('Sending Email!!');
-
-        _this3.sendEmail();
-      });
+        return _this4.QuantityChanged(lineId);
+      }); // .then(() => {
+      //     console.log('Sending Email!!');
+      //     this.sendEmail();
+      // })
     }
   }, {
     key: "updateOrderTotal",
     value: function updateOrderTotal(oldOrderTotal, orderId, productPrice, ProductQuantity) {
-      var updateOrder = this.props.updateOrder; // let newOrderTotal = order.data.order_total + productPrice;
-
+      var updateOrder = this.props.updateOrder;
       var newOrderTotal = oldOrderTotal + productPrice * ProductQuantity;
       var updatedOrderInfo = {
         order_total: newOrderTotal,
@@ -925,13 +948,13 @@ function (_React$Component) {
   }, {
     key: "render",
     value: function render() {
-      var _this4 = this;
+      var _this5 = this;
 
       window.orderShowProps = this.props;
       window.orderShowstate = this.state;
-      var _this$props2 = this.props,
-          currentOrderLines = _this$props2.currentOrderLines,
-          currentOrder = _this$props2.currentOrder;
+      var _this$props3 = this.props,
+          currentOrderLines = _this$props3.currentOrderLines,
+          currentOrder = _this$props3.currentOrder;
       var _this$state3 = this.state,
           lineQuantities = _this$state3.lineQuantities,
           originalLineQuantities = _this$state3.originalLineQuantities;
@@ -963,13 +986,13 @@ function (_React$Component) {
           }),
           type: "text",
           value: lineQuantities["".concat(line.id)],
-          onChange: _this4.update(line.id)
+          onChange: _this5.update(line.id)
         }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
           className: classnames__WEBPACK_IMPORTED_MODULE_4___default()({
-            hidden: !_this4.state.displayUpdateButtons[line.id]
+            hidden: !_this5.state.displayUpdateButtons[line.id]
           }),
           onClick: function onClick() {
-            return _this4.handleUpdateLine(line.product_id, line.order_id, lineQuantities[line.id], line.productPrice, line.quantity, line.id);
+            return _this5.handleUpdateLine(line.product_id, line.order_id, lineQuantities[line.id], line.productPrice, line.quantity, line.id);
           }
         }, " Save ")));
       }));
@@ -996,6 +1019,9 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
     },
     updateOrder: function updateOrder(orderInfo) {
       return dispatch(_actions_order_actions__WEBPACK_IMPORTED_MODULE_6__["updateOrderReduxAjax"](orderInfo));
+    },
+    getCurrentOrder: function getCurrentOrder(orderInfo) {
+      return dispatch(_actions_order_actions__WEBPACK_IMPORTED_MODULE_6__["getCurrentOrderReduxAjax"](orderInfo));
     }
   };
 };
@@ -1294,7 +1320,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _navbar_navbar__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../navbar/navbar */ "./app/javascript/frontend/components/navbar/navbar.js");
 /* harmony import */ var _actions_order_actions__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../actions/order_actions */ "./app/javascript/frontend/actions/order_actions.js");
 /* harmony import */ var _actions_order_line_actions__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../actions/order_line_actions */ "./app/javascript/frontend/actions/order_line_actions.js");
-/* harmony import */ var _util_order_api_util__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../util/order_api_util */ "./app/javascript/frontend/util/order_api_util.js");
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -1312,7 +1337,6 @@ function _assertThisInitialized(self) { if (self === void 0) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
 
 
 
@@ -1352,13 +1376,26 @@ function (_React$Component) {
     value: function componentDidMount() {
       var _this2 = this;
 
-      var getProductsByDept = this.props.getProductsByDept;
+      var _this$props = this.props,
+          getProductsByDept = _this$props.getProductsByDept,
+          getCurrentOrder = _this$props.getCurrentOrder,
+          getOrderLinesByOrder = _this$props.getOrderLinesByOrder;
       getProductsByDept(10) //config constant
       .then(function () {
         return _this2.setState({
           products: Object.values(_this2.props.productsByDept)
         });
       });
+      var currentOrderId = localStorage.getItem('currentOrderId');
+
+      if (currentOrderId) {
+        var orderInfo = {
+          id: currentOrderId
+        };
+        getCurrentOrder(orderInfo).then(function () {
+          return getOrderLinesByOrder(currentOrderId);
+        });
+      }
     }
   }, {
     key: "getMatchingLine",
@@ -1375,8 +1412,7 @@ function (_React$Component) {
   }, {
     key: "updateOrderTotal",
     value: function updateOrderTotal(oldOrderTotal, orderId, productPrice, ProductQuantity) {
-      var updateOrder = this.props.updateOrder; // let newOrderTotal = order.data.order_total + productPrice;
-
+      var updateOrder = this.props.updateOrder;
       var newOrderTotal = oldOrderTotal + productPrice * ProductQuantity;
       var updatedOrderInfo = {
         order_total: newOrderTotal,
@@ -1384,7 +1420,7 @@ function (_React$Component) {
         id: orderId
       };
       updateOrder(updatedOrderInfo).then(function (updatedOrder) {
-        return console.log("Order total updated successfully from this.updateOrderTotal", updatedOrder.data.order_total);
+        return console.log("Order total updated successfully to", updatedOrder.data.order_total);
       });
     }
   }, {
@@ -1392,11 +1428,12 @@ function (_React$Component) {
     value: function handleCreateOrder(productId, productUnit, productPrice) {
       var _this3 = this;
 
-      var _this$props = this.props,
-          createOrder = _this$props.createOrder,
-          createOrderLine = _this$props.createOrderLine,
-          getOrderLinesByOrder = _this$props.getOrderLinesByOrder;
+      var _this$props2 = this.props,
+          createOrder = _this$props2.createOrder,
+          createOrderLine = _this$props2.createOrderLine,
+          getOrderLinesByOrder = _this$props2.getOrderLinesByOrder;
       createOrder(this.state.order).then(function (order) {
+        localStorage.setItem('currentOrderId', JSON.stringify(order.data.id));
         var orderLineInfo = {
           product_id: productId,
           order_id: order.data.id,
@@ -1418,12 +1455,12 @@ function (_React$Component) {
     value: function handleUpdateOrder(productId, productUnit, orderId, newProductQuantity, productPrice, oldOrderTotal) {
       var _this4 = this;
 
-      var _this$props2 = this.props,
-          currentOrderLines = _this$props2.currentOrderLines,
-          createOrderLine = _this$props2.createOrderLine,
-          currentOrder = _this$props2.currentOrder,
-          getOrderLinesByOrder = _this$props2.getOrderLinesByOrder,
-          updateOrderLine = _this$props2.updateOrderLine;
+      var _this$props3 = this.props,
+          currentOrderLines = _this$props3.currentOrderLines,
+          createOrderLine = _this$props3.createOrderLine,
+          currentOrder = _this$props3.currentOrder,
+          getOrderLinesByOrder = _this$props3.getOrderLinesByOrder,
+          updateOrderLine = _this$props3.updateOrderLine;
       var matchingLine = this.getMatchingLine(currentOrderLines, productId);
 
       if (matchingLine) {
@@ -1474,11 +1511,11 @@ function (_React$Component) {
     value: function decreaseLineQuantity(productId, productPrice) {
       var _this5 = this;
 
-      var _this$props3 = this.props,
-          currentOrderLines = _this$props3.currentOrderLines,
-          updateOrderLine = _this$props3.updateOrderLine,
-          getOrderLinesByOrder = _this$props3.getOrderLinesByOrder,
-          currentOrder = _this$props3.currentOrder;
+      var _this$props4 = this.props,
+          currentOrderLines = _this$props4.currentOrderLines,
+          updateOrderLine = _this$props4.updateOrderLine,
+          getOrderLinesByOrder = _this$props4.getOrderLinesByOrder,
+          currentOrder = _this$props4.currentOrder;
       var matchingLine = this.getMatchingLine(currentOrderLines, productId);
 
       if (matchingLine) {
@@ -1498,15 +1535,28 @@ function (_React$Component) {
       }
     }
   }, {
+    key: "checkLocalStorage",
+    value: function checkLocalStorage() {// localStorage.setItem('currentOrderId', JSON.stringify(orderId))
+      // checkLocalStorage(){
+      //    if (!localStorage.getItem('allWhat') || localStorage.getItem('allWhat') === 'allAlbums'){
+      //      return;
+      //    } else if (localStorage.getItem('allWhat') && localStorage.getItem('allWhat') === 'allSongs'){
+      //      this.toggleResults('allSongs')
+      //    } else if (localStorage.getItem('allWhat') && localStorage.getItem('allWhat') === 'AllArtists'){
+      //      this.toggleResults('allArtists')
+      //    }
+      // }
+    }
+  }, {
     key: "render",
     value: function render() {
       var _this6 = this;
 
       var products = this.state.products;
       window.fruitsState = this.state;
-      var _this$props4 = this.props,
-          currentOrderLines = _this$props4.currentOrderLines,
-          currentOrder = _this$props4.currentOrder;
+      var _this$props5 = this.props,
+          currentOrderLines = _this$props5.currentOrderLines,
+          currentOrder = _this$props5.currentOrder;
       var key = 0;
 
       String.prototype.capitalize = function () {
@@ -1566,6 +1616,9 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
   return {
     getProductsByDept: function getProductsByDept(no) {
       return dispatch(Object(_actions_product_actions__WEBPACK_IMPORTED_MODULE_2__["getProductsByDeptThunk"])(no));
+    },
+    getCurrentOrder: function getCurrentOrder(orderInfo) {
+      return dispatch(_actions_order_actions__WEBPACK_IMPORTED_MODULE_4__["getCurrentOrderReduxAjax"](orderInfo));
     },
     createOrder: function createOrder(orderInfo) {
       return dispatch(_actions_order_actions__WEBPACK_IMPORTED_MODULE_4__["createOrderReduxAjax"](orderInfo));
@@ -1877,20 +1930,19 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js");
 /* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_dom__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _components_root__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./components/root */ "./app/javascript/frontend/components/root.js");
-/* harmony import */ var _store_store__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./store/store */ "./app/javascript/frontend/store/store.js");
+/* harmony import */ var _store_store__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./store/store */ "./app/javascript/frontend/store/store.js");
+/* harmony import */ var _components_root__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./components/root */ "./app/javascript/frontend/components/root.js");
 
 
 
- // import { createBench, fetchAllBenches } from './util/benches_api_utils'
-// import { fetchBenchesThunk } from './actions/bench_action';
 
 document.addEventListener("DOMContentLoaded", function () {
-  var store = Object(_store_store__WEBPACK_IMPORTED_MODULE_3__["default"])();
+  var store = Object(_store_store__WEBPACK_IMPORTED_MODULE_2__["default"])();
   var root = document.getElementById("root");
-  react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render(react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_root__WEBPACK_IMPORTED_MODULE_2__["default"], {
+  react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render(react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_root__WEBPACK_IMPORTED_MODULE_3__["default"], {
     store: store
-  }), root);
+  }), root); // for testing
+
   window.store = store;
 
   window.AppState = function () {
@@ -1921,6 +1973,9 @@ __webpack_require__.r(__webpack_exports__);
       return action.data;
 
     case _actions_order_actions__WEBPACK_IMPORTED_MODULE_0__["RECEIVE_UPDATED_ORDER_ACTION"]:
+      return action.data;
+
+    case _actions_order_actions__WEBPACK_IMPORTED_MODULE_0__["RECEIVE_CURRENT_ORDER_ACTION"]:
       return action.data;
 
     default:
@@ -2237,13 +2292,14 @@ function () {
 /*!********************************************************!*\
   !*** ./app/javascript/frontend/util/order_api_util.js ***!
   \********************************************************/
-/*! exports provided: createOrder, updateOrder */
+/*! exports provided: createOrder, updateOrder, getCurrentOrder */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createOrder", function() { return createOrder; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "updateOrder", function() { return updateOrder; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getCurrentOrder", function() { return getCurrentOrder; });
 /* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js");
 /* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(jquery__WEBPACK_IMPORTED_MODULE_0__);
 
@@ -2260,6 +2316,15 @@ var updateOrder = function updateOrder(order) {
   return jquery__WEBPACK_IMPORTED_MODULE_0___default.a.ajax({
     method: 'PUT',
     url: '/api/orders/update',
+    data: {
+      order: order
+    }
+  });
+};
+var getCurrentOrder = function getCurrentOrder(order) {
+  return jquery__WEBPACK_IMPORTED_MODULE_0___default.a.ajax({
+    method: 'GET',
+    url: '/api/orders/current',
     data: {
       order: order
     }
@@ -9184,7 +9249,7 @@ const stdoutColor = __webpack_require__(/*! supports-color */ "./node_modules/su
 
 const template = __webpack_require__(/*! ./templates.js */ "./node_modules/chalk/templates.js");
 
-const isSimpleWindowsTerm = process.platform === 'win32' && !(process.env.TERM || '').toLowerCase().startsWith('xterm');
+const isSimpleWindowsTerm = process.platform === 'win32' && !(Object({"SENDGRID_API_KEY":undefined}).TERM || '').toLowerCase().startsWith('xterm');
 
 // `supportsColor.level` → `ansiStyles.color[name]` mapping
 const levelMapping = ['ansi', 'ansi', 'ansi256', 'ansi16m'];

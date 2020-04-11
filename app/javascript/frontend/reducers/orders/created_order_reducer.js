@@ -1,4 +1,4 @@
-import {  RECEIVE_CREATED_ORDER_ACTION, RECEIVE_UPDATED_ORDER_ACTION } from '../../actions/order_actions';
+import {  RECEIVE_CREATED_ORDER_ACTION, RECEIVE_UPDATED_ORDER_ACTION, RECEIVE_CURRENT_ORDER_ACTION } from '../../actions/order_actions';
 
 export default (state = {}, action) => {
   Object.freeze(state);
@@ -6,6 +6,8 @@ export default (state = {}, action) => {
     case RECEIVE_CREATED_ORDER_ACTION:
       return action.data
     case RECEIVE_UPDATED_ORDER_ACTION:
+      return action.data
+    case RECEIVE_CURRENT_ORDER_ACTION:
       return action.data
     default:
       return state;

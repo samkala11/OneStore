@@ -4,7 +4,6 @@ import { getProductsByDeptThunk } from '../../actions/product_actions';
 import NavBar from '../navbar/navbar';
 import * as OrderActions from '../../actions/order_actions';
 import * as LineActions from '../../actions/order_line_actions';
-import { updateOrder } from '../../util/order_api_util';
 
 class ProductListDept extends React.Component {
    
@@ -25,9 +24,18 @@ class ProductListDept extends React.Component {
    }
    
    componentDidMount(){
-      const { getProductsByDept } = this.props;
+      const { getProductsByDept, getCurrentOrder, getOrderLinesByOrder } = this.props;
       getProductsByDept(10) //config constant
       .then(() => this.setState({products: Object.values(this.props.productsByDept)}));
+
+      let currentOrderId = localStorage.getItem('currentOrderId');
+      if (currentOrderId) {
+         let orderInfo = {
+            id: currentOrderId
+         };
+         getCurrentOrder(orderInfo)
+         .then(() => getOrderLinesByOrder(currentOrderId))
+      }
    }
 
    getMatchingLine(orderLines, productId) {
@@ -41,16 +49,14 @@ class ProductListDept extends React.Component {
 
    updateOrderTotal(oldOrderTotal, orderId, productPrice, ProductQuantity) {
       const { updateOrder } = this.props;
-      // let newOrderTotal = order.data.order_total + productPrice;
       let newOrderTotal = oldOrderTotal + (productPrice * ProductQuantity);
-
-         const updatedOrderInfo = {
-            order_total: newOrderTotal,
-            pending_total: newOrderTotal,
-            id: orderId
-         }
-         updateOrder(updatedOrderInfo)
-         .then((updatedOrder) => console.log(`Order total updated successfully from this.updateOrderTotal`, updatedOrder.data.order_total ));
+      const updatedOrderInfo = {
+         order_total: newOrderTotal,
+         pending_total: newOrderTotal,
+         id: orderId
+      }
+      updateOrder(updatedOrderInfo)
+      .then((updatedOrder) => console.log(`Order total updated successfully to`, updatedOrder.data.order_total ));
    }
 
    handleCreateOrder(productId, productUnit, productPrice) {
@@ -58,6 +64,7 @@ class ProductListDept extends React.Component {
 
       createOrder(this.state.order)
       .then((order) => {
+         localStorage.setItem('currentOrderId', JSON.stringify(order.data.id));
          const orderLineInfo = {
             product_id: productId,
             order_id: order.data.id,
@@ -146,6 +153,21 @@ class ProductListDept extends React.Component {
       }
    }
 
+   checkLocalStorage() {
+      // localStorage.setItem('currentOrderId', JSON.stringify(orderId))
+
+      // checkLocalStorage(){
+      //    if (!localStorage.getItem('allWhat') || localStorage.getItem('allWhat') === 'allAlbums'){
+      //      return;
+      //    } else if (localStorage.getItem('allWhat') && localStorage.getItem('allWhat') === 'allSongs'){
+      //      this.toggleResults('allSongs')
+      //    } else if (localStorage.getItem('allWhat') && localStorage.getItem('allWhat') === 'AllArtists'){
+      //      this.toggleResults('allArtists')
+      //    }
+      // }
+
+   }
+
    render() {
       const products = this.state.products;
       window.fruitsState = this.state;
@@ -214,6 +236,7 @@ const mapStateToProps = state => ({
  
  const mapDispatchToProps = dispatch => ({
    getProductsByDept: (no) => dispatch(getProductsByDeptThunk(no)),
+   getCurrentOrder: (orderInfo) => dispatch(OrderActions.getCurrentOrderReduxAjax(orderInfo)),
    createOrder: (orderInfo) => dispatch(OrderActions.createOrderReduxAjax(orderInfo)),
    updateOrder: (orderInfo) => dispatch(OrderActions.updateOrderReduxAjax(orderInfo)),
    createOrderLine: (orderLineInfo) => dispatch(LineActions.createOrderLineReduxAjax(orderLineInfo)),
