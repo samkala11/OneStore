@@ -4,6 +4,7 @@ import NavBar from '../navbar/navbar';
 import {Link} from 'react-router-dom';
 import {connect} from 'react-redux';
 import * as ProductActions from '../../actions/product_actions'
+import * as InitialHomeLoaderActions from '../../actions/show_loader_home_actions';
 
 class App extends React.Component {
    
@@ -31,14 +32,17 @@ class App extends React.Component {
    }
 
    componentDidMount(){
-      const { getAllProducts } = this.props;
+      const { getAllProducts, hideInitialHomeLoader } = this.props;
       getAllProducts();
       // this.setState({ first: true})
       // this.setState({array: [...this.state.array, 5,4]})
       // this.setState({array: [...this.state.array, 5]})
       // setTimeout(() => this.setState({array: [...this.state.array, 7]}), 500)
       // this.setState({array: [...this.state.array, 7]})
-      this.timer = setTimeout(() => this.setState({showLoader: false}), 900)
+      this.timer = setTimeout(() => {
+         this.setState({showLoader: false});
+         hideInitialHomeLoader();
+      }, 900)
    }
 
    componentWillUnmount() {
@@ -97,9 +101,10 @@ class App extends React.Component {
 
    render() {
       window.homeState = this.state;
+      const {  shouldShowHomeLoader } = this.props;
       return(
          <div className="home-page">
-           { this.state.showLoader && <div  className="loader-main">
+           { shouldShowHomeLoader && this.state.showLoader && <div  className="loader-main">
            <div className="loader-container"> 
                <div className="loader-div red-border">
                   <div className="loader-div white-border">
@@ -218,12 +223,14 @@ class App extends React.Component {
 
 
 const mapStateToProps = state => ({
-   products: state.products
+   products: state.products,
+   shouldShowHomeLoader: state.showHomeLoader
  });
  
  const mapDispatchToProps = dispatch => ({
    getAllProducts: () => dispatch(ProductActions.getAllProductsThunk()),
-   createProduct: (productInfo) => dispatch(ProductActions.createProductThunk(productInfo))
+   createProduct: (productInfo) => dispatch(ProductActions.createProductThunk(productInfo)),
+   hideInitialHomeLoader: () => dispatch(InitialHomeLoaderActions.hideInitialHomeLoader())
 });
  
  

@@ -401,6 +401,28 @@ var clearErrors = function clearErrors() {
 
 /***/ }),
 
+/***/ "./app/javascript/frontend/actions/show_loader_home_actions.js":
+/*!*********************************************************************!*\
+  !*** ./app/javascript/frontend/actions/show_loader_home_actions.js ***!
+  \*********************************************************************/
+/*! exports provided: HIDE_INITIAL_HOME_LOADER_ACTION, hideInitialHomeLoader */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "HIDE_INITIAL_HOME_LOADER_ACTION", function() { return HIDE_INITIAL_HOME_LOADER_ACTION; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "hideInitialHomeLoader", function() { return hideInitialHomeLoader; });
+var HIDE_INITIAL_HOME_LOADER_ACTION = 'HIDE_INITIAL_HOME_LOADER_ACTION'; // Private receive created order
+
+var hideInitialHomeLoader = function hideInitialHomeLoader() {
+  return {
+    type: HIDE_INITIAL_HOME_LOADER_ACTION,
+    showHomeLoaderFlag: false
+  };
+};
+
+/***/ }),
+
 /***/ "./app/javascript/frontend/components/App.js":
 /*!***************************************************!*\
   !*** ./app/javascript/frontend/components/App.js ***!
@@ -647,19 +669,31 @@ function (_React$Component) {
         }) // className="header"
         ,
         id: "header"
-      }, " ", title, "  "), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
-        className: "home-link",
+      }, " ", title, "  "), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"] //    className = "home-link"
+      , {
+        className: classnames__WEBPACK_IMPORTED_MODULE_3___default()({
+          'home-link': true,
+          'current-link': window.location.hash === '#/'
+        }),
         to: "/"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
         className: "fas fa-home"
       })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        onClick: this.toggleSearchBar,
-        className: "search-link",
+        onClick: this.toggleSearchBar // className = "search-link"
+        ,
+        className: classnames__WEBPACK_IMPORTED_MODULE_3___default()({
+          'search-link': true,
+          'current-link': window.location.hash === '#/search'
+        }),
         to: "/ordercheckout"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
         className: "fas fa-search"
-      })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
-        className: "cart-link",
+      })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"] //    className = "cart-link"
+      , {
+        className: classnames__WEBPACK_IMPORTED_MODULE_3___default()({
+          'cart-link': true,
+          'current-link': window.location.hash === '#/ordercheckout'
+        }),
         to: "/ordercheckout"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
         className: "fas fa-shopping-cart"
@@ -1090,6 +1124,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
 /* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
 /* harmony import */ var _actions_product_actions__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../actions/product_actions */ "./app/javascript/frontend/actions/product_actions.js");
+/* harmony import */ var _actions_show_loader_home_actions__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../actions/show_loader_home_actions */ "./app/javascript/frontend/actions/show_loader_home_actions.js");
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -1107,6 +1142,7 @@ function _assertThisInitialized(self) { if (self === void 0) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
 
 
 
@@ -1152,7 +1188,9 @@ function (_React$Component) {
     value: function componentDidMount() {
       var _this2 = this;
 
-      var getAllProducts = this.props.getAllProducts;
+      var _this$props = this.props,
+          getAllProducts = _this$props.getAllProducts,
+          hideInitialHomeLoader = _this$props.hideInitialHomeLoader;
       getAllProducts(); // this.setState({ first: true})
       // this.setState({array: [...this.state.array, 5,4]})
       // this.setState({array: [...this.state.array, 5]})
@@ -1160,9 +1198,11 @@ function (_React$Component) {
       // this.setState({array: [...this.state.array, 7]})
 
       this.timer = setTimeout(function () {
-        return _this2.setState({
+        _this2.setState({
           showLoader: false
         });
+
+        hideInitialHomeLoader();
       }, 900);
     }
   }, {
@@ -1190,9 +1230,9 @@ function (_React$Component) {
       var _this4 = this;
 
       e.preventDefault();
-      var _this$props = this.props,
-          createProduct = _this$props.createProduct,
-          getAllProducts = _this$props.getAllProducts; // let products = {
+      var _this$props2 = this.props,
+          createProduct = _this$props2.createProduct,
+          getAllProducts = _this$props2.getAllProducts; // let products = {
       //    products: [
       //       {
       //          name: 'tomatoo',
@@ -1231,9 +1271,10 @@ function (_React$Component) {
     key: "render",
     value: function render() {
       window.homeState = this.state;
+      var shouldShowHomeLoader = this.props.shouldShowHomeLoader;
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "home-page"
-      }, this.state.showLoader && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      }, shouldShowHomeLoader && this.state.showLoader && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "loader-main"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "loader-container"
@@ -1285,7 +1326,8 @@ function (_React$Component) {
 
 var mapStateToProps = function mapStateToProps(state) {
   return {
-    products: state.products
+    products: state.products,
+    shouldShowHomeLoader: state.showHomeLoader
   };
 };
 
@@ -1296,6 +1338,9 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
     },
     createProduct: function createProduct(productInfo) {
       return dispatch(_actions_product_actions__WEBPACK_IMPORTED_MODULE_5__["createProductThunk"](productInfo));
+    },
+    hideInitialHomeLoader: function hideInitialHomeLoader() {
+      return dispatch(_actions_show_loader_home_actions__WEBPACK_IMPORTED_MODULE_6__["hideInitialHomeLoader"]());
     }
   };
 };
@@ -2158,6 +2203,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _products_reducer__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./products_reducer */ "./app/javascript/frontend/reducers/products_reducer.js");
 /* harmony import */ var _orders_reducer__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./orders_reducer */ "./app/javascript/frontend/reducers/orders_reducer.js");
 /* harmony import */ var _session_reducer__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./session_reducer */ "./app/javascript/frontend/reducers/session_reducer.js");
+/* harmony import */ var _show_loader_home_reducer__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./show_loader_home_reducer */ "./app/javascript/frontend/reducers/show_loader_home_reducer.js");
+
 
 
 
@@ -2169,6 +2216,7 @@ __webpack_require__.r(__webpack_exports__);
   //   currentlyPlaying: CurrentlyPlayingReducer
   products: _products_reducer__WEBPACK_IMPORTED_MODULE_1__["default"],
   orders: _orders_reducer__WEBPACK_IMPORTED_MODULE_2__["default"],
+  showHomeLoader: _show_loader_home_reducer__WEBPACK_IMPORTED_MODULE_4__["default"],
   session: _session_reducer__WEBPACK_IMPORTED_MODULE_3__["default"]
 }));
 
@@ -2213,6 +2261,34 @@ var _nullSession = {
 
     case _actions_session_actions__WEBPACK_IMPORTED_MODULE_0__["LOGOUT_CURRENT_USER_ACTION"]:
       return _nullSession;
+
+    default:
+      return state;
+  }
+});
+
+/***/ }),
+
+/***/ "./app/javascript/frontend/reducers/show_loader_home_reducer.js":
+/*!**********************************************************************!*\
+  !*** ./app/javascript/frontend/reducers/show_loader_home_reducer.js ***!
+  \**********************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _actions_show_loader_home_actions__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../actions/show_loader_home_actions */ "./app/javascript/frontend/actions/show_loader_home_actions.js");
+
+var initialState = true;
+/* harmony default export */ __webpack_exports__["default"] = (function () {
+  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : initialState;
+  var action = arguments.length > 1 ? arguments[1] : undefined;
+  Object.freeze(state);
+
+  switch (action.type) {
+    case _actions_show_loader_home_actions__WEBPACK_IMPORTED_MODULE_0__["HIDE_INITIAL_HOME_LOADER_ACTION"]:
+      return action.showHomeLoaderFlag;
 
     default:
       return state;

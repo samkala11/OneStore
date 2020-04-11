@@ -57,20 +57,23 @@ class NavBar extends React.Component {
                    
 
                    <Link 
-                   className = "home-link"
+                //    className = "home-link"
+                   className={classNames({ 'home-link': true, 'current-link': window.location.hash === '#/' })}
                    to='/'> 
                         <i className="fas fa-home"></i>
                    </Link> 
 
                    <div
                     onClick = {this.toggleSearchBar} 
-                    className = "search-link"
+                    // className = "search-link"
+                    className={classNames({ 'search-link': true, 'current-link': window.location.hash === '#/search' })}
                     to='/ordercheckout'> 
                         <i className="fas fa-search"></i>
                    </div> 
 
                    <Link 
-                   className = "cart-link"
+                //    className = "cart-link"
+                   className={classNames({ 'cart-link': true, 'current-link': window.location.hash === '#/ordercheckout' })}
                    to='/ordercheckout'> 
                         <i className="fas fa-shopping-cart"></i>
                    </Link> 
