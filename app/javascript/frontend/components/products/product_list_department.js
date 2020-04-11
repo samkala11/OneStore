@@ -180,7 +180,9 @@ class ProductListDept extends React.Component {
 
       return(<div className="product-show">
                <NavBar 
-                  title = 'Fruits'
+                  // title = 'Fruits'
+                  title = 'Beirut Market'
+                  isHomeNavBar = { true }
                />
                <div className="product-list-wrapper">
                   {products.map(product => (

@@ -6,6 +6,7 @@ import classNames from 'classnames';
 import * as LineActions from '../../actions/order_line_actions';
 import * as OrderActions from '../../actions/order_actions';
 import jsonobj from "../../../../../config/keymail.json";
+import NavBar from '../navbar/navbar';
 const sgMail = require('@sendgrid/mail');
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
@@ -211,6 +212,11 @@ class OrderShowPage extends React.Component {
       let key = 0;
       return(
          <div className="order-show-container">
+
+            <NavBar
+               title = 'Beirut Market'
+               isHomeNavBar = { true }
+            />
                     <div className="order-header"> 
                         Order Summary {currentOrder.order_total}
                     </div>

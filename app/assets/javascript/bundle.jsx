@@ -561,9 +561,9 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
@@ -587,8 +587,10 @@ function (_React$Component) {
     _this = _possibleConstructorReturn(this, _getPrototypeOf(NavBar).call(this, props));
     _this.state = {
       newOrderExist: false,
-      orderLines: []
+      orderLines: [],
+      showSearchBar: false
     };
+    _this.toggleSearchBar = _this.toggleSearchBar.bind(_assertThisInitialized(_this));
     return _this;
   }
 
@@ -617,9 +619,19 @@ function (_React$Component) {
 
     }
   }, {
+    key: "toggleSearchBar",
+    value: function toggleSearchBar() {
+      console.log('toggle search bar called');
+      this.setState({
+        showSearchBar: !this.state.showSearchBar
+      });
+    }
+  }, {
     key: "render",
     value: function render() {
-      var newOrderExist = this.state.newOrderExist;
+      var _this$state = this.state,
+          newOrderExist = _this$state.newOrderExist,
+          showSearchBar = _this$state.showSearchBar;
       var _this$props = this.props,
           currentOrder = _this$props.currentOrder,
           title = _this$props.title,
@@ -628,7 +640,7 @@ function (_React$Component) {
       window.navprops = this.props;
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "navbar-container"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: classnames__WEBPACK_IMPORTED_MODULE_3___default()({
           'header': true,
           'header-home': isHomeNavBar
@@ -636,13 +648,29 @@ function (_React$Component) {
         ,
         id: "header"
       }, " ", title, "  "), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
+        className: "home-link",
+        to: "/"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
+        className: "fas fa-home"
+      })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        onClick: this.toggleSearchBar,
+        className: "search-link",
+        to: "/ordercheckout"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
+        className: "fas fa-search"
+      })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
         className: "cart-link",
         to: "/ordercheckout"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
         className: "fas fa-shopping-cart"
       })), currentOrder && currentOrder.id && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
         className: "navbar-quantity"
-      }, this.getLinesQuantity()));
+      }, this.getLinesQuantity()), showSearchBar && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "search-bar"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        placeholder: "search",
+        type: "text"
+      })));
     }
   }]);
 
@@ -685,6 +713,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _actions_order_actions__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../actions/order_actions */ "./app/javascript/frontend/actions/order_actions.js");
 /* harmony import */ var _config_keymail_json__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../../../../config/keymail.json */ "./config/keymail.json");
 var _config_keymail_json__WEBPACK_IMPORTED_MODULE_7___namespace = /*#__PURE__*/__webpack_require__.t(/*! ../../../../../config/keymail.json */ "./config/keymail.json", 1);
+/* harmony import */ var _navbar_navbar__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../navbar/navbar */ "./app/javascript/frontend/components/navbar/navbar.js");
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
@@ -710,6 +739,7 @@ function _assertThisInitialized(self) { if (self === void 0) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
 
 
 
@@ -973,7 +1003,10 @@ function (_React$Component) {
       var key = 0;
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "order-show-container"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_navbar_navbar__WEBPACK_IMPORTED_MODULE_8__["default"], {
+        title: "Beirut Market",
+        isHomeNavBar: true
+      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "order-header"
       }, "Order Summary ", currentOrder.order_total), currentLinesArray.map(function (line) {
         return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -1216,12 +1249,7 @@ function (_React$Component) {
         title: "Beirut Market",
         isHomeNavBar: true
       }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "search-bar"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
-        placeholder: "search",
-        type: "text"
-      })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "products-categories"
+        className: "all-department-categories"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "department-wrapper"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_3__["Link"], {
@@ -1248,47 +1276,7 @@ function (_React$Component) {
         className: "department-title"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_3__["Link"], {
         to: "/departments/fruits"
-      }, " Vegetables "))))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "new-product-form"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
-        type: "text",
-        className: "product-name-input",
-        placeholder: "product_id",
-        onChange: this.update('product_id'),
-        value: this.state.productInfo['product_id'] || ''
-      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
-        type: "text",
-        className: "product-name-input",
-        placeholder: "Name",
-        onChange: this.update('name'),
-        value: this.state.productInfo['name'] || ''
-      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
-        type: "text",
-        className: "product-name-input",
-        placeholder: "Short Desc",
-        onChange: this.update('short_desc'),
-        value: this.state.productInfo['short_desc'] || ''
-      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
-        type: "text",
-        className: "product-name-input",
-        placeholder: "Department",
-        onChange: this.update('department_id'),
-        value: this.state.productInfo['department_id'] || ''
-      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
-        type: "text",
-        className: "product-name-input",
-        placeholder: "Price",
-        onChange: this.update('price'),
-        value: this.state.productInfo['price'] || ''
-      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
-        type: "text",
-        className: "product-name-input",
-        placeholder: "Unit",
-        onChange: this.update('unit'),
-        value: this.state.productInfo['unit'] || ''
-      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
-        onClick: this.handleCreate
-      }, "Create")));
+      }, " Vegetables "))))));
     }
   }]);
 
@@ -1577,8 +1565,10 @@ function (_React$Component) {
 
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "product-show"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_navbar_navbar__WEBPACK_IMPORTED_MODULE_3__["default"], {
-        title: "Fruits"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_navbar_navbar__WEBPACK_IMPORTED_MODULE_3__["default"] // title = 'Fruits'
+      , {
+        title: "Beirut Market",
+        isHomeNavBar: true
       }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "product-list-wrapper"
       }, products.map(function (product) {

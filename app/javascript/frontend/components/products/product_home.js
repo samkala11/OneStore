@@ -99,7 +99,6 @@ class App extends React.Component {
       window.homeState = this.state;
       return(
          <div className="home-page">
-
            { this.state.showLoader && <div  className="loader-main">
            <div className="loader-container"> 
                <div className="loader-div red-border">
@@ -116,18 +115,14 @@ class App extends React.Component {
                title = 'Beirut Market'
                isHomeNavBar = { true }
             />
-            {/* <div className="header">
-               <h4> Beirut Market </h4>
-            </div> */}
-
             {/* <Map/> */}
             
-            <div className="search-bar">
+            {/* <div className="search-bar">
                <input 
                   placeholder="search"
                   type="text"/>
-            </div>
-            <div className="products-categories">
+            </div> */}
+            <div className="all-department-categories">
                {/* <h4>  Main Categories</h4> */}
                <div className="department-wrapper">
                   <Link to="/departments/fruits">    
@@ -156,7 +151,7 @@ class App extends React.Component {
 
             </div>
 
-
+{/* 
             <div className="new-product-form">
 
                <input 
@@ -213,7 +208,7 @@ class App extends React.Component {
                   Create
                </button>
 
-            </div>
+            </div> */}
 
          </div>
       )

@@ -1,5 +1,5 @@
 .navbar-container {
-    height: 200px;
+    height: 286px;
     color: white;
     position: fixed;
     background-color: rgb(158, 180, 148);
@@ -32,12 +32,25 @@
         cursor: pointer;
     }
 
-    .cart-link {
+    .cart-link, .home-link, .search-link {
         text-transform: none;
         color: white;
         position: fixed;
-        top: 63px;
-        left: 82%;
+        top: 196px;
+        font-size: 60px;
+
+    }
+
+    .home-link {
+        left: 1%; 
+    }
+    
+    .search-link { 
+        left: 44%;
+    }
+    
+    .cart-link {
+        left: 92%;
     }
 
     .navbar-quantity {

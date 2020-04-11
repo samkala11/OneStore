@@ -10,8 +10,11 @@ class NavBar extends React.Component {
         super(props);
         this.state = {
             newOrderExist: false,
-            orderLines: []
+            orderLines: [],
+            showSearchBar: false
         }
+
+        this.toggleSearchBar = this.toggleSearchBar.bind(this);
     }
 
     getLinesQuantity() {
@@ -34,18 +37,38 @@ class NavBar extends React.Component {
         // this.setState({ orderLines: orderLinesArray })
     }
 
+    toggleSearchBar () {
+        console.log('toggle search bar called')
+        this.setState({showSearchBar: !this.state.showSearchBar})
+    }
+
    render() {
-        const { newOrderExist } = this.state;
+        const { newOrderExist, showSearchBar } = this.state;
         const { currentOrder, title, isHomeNavBar } = this.props;
         window.heyyyState = this.state;
         window.navprops = this.props;
         return(
             <div className="navbar-container">
-                <span 
+                <div 
                 className={classNames({ 'header': true, 'header-home': isHomeNavBar })}
                 // className="header"
                     id="header"
-                > {title}  </span>
+                > {title}  </div>
+                   
+
+                   <Link 
+                   className = "home-link"
+                   to='/'> 
+                        <i className="fas fa-home"></i>
+                   </Link> 
+
+                   <div
+                    onClick = {this.toggleSearchBar} 
+                    className = "search-link"
+                    to='/ordercheckout'> 
+                        <i className="fas fa-search"></i>
+                   </div> 
+
                    <Link 
                    className = "cart-link"
                    to='/ordercheckout'> 
@@ -55,6 +78,13 @@ class NavBar extends React.Component {
                 { currentOrder  && currentOrder.id && <span className="navbar-quantity"> 
                     {this.getLinesQuantity()}
                 </span>}
+
+                { showSearchBar && <div className="search-bar">
+                    <input 
+                        placeholder="search"
+                        type="text"
+                        />
+                </div>}
                 
             </div>
         )
