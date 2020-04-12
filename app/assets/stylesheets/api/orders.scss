@@ -17,6 +17,22 @@
         margin-left: 20px;
     }
     
+    .order-info-wrapper {
+        position: fixed;
+        left: -100%;
+        top: 0;
+        transition: 0.4s linear;
+    }
+
+    .show-wrapper { 
+        left: 30px;
+        opacity: 0.5;
+    }
+
+    .full-opacity {
+        opacity: 1;
+    }
+
     .quantity-input {
         font-size: 44px;
         width: 96px;

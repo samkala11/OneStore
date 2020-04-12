@@ -9,6 +9,7 @@ import SearchPage from './products/search_page';
 const App = () => (
    
    <div className="app-wrapper">
+      {/* <OrderPage/> */}
       <Route exact path="/" component={ProductHome}/>
       {/* <Route exact path="/fruits" component={Fruits}/> */}
       <Route exact path="/departments" component={ProductByDepartment}/> 

@@ -32,7 +32,9 @@ class OrderShowPage extends React.Component {
             },
             displayUpdateButtons: {
 
-            }
+            },
+            showWrapper: false,
+            fullOpacity: false
         }
         this.update = this.update.bind(this);
         this.stateIncludesLine = this.stateIncludesLine.bind(this);
@@ -74,7 +76,13 @@ class OrderShowPage extends React.Component {
                 this.setState({ originalLineQuantities: lineQuantities });
            })
         }
-        
+        this.timer = setTimeout(() => this.setState({ showWrapper: true }), 200 );
+        this.timerOpacity = setTimeout(() => this.setState({ fullOpacity: true }), 800 );
+    }
+
+    componentWillUnmount() {
+        clearTimeout(this.timer);
+        clearTimeout(this.timerOpacity);
     }
 
     update(field) {
@@ -206,54 +214,57 @@ class OrderShowPage extends React.Component {
       window.orderShowstate = this.state;
 
       const { currentOrderLines, currentOrder } = this.props;
-      const { lineQuantities, originalLineQuantities } = this.state;
+      const { lineQuantities, originalLineQuantities, showWrapper, fullOpacity } = this.state;
       const currentLinesArray = Object.values(currentOrderLines);
       let key = 0;
       return(
          <div className="order-show-container">
 
-            <NavBar
+            {/* <NavBar
                title = 'Beirut Market'
                isHomeNavBar = { true }
-            />
-            <div className="order-header"> 
-                Order Summary {currentOrder.order_total}
-            </div>
-            { currentLinesArray.map(line => ( 
-                <div className="order-line-show"
-                    key = {key++}
-                    >
-                    <img className="product-image" 
-                        src={`https://onestorebucket.s3.eu-west-3.amazonaws.com/${line.productName}.jpg`}
-                    />
-                    <div className="line-details"> 
-                        <span className="product-name"> 
-                            {line.productName}
-                        </span>
-                        <span className="product-price"> 
-                            {line.productPrice}/<span className="product-unit"> {line.unit} </span>
-                        </span>
-                    </div>
-                    <div> 
-                        <input
-                            // className="quantity-input"
-                            className={classNames({ 'quantity-input': true })}
-                            type="text"
-                            value = { lineQuantities[`${line.id}`] }
-                            onChange = {this.update(line.id)}
-                        />  
-                        {/* <span> 
-                            Line total: {line.line_total}
-                        </span> */}
-                        <button
-                            className={classNames({ hidden: !this.state.displayUpdateButtons[line.id] }) }
-                            onClick={() => this.handleUpdateLine(line.product_id, line.order_id, lineQuantities[line.id], line.productPrice, line.quantity, line.id )}
-                        > Save </button>
-                        </div>
-                    
+            /> */}
+            { <div className={classNames({ 'order-info-wrapper': true , 'show-wrapper': showWrapper, 'full-opacity': fullOpacity })}
+            > 
+                <div className="order-header"> 
+                    Order Summary {currentOrder.order_total}
                 </div>
-            ))
-            }
+                { currentLinesArray.map(line => ( 
+                    <div className="order-line-show"
+                        key = {key++}
+                        >
+                        <img className="product-image" 
+                            src={`https://onestorebucket.s3.eu-west-3.amazonaws.com/${line.productName}.jpg`}
+                        />
+                        <div className="line-details"> 
+                            <span className="product-name"> 
+                                {line.productName}
+                            </span>
+                            <span className="product-price"> 
+                                {line.productPrice}/<span className="product-unit"> {line.unit} </span>
+                            </span>
+                        </div>
+                        <div> 
+                            <input
+                                // className="quantity-input"
+                                className={classNames({ 'quantity-input': true })}
+                                type="text"
+                                value = { lineQuantities[`${line.id}`] }
+                                onChange = {this.update(line.id)}
+                            />  
+                            {/* <span> 
+                                Line total: {line.line_total}
+                            </span> */}
+                            <button
+                                className={classNames({ hidden: !this.state.displayUpdateButtons[line.id] }) }
+                                onClick={() => this.handleUpdateLine(line.product_id, line.order_id, lineQuantities[line.id], line.productPrice, line.quantity, line.id )}
+                            > Save </button>
+                            </div>
+                        
+                    </div>
+                ))
+                }
+            </div>}
          </div>
       )
    }

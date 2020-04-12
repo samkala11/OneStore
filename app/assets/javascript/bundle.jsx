@@ -833,7 +833,9 @@ function (_React$Component) {
     _this.state = {
       lineQuantities: {},
       originalLineQuantities: {},
-      displayUpdateButtons: {}
+      displayUpdateButtons: {},
+      showWrapper: false,
+      fullOpacity: false
     };
     _this.update = _this.update.bind(_assertThisInitialized(_this));
     _this.stateIncludesLine = _this.stateIncludesLine.bind(_assertThisInitialized(_this));
@@ -892,6 +894,23 @@ function (_React$Component) {
           });
         });
       }
+
+      this.timer = setTimeout(function () {
+        return _this2.setState({
+          showWrapper: true
+        });
+      }, 400);
+      this.timerOpacity = setTimeout(function () {
+        return _this2.setState({
+          fullOpacity: true
+        });
+      }, 800);
+    }
+  }, {
+    key: "componentWillUnmount",
+    value: function componentWillUnmount() {
+      clearTimeout(this.timer);
+      clearTimeout(this.timerOpacity);
     }
   }, {
     key: "update",
@@ -1056,15 +1075,20 @@ function (_React$Component) {
           currentOrder = _this$props3.currentOrder;
       var _this$state3 = this.state,
           lineQuantities = _this$state3.lineQuantities,
-          originalLineQuantities = _this$state3.originalLineQuantities;
+          originalLineQuantities = _this$state3.originalLineQuantities,
+          showWrapper = _this$state3.showWrapper,
+          fullOpacity = _this$state3.fullOpacity;
       var currentLinesArray = Object.values(currentOrderLines);
       var key = 0;
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "order-show-container"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_navbar_navbar__WEBPACK_IMPORTED_MODULE_8__["default"], {
-        title: "Beirut Market",
-        isHomeNavBar: true
-      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: classnames__WEBPACK_IMPORTED_MODULE_4___default()({
+          'order-info-wrapper': true,
+          'show-wrapper': showWrapper,
+          'full-opacity': fullOpacity
+        })
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "order-header"
       }, "Order Summary ", currentOrder.order_total), currentLinesArray.map(function (line) {
         return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -1097,7 +1121,7 @@ function (_React$Component) {
             return _this5.handleUpdateLine(line.product_id, line.order_id, lineQuantities[line.id], line.productPrice, line.quantity, line.id);
           }
         }, " Save ")));
-      }));
+      })));
     }
   }]);
 
