@@ -815,7 +815,6 @@ var client = __webpack_require__(/*! @sendgrid/client */ "./node_modules/@sendgr
 
 
 client.setApiKey(_config_keymail_json__WEBPACK_IMPORTED_MODULE_7__['key']); // client.setApiKey(process.env.SENDGRID_API_KEY);
-// debugger;
 // client.setDefaultHeader('User-Agent', 'Some user agent string');
 // client.setDefaultHeader("X-Requested-With", "XMLHttpRequest");
 // client.setDefaultRequest('proxy', 'https://proxy.sendgrid.com/');
@@ -856,7 +855,8 @@ function (_React$Component) {
           getCurrentOrder = _this$props.getCurrentOrder,
           getOrderLinesByOrder = _this$props.getOrderLinesByOrder;
       var linesArray = _util_order_pure_fucntions__WEBPACK_IMPORTED_MODULE_3__["objectValuesArray"](currentOrderLines);
-      var lineQuantities = Object.assign({}, this.state.lineQuantities);
+      var lineQuantities = Object.assign({}, this.state.lineQuantities); // set initial line quantities in state
+
       linesArray.forEach(function (line) {
         lineQuantities[line.id] = line.quantity;
       });
@@ -865,7 +865,8 @@ function (_React$Component) {
       });
       this.setState({
         originalLineQuantities: lineQuantities
-      });
+      }); // check localStorage for draft order 
+
       var currentOrderId = localStorage.getItem('currentOrderId');
 
       if (!currentOrder.id && currentOrderId) {
@@ -1071,7 +1072,7 @@ function (_React$Component) {
           key: key++
         }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("img", {
           className: "product-image",
-          src: "https://onestorebucket.s3.eu-west-3.amazonaws.com/tomato.jpg"
+          src: "https://onestorebucket.s3.eu-west-3.amazonaws.com/".concat(line.productName, ".jpg")
         }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
           className: "line-details"
         }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {

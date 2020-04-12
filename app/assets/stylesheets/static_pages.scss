@@ -1,6 +1,9 @@
 // Place all the styles related to the static_pages controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: https://sass-lang.com/
+html {
+    background: beige;
+}
 
 .app-wrapper {
     // background-color: lightblue;
@@ -62,8 +65,8 @@
             .product-image {
                 top: -15px;
                 left: 10px;
-                width: calc(100% - 15px);
-                height: calc(100% - 15px);
+                width: 455px;
+                height: 358px;
                 //backgroundimageurl css
             }
 
@@ -85,10 +88,11 @@
                     font-weight: 600;
                     font-size: 35px;
                     display: block;
+                    color: #8da084;
                 }
 
                 .product-price {
-                    font-size: 33px;
+                    font-size: 30px;
                     display: block;
                     font-style: italic;
                 }
@@ -105,7 +109,7 @@
                 display: block;
                 box-sizing: border-box;
                 text-transform: uppercase;
-                background-color: green;
+                background-color: #8da084;
                 color: white;
                 width: calc(100% - 15px);
                 position: relative;
@@ -119,10 +123,10 @@
 
             .decrease-quantity-button {
                 position: absolute;
-                color: yellow;
+                color: white;
                 height: 87px;
                 border-right: 6px solid white;
-                background: green;
+                background: #8da084;
                 z-index: 4;
                 // line-height: 20px;
                 width: 83px;
@@ -146,12 +150,7 @@
     .department-wrapper {
         box-sizing: border-box;
         height: 90%;
-        // width: calc(50% - 12px);
-        // margin: 0 5px 10px 3px;
-        // float: left;
-        // position: relative;
-        // padding: 20px 0 17px 0;
-        // border: 1px solid beige;
+        margin-bottom: 36px;
     
         .department-image {
             top: -15px;
@@ -180,7 +179,8 @@
 
             a {
                 text-decoration: none;
-                color: black;
+                color: #9eb494;
+                font-weight: 600;
             }
         }
 

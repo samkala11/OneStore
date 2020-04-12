@@ -15,8 +15,6 @@ const client = require('@sendgrid/client');
 // client.setApiKey('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');
 client.setApiKey(jsonobj['key']);
 // client.setApiKey(process.env.SENDGRID_API_KEY);
-
-// debugger;
 // client.setDefaultHeader('User-Agent', 'Some user agent string');
 // client.setDefaultHeader("X-Requested-With", "XMLHttpRequest");
 // client.setDefaultRequest('proxy', 'https://proxy.sendgrid.com/');
@@ -49,12 +47,14 @@ class OrderShowPage extends React.Component {
         let linesArray = OrderPureFunctions.objectValuesArray(currentOrderLines);
         let lineQuantities = Object.assign({}, this.state.lineQuantities) ;
 
+        // set initial line quantities in state
         linesArray.forEach(line => {
             lineQuantities[line.id]  = line.quantity
         });
         this.setState({ lineQuantities: lineQuantities });
         this.setState({ originalLineQuantities: lineQuantities });
 
+        // check localStorage for draft order 
         let currentOrderId = localStorage.getItem('currentOrderId');
         if ( !currentOrder.id && currentOrderId ) {
            let orderInfo = {
@@ -63,7 +63,6 @@ class OrderShowPage extends React.Component {
            getCurrentOrder(orderInfo)
            .then(() => getOrderLinesByOrder(currentOrderId))
            .then((orderLines) => {
-               
                 let linesArray = OrderPureFunctions.objectValuesArray(orderLines.data);
                 let lineQuantities = Object.assign({}, this.state.lineQuantities) ;
         
@@ -217,45 +216,44 @@ class OrderShowPage extends React.Component {
                title = 'Beirut Market'
                isHomeNavBar = { true }
             />
-                    <div className="order-header"> 
-                        Order Summary {currentOrder.order_total}
+            <div className="order-header"> 
+                Order Summary {currentOrder.order_total}
+            </div>
+            { currentLinesArray.map(line => ( 
+                <div className="order-line-show"
+                    key = {key++}
+                    >
+                    <img className="product-image" 
+                        src={`https://onestorebucket.s3.eu-west-3.amazonaws.com/${line.productName}.jpg`}
+                    />
+                    <div className="line-details"> 
+                        <span className="product-name"> 
+                            {line.productName}
+                        </span>
+                        <span className="product-price"> 
+                            {line.productPrice}/<span className="product-unit"> {line.unit} </span>
+                        </span>
                     </div>
-                { 
-                    currentLinesArray.map(line => (
-                        <div className="order-line-show"
-                            key = {key++}
-                            >
-                            <img className="product-image" 
-                              src="https://onestorebucket.s3.eu-west-3.amazonaws.com/tomato.jpg"
-                            />
-                            <div className="line-details"> 
-                                <span className="product-name"> 
-                                    {line.productName}
-                                </span>
-                                <span className="product-price"> 
-                                    {line.productPrice}/<span className="product-unit"> {line.unit} </span>
-                                </span>
-                            </div>
-                            <div> 
-                                <input
-                                    // className="quantity-input"
-                                    className={classNames({ 'quantity-input': true })}
-                                    type="text"
-                                    value = { lineQuantities[`${line.id}`] }
-                                    onChange = {this.update(line.id)}
-                                />  
-                                {/* <span> 
-                                    Line total: {line.line_total}
-                                </span> */}
-                                <button
-                                    className={classNames({ hidden: !this.state.displayUpdateButtons[line.id] }) }
-                                    onClick={() => this.handleUpdateLine(line.product_id, line.order_id, lineQuantities[line.id], line.productPrice, line.quantity, line.id )}
-                                > Save </button>
-                             </div>
-                            
+                    <div> 
+                        <input
+                            // className="quantity-input"
+                            className={classNames({ 'quantity-input': true })}
+                            type="text"
+                            value = { lineQuantities[`${line.id}`] }
+                            onChange = {this.update(line.id)}
+                        />  
+                        {/* <span> 
+                            Line total: {line.line_total}
+                        </span> */}
+                        <button
+                            className={classNames({ hidden: !this.state.displayUpdateButtons[line.id] }) }
+                            onClick={() => this.handleUpdateLine(line.product_id, line.order_id, lineQuantities[line.id], line.productPrice, line.quantity, line.id )}
+                        > Save </button>
                         </div>
-                    ))
-                }
+                    
+                </div>
+            ))
+            }
          </div>
       )
    }
