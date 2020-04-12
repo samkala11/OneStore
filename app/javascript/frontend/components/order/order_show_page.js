@@ -6,6 +6,7 @@ import classNames from 'classnames';
 import * as LineActions from '../../actions/order_line_actions';
 import * as OrderActions from '../../actions/order_actions';
 import jsonobj from "../../../../../config/keymail.json";
+import {Link} from 'react-router-dom';
 import NavBar from '../navbar/navbar';
 const sgMail = require('@sendgrid/mail');
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
@@ -76,8 +77,8 @@ class OrderShowPage extends React.Component {
                 this.setState({ originalLineQuantities: lineQuantities });
            })
         }
-        this.timer = setTimeout(() => this.setState({ showWrapper: true }), 200 );
-        this.timerOpacity = setTimeout(() => this.setState({ fullOpacity: true }), 800 );
+        this.timer = setTimeout(() => this.setState({ showWrapper: true }), 50 );
+        this.timerOpacity = setTimeout(() => this.setState({ fullOpacity: true }), 700 );
     }
 
     componentWillUnmount() {
@@ -226,6 +227,12 @@ class OrderShowPage extends React.Component {
             /> */}
             { <div className={classNames({ 'order-info-wrapper': true , 'show-wrapper': showWrapper, 'full-opacity': fullOpacity })}
             > 
+                <Link 
+                    to = "/"
+                >
+                    X
+                </Link>
+
                 <div className="order-header"> 
                     Order Summary {currentOrder.order_total}
                 </div>

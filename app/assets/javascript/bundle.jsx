@@ -807,6 +807,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 
 
+
 var sgMail = __webpack_require__(/*! @sendgrid/mail */ "./node_modules/@sendgrid/mail/index.js");
 
 sgMail.setApiKey(undefined);
@@ -899,12 +900,12 @@ function (_React$Component) {
         return _this2.setState({
           showWrapper: true
         });
-      }, 400);
+      }, 50);
       this.timerOpacity = setTimeout(function () {
         return _this2.setState({
           fullOpacity: true
         });
-      }, 800);
+      }, 700);
     }
   }, {
     key: "componentWillUnmount",
@@ -1088,7 +1089,9 @@ function (_React$Component) {
           'show-wrapper': showWrapper,
           'full-opacity': fullOpacity
         })
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
+        to: "/"
+      }, "X"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "order-header"
       }, "Order Summary ", currentOrder.order_total), currentLinesArray.map(function (line) {
         return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
