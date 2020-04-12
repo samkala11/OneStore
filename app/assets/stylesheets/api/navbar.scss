@@ -8,6 +8,7 @@
     top: 0;
     display: flex;
     justify-content: center;
+    flex-direction: column;
 
     .header {
         font-size: 80px;
@@ -22,7 +23,7 @@
     }
 
     #header {
-        margin: 39px;
+        margin: 29px;
     }
     p {
         margin: 0;
@@ -34,7 +35,7 @@
 
     .cart-link, .home-link, .search-link {
         text-transform: none;
-        color: white;
+        color: rgb(184, 192, 199);
         position: fixed;
         top: 196px;
         font-size: 60px;
@@ -54,13 +55,24 @@
     }
 
     .current-link {
-        color: rgb(205, 212, 102);
+        color: #9eb494;
     }
 
     .navbar-quantity {
         position: fixed;
-        top: 69px;
-        left: 89%;
-        font-size: 40px;
+        top: 183px;
+        left: 90%;
+        font-size: 29px;
+        font-weight: bold;
+        border-radius: 50%;
+        background: red;
+        padding: 4px;
+    }
+
+    .nav-links-container {
+        height: 130px;
+        width: 100%;
+        // background: radial-gradient(rgb(112, 112, 105), beige);
+        background: rgb(236, 236, 221);
     }
 }

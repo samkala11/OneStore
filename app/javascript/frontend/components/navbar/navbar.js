@@ -50,33 +50,31 @@ class NavBar extends React.Component {
         return(
             <div className="navbar-container">
                 <div 
-                className={classNames({ 'header': true, 'header-home': isHomeNavBar })}
-                // className="header"
+                    className={classNames({ 'header': true, 'header-home': isHomeNavBar })}
                     id="header"
-                > {title}  </div>
-                   
+                > 
+                    {title}  
+                </div>
 
+                <div className="nav-links-container">
                    <Link 
-                //    className = "home-link"
-                   className={classNames({ 'home-link': true, 'current-link': window.location.hash === '#/' })}
-                   to='/'> 
+                        className={classNames({ 'home-link': true, 'current-link': window.location.hash === '#/' })}
+                        to='/'> 
                         <i className="fas fa-home"></i>
                    </Link> 
 
                    <Link
-                    // onClick = {this.toggleSearchBar} 
-                    // className = "search-link"
-                    className={classNames({ 'search-link': true, 'current-link': window.location.hash === '#/search' })}
-                    to='/search'> 
+                        className={classNames({ 'search-link': true, 'current-link': window.location.hash === '#/search' })}
+                        to='/search'> 
                         <i className="fas fa-search"></i>
                    </Link> 
 
                    <Link 
-                //    className = "cart-link"
-                   className={classNames({ 'cart-link': true, 'current-link': window.location.hash === '#/ordercheckout' })}
-                   to='/ordercheckout'> 
+                        className={classNames({ 'cart-link': true, 'current-link': window.location.hash === '#/ordercheckout' })}
+                        to='/ordercheckout'> 
                         <i className="fas fa-shopping-cart"></i>
                    </Link> 
+                </div>
 
                 { currentOrder  && currentOrder.id && <span className="navbar-quantity"> 
                     {this.getLinesQuantity()}

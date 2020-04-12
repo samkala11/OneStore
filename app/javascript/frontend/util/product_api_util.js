@@ -1,5 +1,13 @@
 import $ from "jquery";
 
+export const searchProducts = (productName) => (
+    $.ajax({
+        method: 'GET',
+        url: `/api/products/name?name=${productName}`,
+        error: (err) => console.log(err)
+    })
+);
+
 export const getAllProducts = () => (
     $.ajax({
         method: 'GET',
@@ -8,8 +16,6 @@ export const getAllProducts = () => (
     })
 );
 
-
-
 export const getProductsByDept= (deptNo) => (
     $.ajax({
         method: 'GET',
@@ -17,7 +23,6 @@ export const getProductsByDept= (deptNo) => (
         error: (err) => console.log(err)
     })
 );
-
 
 export const createProduct = product => (
     $.ajax({

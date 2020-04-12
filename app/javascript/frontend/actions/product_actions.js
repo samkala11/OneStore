@@ -1,20 +1,20 @@
-import { getAllProducts, getProductsByDept, createProduct } from '../util/product_api_util';
+import { getAllProducts, getProductsByDept, createProduct, searchProducts } from '../util/product_api_util';
 
 export const GET_ALL_PRODUCTS_ACTION = 'GET_ALL_PRODUCTS_ACTION';
 export const GET_PRODUCTS_BY_DEPT_ACTION  = 'GET_PRODUCTS_BY_DEPT_ACTION';
 export const RECEIVE_CREATED_PRODUCT_ACTION  = 'RECEIVE_CREATED_PRODUCT_ACTION';
+export const RECEIVE_SEARCHED_PRODUCTS_ACTION  = 'RECEIVE_SEARCHED_PRODUCTS_ACTION';
 
 
+// Redux Thunk Action Get searched Products
+export const searchProductsAjaxRedux = () => dispatch => searchProducts()
+.then((products) => dispatch(receiveSearchedProducts(products)));
 
-// Redux Thunk Action Get All Products
-export const getAllProductsThunk = () => dispatch => getAllProducts()
-.then((products) => dispatch(receiveAllProducts(products)));
-
-// All Products - rarely used
-const receiveAllProducts = (products) => ({
-  type: GET_ALL_PRODUCTS_ACTION,
+// Searched Products
+const receiveSearchedProducts = (products) => ({
+  type: RECEIVE_SEARCHED_PRODUCTS_ACTION,
   products
-})
+});
 
 
 // Redux Thunk Action Get Products By Dept
@@ -25,7 +25,7 @@ export const getProductsByDeptThunk = (no) => dispatch => getProductsByDept(no)
 const receiveProductsByDept = (products) => ({
   type: GET_PRODUCTS_BY_DEPT_ACTION,
   products
-})
+});
 
 
 // Redux Thunk Create Product  
@@ -41,4 +41,16 @@ export const createProductThunk = (product) => dispatch => createProduct(product
 const receiveCreatedProduct = (data) => ({
   type: RECEIVE_CREATED_PRODUCT_ACTION,
   data
+})
+
+
+
+// Redux Thunk Action Get All Products
+export const getAllProductsThunk = () => dispatch => getAllProducts()
+.then((products) => dispatch(receiveAllProducts(products)));
+
+// All Products - rarely used
+const receiveAllProducts = (products) => ({
+  type: GET_ALL_PRODUCTS_ACTION,
+  products
 })

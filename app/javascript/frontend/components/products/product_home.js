@@ -5,8 +5,10 @@ import {Link} from 'react-router-dom';
 import {connect} from 'react-redux';
 import * as ProductActions from '../../actions/product_actions'
 import * as InitialHomeLoaderActions from '../../actions/show_loader_home_actions';
+import * as OrderActions from '../../actions/order_actions';
+import * as LineActions from '../../actions/order_line_actions';
 
-class App extends React.Component {
+class ProductHome extends React.Component {
    
    constructor(props){
       super(props);
@@ -32,17 +34,28 @@ class App extends React.Component {
    }
 
    componentDidMount(){
-      const { getAllProducts, hideInitialHomeLoader } = this.props;
-      getAllProducts();
+      const { getAllProducts, hideInitialHomeLoader, currentOrder, getCurrentOrder, getOrderLinesByOrder } = this.props;
+      // getAllProducts();
       // this.setState({ first: true})
       // this.setState({array: [...this.state.array, 5,4]})
       // this.setState({array: [...this.state.array, 5]})
       // setTimeout(() => this.setState({array: [...this.state.array, 7]}), 500)
       // this.setState({array: [...this.state.array, 7]})
+      
       this.timer = setTimeout(() => {
          this.setState({showLoader: false});
          hideInitialHomeLoader();
       }, 900)
+
+      let storageCurrentOrderId = localStorage.getItem('currentOrderId');
+      if ( !currentOrder.id && storageCurrentOrderId ) {
+         let orderInfo = {
+            id: storageCurrentOrderId
+         };
+         getCurrentOrder(orderInfo)
+         .then(() => getOrderLinesByOrder(storageCurrentOrderId))
+      }
+
    }
 
    componentWillUnmount() {
@@ -223,6 +236,7 @@ class App extends React.Component {
 
 
 const mapStateToProps = state => ({
+   currentOrder: state.orders.currentOrder,
    products: state.products,
    shouldShowHomeLoader: state.showHomeLoader
  });
@@ -230,11 +244,13 @@ const mapStateToProps = state => ({
  const mapDispatchToProps = dispatch => ({
    getAllProducts: () => dispatch(ProductActions.getAllProductsThunk()),
    createProduct: (productInfo) => dispatch(ProductActions.createProductThunk(productInfo)),
-   hideInitialHomeLoader: () => dispatch(InitialHomeLoaderActions.hideInitialHomeLoader())
+   hideInitialHomeLoader: () => dispatch(InitialHomeLoaderActions.hideInitialHomeLoader()),
+   getCurrentOrder: (orderInfo) => dispatch(OrderActions.getCurrentOrderReduxAjax(orderInfo)),
+   getOrderLinesByOrder: (orderId) => dispatch(LineActions.getOrderLinesByOrderReduxAjax(orderId))
 });
  
  
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default connect(mapStateToProps, mapDispatchToProps)(ProductHome);
 
 
 
