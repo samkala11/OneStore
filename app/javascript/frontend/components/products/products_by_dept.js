@@ -15,10 +15,14 @@ class ProductsByDepartment extends React.Component {
        let params = this.props.match.params.department;
        switch(params){
            case 'fruits':{
-                return <ProductListDepartment/>
+                return <ProductListDepartment
+                    departmentNumber = {20}
+                />
            }
            case 'vegetables':{
-
+                 return <ProductListDepartment
+                        departmentNumber = {10}
+                 />
            }
            default:
                return <p>Oops.. Please return back to the previous page</p>

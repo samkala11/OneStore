@@ -652,11 +652,12 @@ function (_React$Component) {
         orderLinesArray = Object.values(currentOrderLines);
       }
 
-      console.log('orderlines array', orderLinesArray);
-      orderLinesArray.forEach(function (line) {
-        // debugger;
-        lineQuantity += line.quantity;
-      });
+      console.log('orderlines array', orderLinesArray); // orderLinesArray.forEach(line => {
+      //     // debugger;
+      //     lineQuantity += line.quantity;
+      // });
+
+      lineQuantity = orderLinesArray.length;
 
       if (lineQuantity > 0) {
         return lineQuantity;
@@ -1346,7 +1347,7 @@ function (_React$Component) {
       }, " Fruits ")))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "department-wrapper"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_3__["Link"], {
-        to: "/departments/fruits"
+        to: "/departments/vegetables"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("img", {
         className: "department-image",
         src: "https://onestorebucket.s3.eu-west-3.amazonaws.com/vegetables.jpg"
@@ -1355,7 +1356,7 @@ function (_React$Component) {
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
         className: "department-title"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_3__["Link"], {
-        to: "/departments/fruits"
+        to: "/departments/vegetables"
       }, " Vegetables "))))));
     }
   }]);
@@ -1470,8 +1471,9 @@ function (_React$Component) {
       var _this$props = this.props,
           getProductsByDept = _this$props.getProductsByDept,
           getCurrentOrder = _this$props.getCurrentOrder,
-          getOrderLinesByOrder = _this$props.getOrderLinesByOrder;
-      getProductsByDept(10) //config constant
+          getOrderLinesByOrder = _this$props.getOrderLinesByOrder,
+          departmentNumber = _this$props.departmentNumber;
+      getProductsByDept(departmentNumber) //config constant
       .then(function () {
         return _this2.setState({
           products: Object.values(_this2.props.productsByDept)
@@ -1668,7 +1670,7 @@ function (_React$Component) {
           key: key++
         }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("img", {
           className: "product-image",
-          src: "https://onestorebucket.s3.eu-west-3.amazonaws.com/tomato.jpg"
+          src: "https://onestorebucket.s3.eu-west-3.amazonaws.com/".concat(product.name, ".jpg")
         }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
           className: "product-details"
         }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
@@ -1795,11 +1797,17 @@ function (_React$Component) {
       switch (params) {
         case 'fruits':
           {
-            return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_product_list_department__WEBPACK_IMPORTED_MODULE_3__["default"], null);
+            return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_product_list_department__WEBPACK_IMPORTED_MODULE_3__["default"], {
+              departmentNumber: 20
+            });
           }
 
         case 'vegetables':
-          {}
+          {
+            return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_product_list_department__WEBPACK_IMPORTED_MODULE_3__["default"], {
+              departmentNumber: 10
+            });
+          }
 
         default:
           return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Oops.. Please return back to the previous page");
@@ -1848,6 +1856,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
 /* harmony import */ var _actions_product_actions__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../actions/product_actions */ "./app/javascript/frontend/actions/product_actions.js");
 /* harmony import */ var _actions_show_loader_home_actions__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../actions/show_loader_home_actions */ "./app/javascript/frontend/actions/show_loader_home_actions.js");
+/* harmony import */ var _actions_order_actions__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../actions/order_actions */ "./app/javascript/frontend/actions/order_actions.js");
+/* harmony import */ var _actions_order_line_actions__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../actions/order_line_actions */ "./app/javascript/frontend/actions/order_line_actions.js");
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -1873,6 +1883,8 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 
 
+
+
 var SearchPage =
 /*#__PURE__*/
 function (_React$Component) {
@@ -1889,6 +1901,24 @@ function (_React$Component) {
   }
 
   _createClass(SearchPage, [{
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      var _this$props = this.props,
+          currentOrder = _this$props.currentOrder,
+          getCurrentOrder = _this$props.getCurrentOrder,
+          getOrderLinesByOrder = _this$props.getOrderLinesByOrder;
+      var storageCurrentOrderId = localStorage.getItem('currentOrderId');
+
+      if (!currentOrder.id && storageCurrentOrderId) {
+        var orderInfo = {
+          id: storageCurrentOrderId
+        };
+        getCurrentOrder(orderInfo).then(function () {
+          return getOrderLinesByOrder(storageCurrentOrderId);
+        });
+      }
+    }
+  }, {
     key: "render",
     value: function render() {
       window.searchState = this.state;
@@ -1911,6 +1941,7 @@ function (_React$Component) {
 
 var mapStateToProps = function mapStateToProps(state) {
   return {
+    currentOrder: state.orders.currentOrder,
     products: state.products,
     shouldShowHomeLoader: state.showHomeLoader
   };
@@ -1926,6 +1957,12 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
     },
     hideInitialHomeLoader: function hideInitialHomeLoader() {
       return dispatch(_actions_show_loader_home_actions__WEBPACK_IMPORTED_MODULE_5__["hideInitialHomeLoader"]());
+    },
+    getCurrentOrder: function getCurrentOrder(orderInfo) {
+      return dispatch(_actions_order_actions__WEBPACK_IMPORTED_MODULE_6__["getCurrentOrderReduxAjax"](orderInfo));
+    },
+    getOrderLinesByOrder: function getOrderLinesByOrder(orderId) {
+      return dispatch(_actions_order_line_actions__WEBPACK_IMPORTED_MODULE_7__["getOrderLinesByOrderReduxAjax"](orderId));
     }
   };
 };

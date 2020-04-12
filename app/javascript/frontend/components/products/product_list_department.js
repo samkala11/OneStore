@@ -24,8 +24,8 @@ class ProductListDept extends React.Component {
    }
    
    componentDidMount(){
-      const { getProductsByDept, getCurrentOrder, getOrderLinesByOrder } = this.props;
-      getProductsByDept(10) //config constant
+      const { getProductsByDept, getCurrentOrder, getOrderLinesByOrder, departmentNumber } = this.props;
+      getProductsByDept(departmentNumber) //config constant
       .then(() => this.setState({products: Object.values(this.props.productsByDept)}));
 
       let currentOrderId = localStorage.getItem('currentOrderId');
@@ -188,7 +188,7 @@ class ProductListDept extends React.Component {
                   {products.map(product => (
                      <div className="product-item-wrapper" key={key++}>
                         <img className="product-image" 
-                              src="https://onestorebucket.s3.eu-west-3.amazonaws.com/tomato.jpg"
+                              src={`https://onestorebucket.s3.eu-west-3.amazonaws.com/${product.name}.jpg`}
                         />
                         <div className="product-details">
                            <span className="product-title">

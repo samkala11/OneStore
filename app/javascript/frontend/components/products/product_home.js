@@ -156,13 +156,13 @@ class ProductHome extends React.Component {
                </div>
 
                <div className="department-wrapper">
-                  <Link to="/departments/fruits">    
+                  <Link to="/departments/vegetables">    
                     <img className="department-image" 
                      src="https://onestorebucket.s3.eu-west-3.amazonaws.com/vegetables.jpg"/> 
                   </Link>
                   <div className="department-details">
                      <span className="department-title">
-                           <Link to="/departments/fruits"> Vegetables </Link>
+                           <Link to="/departments/vegetables"> Vegetables </Link>
                      </span>
                   </div>
                </div>

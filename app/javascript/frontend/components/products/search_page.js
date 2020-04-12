@@ -4,6 +4,8 @@ import {Link} from 'react-router-dom';
 import {connect} from 'react-redux';
 import * as ProductActions from '../../actions/product_actions'
 import * as InitialHomeLoaderActions from '../../actions/show_loader_home_actions';
+import * as OrderActions from '../../actions/order_actions';
+import * as LineActions from '../../actions/order_line_actions';
 
 class SearchPage extends React.Component {
    
@@ -11,6 +13,20 @@ class SearchPage extends React.Component {
         super(props);
         this.state = {
         }
+    }
+
+    componentDidMount() {
+        const { currentOrder, getCurrentOrder, getOrderLinesByOrder } = this.props;
+
+        let storageCurrentOrderId = localStorage.getItem('currentOrderId');
+        if ( !currentOrder.id && storageCurrentOrderId ) {
+            let orderInfo = {
+                id: storageCurrentOrderId
+            };
+            getCurrentOrder(orderInfo)
+            .then(() => getOrderLinesByOrder(storageCurrentOrderId))
+        } 
+
     }
 
    render() {
@@ -34,14 +50,17 @@ class SearchPage extends React.Component {
 
 
 const mapStateToProps = state => ({
-   products: state.products,
-   shouldShowHomeLoader: state.showHomeLoader
+    currentOrder: state.orders.currentOrder,
+    products: state.products,
+    shouldShowHomeLoader: state.showHomeLoader
  });
  
  const mapDispatchToProps = dispatch => ({
    getAllProducts: () => dispatch(ProductActions.getAllProductsThunk()),
    createProduct: (productInfo) => dispatch(ProductActions.createProductThunk(productInfo)),
-   hideInitialHomeLoader: () => dispatch(InitialHomeLoaderActions.hideInitialHomeLoader())
+   hideInitialHomeLoader: () => dispatch(InitialHomeLoaderActions.hideInitialHomeLoader()),
+   getCurrentOrder: (orderInfo) => dispatch(OrderActions.getCurrentOrderReduxAjax(orderInfo)),
+   getOrderLinesByOrder: (orderId) => dispatch(LineActions.getOrderLinesByOrderReduxAjax(orderId))
 });
  
  

@@ -25,10 +25,11 @@ class NavBar extends React.Component {
             orderLinesArray = Object.values(currentOrderLines);
         }
         console.log('orderlines array', orderLinesArray);
-        orderLinesArray.forEach(line => {
-            // debugger;
-            lineQuantity += line.quantity;
-        });
+        // orderLinesArray.forEach(line => {
+        //     // debugger;
+        //     lineQuantity += line.quantity;
+        // });
+        lineQuantity = orderLinesArray.length;
         if (lineQuantity > 0) {
             return lineQuantity
         } else {
