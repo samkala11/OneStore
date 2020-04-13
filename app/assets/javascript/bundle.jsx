@@ -1090,10 +1090,15 @@ function (_React$Component) {
           'full-opacity': fullOpacity
         })
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
+        className: "close-button",
         to: "/"
       }, "X"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "order-header"
-      }, "Order Summary ", currentOrder.order_total), currentLinesArray.map(function (line) {
+      }, "Your Order"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "continue-button"
+      }, "contirue to address ", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+        className: "order-total"
+      }, " ", currentOrder.order_total, " L.L. ")), currentLinesArray.map(function (line) {
         return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
           className: "order-line-show",
           key: key++

@@ -225,16 +225,22 @@ class OrderShowPage extends React.Component {
                title = 'Beirut Market'
                isHomeNavBar = { true }
             /> */}
+
             { <div className={classNames({ 'order-info-wrapper': true , 'show-wrapper': showWrapper, 'full-opacity': fullOpacity })}
             > 
                 <Link 
+                    className= "close-button"
                     to = "/"
                 >
                     X
                 </Link>
 
                 <div className="order-header"> 
-                    Order Summary {currentOrder.order_total}
+                    Your Order 
+                </div>
+
+                <div className="continue-button"> 
+                    contirue to address <span className="order-total"> {currentOrder.order_total} L.L. </span> 
                 </div>
                 { currentLinesArray.map(line => ( 
                     <div className="order-line-show"

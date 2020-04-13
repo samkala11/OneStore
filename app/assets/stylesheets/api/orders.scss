@@ -5,8 +5,9 @@
 .order-show-container {
 
     .order-header{
-        margin-top: 284px;
+        margin-top: 206px;
         margin-bottom: 60px;
+        color: #797b7e;
     }
 
     button{
@@ -16,17 +17,46 @@
         color: white;
         margin-left: 20px;
     }
+
+    .close-button {
+        color: #b8c0c7;
+        text-decoration: none;
+        margin-top: 39px;
+        position: fixed;
+        font-size: 62px;
+        font-weight: 600;
+    }
     
     .order-info-wrapper {
         position: fixed;
         left: -100%;
         top: 0;
         transition: 0.4s linear;
+
+        .continue-button {
+            border: 1px solid red;
+            background: red;
+            color: white;
+            height: 72px;
+            width: 702px;
+            margin: 48px 0px;
+            padding: 10px;
+            padding-left: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            .order-total {
+                font-size: 37px;
+                display: inline-block;
+                // margin-left: 18%;
+            }
+        }
     }
 
     .show-wrapper { 
-        left: 30px;
-        opacity: 0.5;
+        left: 88px;
+        opacity: 0.3;
     }
 
     .full-opacity {
@@ -66,10 +96,11 @@
                 font-weight: 600;
                 font-size: 35px;
                 display: block;
+                color: #8da084;
             }
 
             .product-price {
-                font-size: 35px;
+                font-size: 30px;
                 display: block;
                 font-style: italic;
             }
