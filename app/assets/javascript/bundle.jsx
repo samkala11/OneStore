@@ -1113,7 +1113,11 @@ function (_React$Component) {
           className: "product-price"
         }, line.productPrice, "/", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
           className: "product-unit"
-        }, " ", line.unit, " "))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        }, " ", line.unit, " ")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+          className: "remove-button"
+        }, "Remove")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+          className: "quantity-wrapper"
+        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
           // className="quantity-input"
           className: classnames__WEBPACK_IMPORTED_MODULE_4___default()({
             'quantity-input': true

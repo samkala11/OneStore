@@ -256,8 +256,12 @@ class OrderShowPage extends React.Component {
                             <span className="product-price"> 
                                 {line.productPrice}/<span className="product-unit"> {line.unit} </span>
                             </span>
+
+                            <span className="remove-button"> 
+                               Remove
+                            </span>
                         </div>
-                        <div> 
+                        <div className="quantity-wrapper"> 
                             <input
                                 // className="quantity-input"
                                 className={classNames({ 'quantity-input': true })}
@@ -272,7 +276,7 @@ class OrderShowPage extends React.Component {
                                 className={classNames({ hidden: !this.state.displayUpdateButtons[line.id] }) }
                                 onClick={() => this.handleUpdateLine(line.product_id, line.order_id, lineQuantities[line.id], line.productPrice, line.quantity, line.id )}
                             > Save </button>
-                            </div>
+                        </div>
                         
                     </div>
                 ))
