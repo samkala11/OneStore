@@ -4,9 +4,12 @@
 
 .order-show-container {
 
+    height: 100%;
+
     .order-header{
         margin-top: 150px;
         margin-bottom: 60px;
+        margin-left: 88px;
         color: #797b7e;
     }
 
@@ -25,6 +28,7 @@
         font-size: 62px;
         font-weight: 600;
         display: inline-block;
+        margin-left: 88px;
     }
     
     .order-info-wrapper::-webkit-scrollbar {
@@ -37,7 +41,7 @@
         top: 0;
         transition: 0.4s linear;
         height: 100%;
-        width: 740px;
+        width: 100%;
         overflow-y: scroll;
         -ms-overflow-style: none;
 
@@ -48,6 +52,8 @@
             height: 72px;
             width: 702px;
             margin: 48px 0px;
+            margin-bottom: 96px;
+            margin-left: 88px;
             padding: 10px;
             padding-left: 20px;
             display: flex;
@@ -63,7 +69,7 @@
     }
 
     .show-wrapper { 
-        left: 88px;
+        left: 0;
         opacity: 0.3;
     }
 
@@ -92,6 +98,7 @@
     .order-line-show {
         display: flex;
         height: 238px;
+        margin-left: 88px;
 
         .product-image {
             width: 230px;
