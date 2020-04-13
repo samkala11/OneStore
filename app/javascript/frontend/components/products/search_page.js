@@ -2,6 +2,7 @@ import React from 'react';
 import NavBar from '../navbar/navbar';
 import {Link} from 'react-router-dom';
 import {connect} from 'react-redux';
+import classNames from 'classnames';
 import * as ProductActions from '../../actions/product_actions'
 import * as InitialHomeLoaderActions from '../../actions/show_loader_home_actions';
 import * as OrderActions from '../../actions/order_actions';
@@ -12,7 +13,8 @@ class SearchPage extends React.Component {
     constructor(props){
         super(props);
         this.state = {
-            productName : 'tomato'
+            productName : 'tomato',
+            showSearchBar: false
         }
     }
 
@@ -26,12 +28,19 @@ class SearchPage extends React.Component {
             };
             getCurrentOrder(orderInfo)
             .then(() => getOrderLinesByOrder(storageCurrentOrderId))
-        } 
+        }
+        
+        this.timer = setTimeout(() => this.setState({ showSearchBar: true }), 50);
+    }
 
+
+    componentWillUnmount() {
+        clearTimeout(this.timer);
     }
 
    render() {
        const { searchProducts } = this.props;
+       const {  showSearchBar } = this.state;
       window.searchState = this.state;
       return(
         <div className="search-page">
@@ -39,7 +48,10 @@ class SearchPage extends React.Component {
                title = 'Beirut Market'
                isHomeNavBar = { true }
             />
-            <div className="search-bar">
+            <div
+                className={classNames({ 'search-bar': true, 'show-search-bar': showSearchBar })} 
+                // className="search-bar"
+                >
                <input 
                   placeholder="search"
                   type="text"/>

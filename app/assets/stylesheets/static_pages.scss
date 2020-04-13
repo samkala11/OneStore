@@ -24,13 +24,13 @@ html {
 
 
     .search-bar {
-
         height: 116px;
         line-height: 80px;
         display: flex;
-        margin-top: 285px;
+        margin-top: 130px;
         width: 100%;
         position: fixed;
+        transition: 0.4s ease-in;
         box-shadow: 1px 0px 1px 1px white;
         
         input {
@@ -40,6 +40,10 @@ html {
             padding-bottom: 10px;
             padding-left: 52px;
         }
+    }
+
+    .show-search-bar {
+        margin-top: 285px;
     }
     
     .product-show {

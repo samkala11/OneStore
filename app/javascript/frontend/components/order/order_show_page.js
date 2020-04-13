@@ -273,7 +273,7 @@ class OrderShowPage extends React.Component {
                                 Line total: {line.line_total}
                             </span> */}
                             <button
-                                className={classNames({ hidden: !this.state.displayUpdateButtons[line.id] }) }
+                                className={classNames({ hidden: !this.state.displayUpdateButtons[line.id], 'save-button': true }) }
                                 onClick={() => this.handleUpdateLine(line.product_id, line.order_id, lineQuantities[line.id], line.productPrice, line.quantity, line.id )}
                             > Save </button>
                         </div>
