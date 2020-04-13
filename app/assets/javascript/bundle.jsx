@@ -256,9 +256,9 @@ var GET_PRODUCTS_BY_DEPT_ACTION = 'GET_PRODUCTS_BY_DEPT_ACTION';
 var RECEIVE_CREATED_PRODUCT_ACTION = 'RECEIVE_CREATED_PRODUCT_ACTION';
 var RECEIVE_SEARCHED_PRODUCTS_ACTION = 'RECEIVE_SEARCHED_PRODUCTS_ACTION'; // Redux Thunk Action Get searched Products
 
-var searchProductsAjaxRedux = function searchProductsAjaxRedux() {
+var searchProductsAjaxRedux = function searchProductsAjaxRedux(productName) {
   return function (dispatch) {
-    return Object(_util_product_api_util__WEBPACK_IMPORTED_MODULE_0__["searchProducts"])().then(function (products) {
+    return Object(_util_product_api_util__WEBPACK_IMPORTED_MODULE_0__["searchProducts"])(productName).then(function (products) {
       return dispatch(receiveSearchedProducts(products));
     });
   };
@@ -1933,7 +1933,9 @@ function (_React$Component) {
     _classCallCheck(this, SearchPage);
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(SearchPage).call(this, props));
-    _this.state = {};
+    _this.state = {
+      productName: 'tomato'
+    };
     return _this;
   }
 
@@ -1958,9 +1960,12 @@ function (_React$Component) {
   }, {
     key: "render",
     value: function render() {
+      var _this2 = this;
+
+      var searchProducts = this.props.searchProducts;
       window.searchState = this.state;
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "-page"
+        className: "search-page"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_navbar_navbar__WEBPACK_IMPORTED_MODULE_1__["default"], {
         title: "Beirut Market",
         isHomeNavBar: true
@@ -1969,7 +1974,11 @@ function (_React$Component) {
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
         placeholder: "search",
         type: "text"
-      })));
+      })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+        onClick: function onClick() {
+          return searchProducts(_this2.state.productName);
+        }
+      }, " Start "));
     }
   }]);
 
@@ -1991,6 +2000,9 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
     },
     createProduct: function createProduct(productInfo) {
       return dispatch(_actions_product_actions__WEBPACK_IMPORTED_MODULE_4__["createProductThunk"](productInfo));
+    },
+    searchProducts: function searchProducts(productInfo) {
+      return dispatch(_actions_product_actions__WEBPACK_IMPORTED_MODULE_4__["searchProductsAjaxRedux"](productInfo));
     },
     hideInitialHomeLoader: function hideInitialHomeLoader() {
       return dispatch(_actions_show_loader_home_actions__WEBPACK_IMPORTED_MODULE_5__["hideInitialHomeLoader"]());
@@ -2390,6 +2402,33 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./app/javascript/frontend/reducers/products/searched_products.js":
+/*!************************************************************************!*\
+  !*** ./app/javascript/frontend/reducers/products/searched_products.js ***!
+  \************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _actions_product_actions__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../actions/product_actions */ "./app/javascript/frontend/actions/product_actions.js");
+
+/* harmony default export */ __webpack_exports__["default"] = (function () {
+  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+  var action = arguments.length > 1 ? arguments[1] : undefined;
+  Object.freeze(state);
+
+  switch (action.type) {
+    case _actions_product_actions__WEBPACK_IMPORTED_MODULE_0__["RECEIVE_SEARCHED_PRODUCTS_ACTION"]:
+      return action.products;
+
+    default:
+      return state;
+  }
+});
+
+/***/ }),
+
 /***/ "./app/javascript/frontend/reducers/products_reducer.js":
 /*!**************************************************************!*\
   !*** ./app/javascript/frontend/reducers/products_reducer.js ***!
@@ -2402,12 +2441,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var redux__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! redux */ "./node_modules/redux/es/redux.js");
 /* harmony import */ var _products_products_by_dept_reducer__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./products/products_by_dept_reducer */ "./app/javascript/frontend/reducers/products/products_by_dept_reducer.js");
 /* harmony import */ var _products_all_products_reducer__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./products/all_products_reducer */ "./app/javascript/frontend/reducers/products/all_products_reducer.js");
+/* harmony import */ var _products_searched_products__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./products/searched_products */ "./app/javascript/frontend/reducers/products/searched_products.js");
+
 
 
 
 /* harmony default export */ __webpack_exports__["default"] = (Object(redux__WEBPACK_IMPORTED_MODULE_0__["combineReducers"])({
   productsByDept: _products_products_by_dept_reducer__WEBPACK_IMPORTED_MODULE_1__["default"],
-  allProducts: _products_all_products_reducer__WEBPACK_IMPORTED_MODULE_2__["default"]
+  allProducts: _products_all_products_reducer__WEBPACK_IMPORTED_MODULE_2__["default"],
+  searchedProducts: _products_searched_products__WEBPACK_IMPORTED_MODULE_3__["default"]
 }));
 
 /***/ }),

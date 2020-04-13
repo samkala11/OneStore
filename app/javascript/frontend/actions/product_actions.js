@@ -7,7 +7,7 @@ export const RECEIVE_SEARCHED_PRODUCTS_ACTION  = 'RECEIVE_SEARCHED_PRODUCTS_ACTI
 
 
 // Redux Thunk Action Get searched Products
-export const searchProductsAjaxRedux = () => dispatch => searchProducts()
+export const searchProductsAjaxRedux = (productName) => dispatch => searchProducts(productName)
 .then((products) => dispatch(receiveSearchedProducts(products)));
 
 // Searched Products

@@ -12,6 +12,7 @@ class SearchPage extends React.Component {
     constructor(props){
         super(props);
         this.state = {
+            productName : 'tomato'
         }
     }
 
@@ -30,9 +31,10 @@ class SearchPage extends React.Component {
     }
 
    render() {
+       const { searchProducts } = this.props;
       window.searchState = this.state;
       return(
-        <div className="-page">
+        <div className="search-page">
             <NavBar
                title = 'Beirut Market'
                isHomeNavBar = { true }
@@ -42,6 +44,10 @@ class SearchPage extends React.Component {
                   placeholder="search"
                   type="text"/>
             </div>
+
+            <button
+                onClick={() => searchProducts(this.state.productName)}
+            > Start </button>
         </div>
       )
    }
@@ -58,6 +64,7 @@ const mapStateToProps = state => ({
  const mapDispatchToProps = dispatch => ({
    getAllProducts: () => dispatch(ProductActions.getAllProductsThunk()),
    createProduct: (productInfo) => dispatch(ProductActions.createProductThunk(productInfo)),
+   searchProducts: (productInfo) => dispatch(ProductActions.searchProductsAjaxRedux(productInfo)),
    hideInitialHomeLoader: () => dispatch(InitialHomeLoaderActions.hideInitialHomeLoader()),
    getCurrentOrder: (orderInfo) => dispatch(OrderActions.getCurrentOrderReduxAjax(orderInfo)),
    getOrderLinesByOrder: (orderId) => dispatch(LineActions.getOrderLinesByOrderReduxAjax(orderId))
