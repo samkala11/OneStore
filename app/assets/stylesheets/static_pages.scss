@@ -172,11 +172,12 @@ html {
             display: block;
             position: relative;
             width: 100%;
-            border-top: 1px solid #eee;
             box-sizing: border-box;
             text-align: center;
-            font-size: 44px;
+            font-size: 38px;
             height: 98px;
+            font-weight: bold;
+            margin-top: -30px;
         }
 
         .department-title {
@@ -188,8 +189,8 @@ html {
             a {
                 text-decoration: none;
                 color: #9eb494;
-                font-weight: 600;
-                font-size: 55px;
+                font-weight: bold;
+                font-size: 49px;
             }
         }
 
