@@ -844,6 +844,7 @@ function (_React$Component) {
     _this.handleUpdateLine = _this.handleUpdateLine.bind(_assertThisInitialized(_this));
     _this.updateOrderTotal = _this.updateOrderTotal.bind(_assertThisInitialized(_this));
     _this.updateStateOriginalLines = _this.updateStateOriginalLines.bind(_assertThisInitialized(_this));
+    _this.handleEnter = _this.handleEnter.bind(_assertThisInitialized(_this));
     return _this;
   }
 
@@ -1065,6 +1066,14 @@ function (_React$Component) {
       });
     }
   }, {
+    key: "handleEnter",
+    value: function handleEnter(event, productId, orderId, newProductQuantity, productPrice, oldLineQuantity, lineId) {
+      if (event.keyCode === 13) {
+        console.log('enter');
+        this.handleUpdateLine(productId, orderId, newProductQuantity, productPrice, oldLineQuantity, lineId);
+      }
+    }
+  }, {
     key: "render",
     value: function render() {
       var _this5 = this;
@@ -1124,16 +1133,21 @@ function (_React$Component) {
           }),
           type: "text",
           value: lineQuantities["".concat(line.id)],
-          onChange: _this5.update(line.id)
-        }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+          onChange: _this5.update(line.id),
+          onKeyDown: function onKeyDown(event) {
+            return _this5.handleEnter(event, line.product_id, line.order_id, lineQuantities[line.id], line.productPrice, line.quantity, line.id);
+          }
+        }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
           className: classnames__WEBPACK_IMPORTED_MODULE_4___default()({
             hidden: !_this5.state.displayUpdateButtons[line.id],
-            'save-button': true
+            'save-button': true,
+            'fas': true,
+            'fa-save': true
           }),
           onClick: function onClick() {
             return _this5.handleUpdateLine(line.product_id, line.order_id, lineQuantities[line.id], line.productPrice, line.quantity, line.id);
           }
-        }, " Save ")));
+        }, " ")));
       })));
     }
   }]);

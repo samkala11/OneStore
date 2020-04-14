@@ -63,15 +63,15 @@ html {
             position: relative;
             padding: 20px 0 17px 0;
             border: 1px solid beige;
-            box-shadow: 5px 1px 7px 1px rgb(180, 178, 178);
-
+            // box-shadow: 5px 1px 7px 1px rgb(180, 178, 178);
+            box-shadow: 3px 1px 7px grey;
 
             .product-image {
                 top: -15px;
-                left: 10px;
-                width: 455px;
-                height: 358px;
-                //backgroundimageurl css
+                margin-left: 18px;
+                width: 432px;
+                height: 332px;
+                margin-top: 8px;
             }
 
             .product-details {
@@ -93,12 +93,14 @@ html {
                     font-size: 35px;
                     display: block;
                     color: #8da084;
+                    margin-left: 18px;
                 }
 
                 .product-price {
                     font-size: 30px;
                     display: block;
                     font-style: italic;
+                    margin-left: 18px;
                 }
             }
 
@@ -115,7 +117,8 @@ html {
                 text-transform: uppercase;
                 background-color: #8da084;
                 color: white;
-                width: calc(100% - 15px);
+                width: 432px;
+                margin-left: 18px;
                 position: relative;
             }
 
@@ -135,6 +138,7 @@ html {
                 // line-height: 20px;
                 width: 83px;
                 font-size: 64px;
+                margin-left: 18px;
             }
 
             .plus-sign {
@@ -157,10 +161,10 @@ html {
         margin-bottom: 36px;
     
         .department-image {
-            top: -15px;
-            left: 10px;
-            width: 100%;
-            //backgroundimageurl css
+            margin-top: 5%;
+            margin-left: 5%;
+            width: 90%;
+            box-shadow: 3px 1px 7px grey;
         }
 
         .department-details {

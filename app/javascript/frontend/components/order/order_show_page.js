@@ -43,6 +43,7 @@ class OrderShowPage extends React.Component {
         this.handleUpdateLine = this.handleUpdateLine.bind(this);
         this.updateOrderTotal = this.updateOrderTotal.bind(this);
         this.updateStateOriginalLines = this.updateStateOriginalLines.bind(this);
+        this.handleEnter = this.handleEnter.bind(this);
     }
 
     componentDidMount(){
@@ -210,6 +211,14 @@ class OrderShowPage extends React.Component {
         .then((updatedOrder) => console.log(`Order total updated successfully from this.updateOrderTotal`, updatedOrder.data.order_total ));
     }
 
+    handleEnter(event, productId, orderId, newProductQuantity, productPrice, oldLineQuantity, lineId) {
+        if (event.keyCode === 13) {
+            console.log('enter');
+            this.handleUpdateLine(productId, orderId, newProductQuantity, productPrice, oldLineQuantity, lineId );
+        }
+
+    }
+
    render() {
       window.orderShowProps = this.props;
       window.orderShowstate = this.state;
@@ -268,14 +277,21 @@ class OrderShowPage extends React.Component {
                                 type="text"
                                 value = { lineQuantities[`${line.id}`] }
                                 onChange = {this.update(line.id)}
+                                onKeyDown={(event) => this.handleEnter(event, line.product_id, line.order_id, lineQuantities[line.id], line.productPrice, line.quantity, line.id )}
                             />  
                             {/* <span> 
                                 Line total: {line.line_total}
                             </span> */}
-                            <button
+                            {/* <button
                                 className={classNames({ hidden: !this.state.displayUpdateButtons[line.id], 'save-button': true }) }
                                 onClick={() => this.handleUpdateLine(line.product_id, line.order_id, lineQuantities[line.id], line.productPrice, line.quantity, line.id )}
-                            > Save </button>
+                            > Save </button> */}
+
+
+                            <i
+                                className={classNames({ hidden: !this.state.displayUpdateButtons[line.id], 'save-button': true, 'fas': true, 'fa-save': true }) }
+                                onClick={() => this.handleUpdateLine(line.product_id, line.order_id, lineQuantities[line.id], line.productPrice, line.quantity, line.id )}
+                            > </i>    
                         </div>
                         
                     </div>
