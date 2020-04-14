@@ -1068,10 +1068,9 @@ function (_React$Component) {
   }, {
     key: "handleEnter",
     value: function handleEnter(event, productId, orderId, newProductQuantity, productPrice, oldLineQuantity, lineId) {
-      if (event.keyCode === 13) {
-        console.log('enter');
-        this.handleUpdateLine(productId, orderId, newProductQuantity, productPrice, oldLineQuantity, lineId);
-      }
+      // if (event.keyCode === 13) {
+      console.log('blurrr and save');
+      this.handleUpdateLine(productId, orderId, newProductQuantity, productPrice, oldLineQuantity, lineId); // }
     }
   }, {
     key: "render",
@@ -1133,8 +1132,9 @@ function (_React$Component) {
           }),
           type: "text",
           value: lineQuantities["".concat(line.id)],
-          onChange: _this5.update(line.id),
-          onKeyDown: function onKeyDown(event) {
+          onChange: _this5.update(line.id) // onKeyDown={(event) => this.handleEnter(event, line.product_id, line.order_id, lineQuantities[line.id], line.productPrice, line.quantity, line.id )}
+          ,
+          onBlur: function onBlur(event) {
             return _this5.handleEnter(event, line.product_id, line.order_id, lineQuantities[line.id], line.productPrice, line.quantity, line.id);
           }
         }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
@@ -1743,7 +1743,7 @@ function (_React$Component) {
           className: "quantity-display"
         }, _this6.getMatchingLine(currentOrderLines, product.id).quantity), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
           className: "plus-sign"
-        }, " + ")) : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, " Add to order ")));
+        }, "+")) : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, " Add to order ")));
       })));
     }
   }]);
@@ -1914,6 +1914,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _actions_order_line_actions__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../actions/order_line_actions */ "./app/javascript/frontend/actions/order_line_actions.js");
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -1922,9 +1924,9 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
@@ -1952,9 +1954,10 @@ function (_React$Component) {
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(SearchPage).call(this, props));
     _this.state = {
-      productName: 'tomato',
+      productName: '',
       showSearchBar: false
     };
+    _this.update = _this.update.bind(_assertThisInitialized(_this));
     return _this;
   }
 
@@ -1990,12 +1993,171 @@ function (_React$Component) {
       clearTimeout(this.timer);
     }
   }, {
-    key: "render",
-    value: function render() {
+    key: "update",
+    value: function update(field) {
       var _this3 = this;
 
-      var searchProducts = this.props.searchProducts;
+      return function (e) {
+        // debugger;
+        _this3.setState(_defineProperty({}, field, e.currentTarget.value)); // setTimeout(() => { this.QuantityChanged(field) })
+
+      };
+    }
+  }, {
+    key: "getMatchingLine",
+    value: function getMatchingLine(orderLines, productId) {
+      var orderLinesArray = Object.values(orderLines);
+
+      for (var index = 0; index < orderLinesArray.length; index++) {
+        var orderLine = orderLinesArray[index];
+        if (orderLine.product_id === productId) return orderLine;
+      }
+
+      return false;
+    }
+  }, {
+    key: "updateOrderTotal",
+    value: function updateOrderTotal(oldOrderTotal, orderId, productPrice, ProductQuantity) {
+      var updateOrder = this.props.updateOrder;
+      var newOrderTotal = oldOrderTotal + productPrice * ProductQuantity;
+      var updatedOrderInfo = {
+        order_total: newOrderTotal,
+        pending_total: newOrderTotal,
+        id: orderId
+      };
+      updateOrder(updatedOrderInfo).then(function (updatedOrder) {
+        return console.log("Order total updated successfully to", updatedOrder.data.order_total);
+      });
+    }
+  }, {
+    key: "handleCreateOrder",
+    value: function handleCreateOrder(productId, productUnit, productPrice) {
+      var _this4 = this;
+
+      var _this$props2 = this.props,
+          createOrder = _this$props2.createOrder,
+          createOrderLine = _this$props2.createOrderLine,
+          getOrderLinesByOrder = _this$props2.getOrderLinesByOrder;
+      createOrder(this.state.order).then(function (order) {
+        localStorage.setItem('currentOrderId', JSON.stringify(order.data.id));
+        var orderLineInfo = {
+          product_id: productId,
+          order_id: order.data.id,
+          quantity: 1,
+          line_total: productPrice,
+          unit: productUnit
+        };
+        console.log('order created successfully from handle create', order);
+        createOrderLine(orderLineInfo).then(function (line) {
+          console.log('newly line created', line);
+          getOrderLinesByOrder(line.data.order_id);
+        }).then(function () {
+          _this4.updateOrderTotal(order.data.order_total, order.data.id, productPrice, 1);
+        });
+      });
+    }
+  }, {
+    key: "handleUpdateOrder",
+    value: function handleUpdateOrder(productId, productUnit, orderId, newProductQuantity, productPrice, oldOrderTotal) {
+      var _this5 = this;
+
+      var _this$props3 = this.props,
+          currentOrderLines = _this$props3.currentOrderLines,
+          createOrderLine = _this$props3.createOrderLine,
+          currentOrder = _this$props3.currentOrder,
+          getOrderLinesByOrder = _this$props3.getOrderLinesByOrder,
+          updateOrderLine = _this$props3.updateOrderLine;
+      var matchingLine = this.getMatchingLine(currentOrderLines, productId);
+
+      if (matchingLine) {
+        var newQuantity = newProductQuantity + matchingLine.quantity;
+        var newLineTotal = newProductQuantity * productPrice + matchingLine.line_total; // let lineId = matchingLine.id;
+
+        var orderLineInfo = {
+          product_id: productId,
+          order_id: orderId,
+          quantity: newQuantity,
+          line_total: newLineTotal
+        };
+        updateOrderLine(orderLineInfo).then(function () {
+          return getOrderLinesByOrder(currentOrder.id);
+        }).then(function () {
+          _this5.updateOrderTotal(oldOrderTotal, orderId, productPrice, newProductQuantity);
+        });
+      } else {
+        var _orderLineInfo = {
+          product_id: productId,
+          order_id: orderId,
+          quantity: 1,
+          line_total: productPrice,
+          unit: productUnit
+        };
+        createOrderLine(_orderLineInfo).then(function () {
+          return getOrderLinesByOrder(currentOrder.id);
+        }).then(function () {
+          return console.log('order updated and orderLine added to order successfully');
+        }).then(function () {
+          _this5.updateOrderTotal(oldOrderTotal, orderId, productPrice, 1);
+        });
+      }
+    }
+  }, {
+    key: "handleAddToOrder",
+    value: function handleAddToOrder(productId, productUnit, productPrice, newProductQuantity, oldOrderTotal) {
+      var currentOrder = this.props.currentOrder;
+
+      if (currentOrder && currentOrder.id) {
+        this.handleUpdateOrder(productId, productUnit, currentOrder.id, newProductQuantity, productPrice, oldOrderTotal);
+      } else {
+        this.handleCreateOrder(productId, productUnit, productPrice);
+      }
+    }
+  }, {
+    key: "decreaseLineQuantity",
+    value: function decreaseLineQuantity(productId, productPrice) {
+      var _this6 = this;
+
+      var _this$props4 = this.props,
+          currentOrderLines = _this$props4.currentOrderLines,
+          updateOrderLine = _this$props4.updateOrderLine,
+          getOrderLinesByOrder = _this$props4.getOrderLinesByOrder,
+          currentOrder = _this$props4.currentOrder;
+      var matchingLine = this.getMatchingLine(currentOrderLines, productId);
+
+      if (matchingLine) {
+        var newQuantity = matchingLine.quantity - 0.5;
+        var newLineTotal = matchingLine.line_total - 0.5 * productPrice;
+        var orderLineInfo = {
+          product_id: productId,
+          order_id: matchingLine.order_id,
+          quantity: newQuantity,
+          line_total: newLineTotal
+        };
+        updateOrderLine(orderLineInfo).then(function () {
+          return getOrderLinesByOrder(matchingLine.order_id);
+        }).then(function () {
+          _this6.updateOrderTotal(currentOrder.order_total, currentOrder.id, productPrice, -0.5);
+        });
+      }
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      var _this7 = this;
+
+      var _this$props5 = this.props,
+          searchProducts = _this$props5.searchProducts,
+          productSearchResults = _this$props5.productSearchResults,
+          currentOrderLines = _this$props5.currentOrderLines,
+          currentOrder = _this$props5.currentOrder;
+      var productsArray = Object.values(productSearchResults);
       var showSearchBar = this.state.showSearchBar;
+      var key = 0;
+
+      String.prototype.capitalize = function () {
+        return this.charAt(0).toUpperCase() + this.slice(1);
+      };
+
       window.searchState = this.state;
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "search-page"
@@ -2006,16 +2168,45 @@ function (_React$Component) {
         className: classnames__WEBPACK_IMPORTED_MODULE_4___default()({
           'search-bar': true,
           'show-search-bar': showSearchBar
-        }) // className="search-bar"
-
+        })
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
-        placeholder: "search",
-        type: "text"
-      })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
-        onClick: function onClick() {
-          return searchProducts(_this3.state.productName);
+        placeholder: "Search",
+        type: "text",
+        onChange: this.update('productName'),
+        onBlur: function onBlur() {
+          return searchProducts(_this7.state.productName);
         }
-      }, " Start "));
+      })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "product-list-search-wrapper"
+      }, productsArray.map(function (product) {
+        return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+          className: "product-item-wrapper",
+          key: key++
+        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("img", {
+          className: "product-image",
+          src: "https://onestorebucket.s3.eu-west-3.amazonaws.com/".concat(product.name, ".jpg")
+        }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+          className: "product-details"
+        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+          className: "product-title"
+        }, product.name.capitalize()), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+          className: "product-price"
+        }, product.price + '/' + product.unit)), currentOrderLines && _this7.getMatchingLine(currentOrderLines, product.id) && _this7.getMatchingLine(currentOrderLines, product.id).quantity > 0 && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+          className: "decrease-quantity-button",
+          onClick: function onClick() {
+            return _this7.decreaseLineQuantity(product.id, product.price);
+          }
+        }, " - "), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+          onClick: function onClick() {
+            return _this7.handleAddToOrder(product.id, product.unit, product.price, 0.5, currentOrder.order_total);
+          },
+          className: "add-button"
+        }, currentOrderLines && _this7.getMatchingLine(currentOrderLines, product.id) && _this7.getMatchingLine(currentOrderLines, product.id).quantity > 0 ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+          className: "quantity-display"
+        }, _this7.getMatchingLine(currentOrderLines, product.id).quantity), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+          className: "plus-sign"
+        }, "+")) : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, " Add to order ")));
+      })));
     }
   }]);
 
@@ -2025,7 +2216,8 @@ function (_React$Component) {
 var mapStateToProps = function mapStateToProps(state) {
   return {
     currentOrder: state.orders.currentOrder,
-    products: state.products,
+    currentOrderLines: state.orders.currentOrderLines,
+    productSearchResults: state.products.searchedProducts,
     shouldShowHomeLoader: state.showHomeLoader
   };
 };
@@ -2046,6 +2238,18 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
     },
     getCurrentOrder: function getCurrentOrder(orderInfo) {
       return dispatch(_actions_order_actions__WEBPACK_IMPORTED_MODULE_7__["getCurrentOrderReduxAjax"](orderInfo));
+    },
+    createOrder: function createOrder(orderInfo) {
+      return dispatch(_actions_order_actions__WEBPACK_IMPORTED_MODULE_7__["createOrderReduxAjax"](orderInfo));
+    },
+    updateOrder: function updateOrder(orderInfo) {
+      return dispatch(_actions_order_actions__WEBPACK_IMPORTED_MODULE_7__["updateOrderReduxAjax"](orderInfo));
+    },
+    createOrderLine: function createOrderLine(orderLineInfo) {
+      return dispatch(_actions_order_line_actions__WEBPACK_IMPORTED_MODULE_8__["createOrderLineReduxAjax"](orderLineInfo));
+    },
+    updateOrderLine: function updateOrderLine(orderLineInfo) {
+      return dispatch(_actions_order_line_actions__WEBPACK_IMPORTED_MODULE_8__["updateOrderLineReduxAjax"](orderLineInfo));
     },
     getOrderLinesByOrder: function getOrderLinesByOrder(orderId) {
       return dispatch(_actions_order_line_actions__WEBPACK_IMPORTED_MODULE_8__["getOrderLinesByOrderReduxAjax"](orderId));

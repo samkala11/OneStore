@@ -1,0 +1,101 @@
+.search-page {
+    
+    .product-list-search-wrapper {
+        box-sizing: border-box;
+        height: 90%;
+        margin-top: 88px;
+
+        .product-item-wrapper {
+            width: calc(50% - 12px);
+            margin: 0 0px 10px 10px;
+            float: left;
+            position: relative;
+            padding: 20px 0 17px 0;
+            border: 1px solid beige;
+            box-shadow: 3px 1px 7px grey;
+        }
+
+        .product-image {
+            top: -15px;
+            margin-left: 18px;
+            width: 432px;
+            height: 332px;
+            margin-top: 8px;
+        }
+
+        .product-details {
+            margin-bottom: 32px;
+            display: block;
+            position: relative;
+            width: 100%;
+            border-top: 1px solid #eee;
+            box-sizing: border-box;
+            // text-align: center;
+            font-size: 44px;
+            height: 115px;
+
+            .product-title {
+                margin-top: 20px;
+                box-sizing: border-box;
+                text-transform: capitalize;
+                font-weight: 600;
+                font-size: 35px;
+                display: block;
+                color: #8da084;
+                margin-left: 18px;
+            }
+
+            .product-price {
+                font-size: 30px;
+                display: block;
+                font-style: italic;
+                margin-left: 18px;
+            }
+        }
+
+        .add-button {
+            border-radius: 8px;
+            border-top-left-radius: 0;
+            border-top-right-radius: 0;
+            padding: 0 10px;
+            line-height: 3px;
+            height: 88px;
+            font-size: 45px;
+            display: block;
+            box-sizing: border-box;
+            text-transform: uppercase;
+            background-color: #8da084;
+            color: white;
+            width: 432px;
+            margin-left: 18px;
+            position: relative;
+        }
+
+        .decrease-quantity-button {
+            position: absolute;
+            color: white;
+            height: 87px;
+            border-right: 6px solid white;
+            background: #8da084;
+            z-index: 4;
+            // line-height: 20px;
+            width: 83px;
+            font-size: 64px;
+            margin-left: 18px;
+        }
+
+        .plus-sign {
+            display: inline-block;
+            position: absolute;
+            padding-left: 60px;
+            font-size: 55px;
+        }
+
+        .quantity-display {
+            display: inline-block;
+            width: 200px;            
+        }
+
+
+    }
+}

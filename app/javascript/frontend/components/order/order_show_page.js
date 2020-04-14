@@ -212,10 +212,10 @@ class OrderShowPage extends React.Component {
     }
 
     handleEnter(event, productId, orderId, newProductQuantity, productPrice, oldLineQuantity, lineId) {
-        if (event.keyCode === 13) {
-            console.log('enter');
+        // if (event.keyCode === 13) {
+            console.log('blurrr and save');
             this.handleUpdateLine(productId, orderId, newProductQuantity, productPrice, oldLineQuantity, lineId );
-        }
+        // }
 
     }
 
@@ -277,7 +277,8 @@ class OrderShowPage extends React.Component {
                                 type="text"
                                 value = { lineQuantities[`${line.id}`] }
                                 onChange = {this.update(line.id)}
-                                onKeyDown={(event) => this.handleEnter(event, line.product_id, line.order_id, lineQuantities[line.id], line.productPrice, line.quantity, line.id )}
+                                // onKeyDown={(event) => this.handleEnter(event, line.product_id, line.order_id, lineQuantities[line.id], line.productPrice, line.quantity, line.id )}
+                                onBlur={(event) => this.handleEnter(event, line.product_id, line.order_id, lineQuantities[line.id], line.productPrice, line.quantity, line.id )}
                             />  
                             {/* <span> 
                                 Line total: {line.line_total}

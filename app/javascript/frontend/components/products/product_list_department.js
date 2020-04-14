@@ -178,51 +178,53 @@ class ProductListDept extends React.Component {
          return this.charAt(0).toUpperCase() + this.slice(1);
       };
 
-      return(<div className="product-show">
-               <NavBar 
-                  // title = 'Fruits'
-                  title = 'Beirut Market'
-                  isHomeNavBar = { true }
-               />
-               <div className="product-list-wrapper">
-                  {products.map(product => (
-                     <div className="product-item-wrapper" key={key++}>
-                        <img className="product-image" 
-                              src={`https://onestorebucket.s3.eu-west-3.amazonaws.com/${product.name}.jpg`}
-                        />
-                        <div className="product-details">
-                           <span className="product-title">
-                              {product.name.capitalize()}
-                           </span>
-                           <span className="product-price">
-                              {product.price + '/' + product.unit}
-                           </span>
-                        </div>
+      return(
+         <div className="product-show">
+            <NavBar 
+               // title = 'Fruits'
+               title = 'Beirut Market'
+               isHomeNavBar = { true }
+            />
+            <div className="product-list-wrapper">
+               {products.map(product => (
+                  <div className="product-item-wrapper" key={key++}>
+                     <img className="product-image" 
+                           src={`https://onestorebucket.s3.eu-west-3.amazonaws.com/${product.name}.jpg`}
+                     />
+                     <div className="product-details">
+                        <span className="product-title">
+                           {product.name.capitalize()}
+                        </span>
+                        <span className="product-price">
+                           {product.price + '/' + product.unit}
+                        </span>
+                     </div>
 
-                        { (currentOrderLines && this.getMatchingLine(currentOrderLines, product.id) && this.getMatchingLine(currentOrderLines, product.id).quantity > 0) && <button
-                           className="decrease-quantity-button"
-                           onClick = {() => this.decreaseLineQuantity(product.id, product.price)}
-                        > - </button> }
-                        <button 
+                     { (currentOrderLines && this.getMatchingLine(currentOrderLines, product.id) && this.getMatchingLine(currentOrderLines, product.id).quantity > 0) && <button
+                        className="decrease-quantity-button"
+                        onClick = {() => this.decreaseLineQuantity(product.id, product.price)}
+                     > - </button> }
+
+                     <button 
                         onClick = { () => this.handleAddToOrder(product.id, product.unit, product.price, 0.5, currentOrder.order_total)}
-                        className="add-button">
-                           { (currentOrderLines && this.getMatchingLine(currentOrderLines, product.id) && this.getMatchingLine(currentOrderLines, product.id).quantity > 0) 
-                              ?
-                              <span> 
-                              
-                              <span className="quantity-display"> 
+                        className="add-button"
+                     >
+                        { (currentOrderLines && this.getMatchingLine(currentOrderLines, product.id) && this.getMatchingLine(currentOrderLines, product.id).quantity > 0) 
+                           ?
+                           <span> 
+                              <span className= "quantity-display"> 
                                  { this.getMatchingLine(currentOrderLines, product.id).quantity }
                               </span>
-                                 <span 
-                                 className = "plus-sign"
-                                 > + </span>
+                              <span className= "plus-sign"> 
+                                 + 
                               </span>
-                              :
-                             <span> Add to order </span>}
-                        </button>
-                     </div>
-                  ))}              
-               </div>
+                           </span>
+                           :
+                           <span> Add to order </span>}
+                     </button>
+                  </div>
+               ))}              
+            </div>
          </div>
       )
    }
