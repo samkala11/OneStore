@@ -885,7 +885,9 @@ function (_React$Component) {
     _this.updateOrderTotal = _this.updateOrderTotal.bind(_assertThisInitialized(_this));
     _this.updateStateOriginalLines = _this.updateStateOriginalLines.bind(_assertThisInitialized(_this));
     _this.handleBlur = _this.handleBlur.bind(_assertThisInitialized(_this));
+    _this.handleEnter = _this.handleEnter.bind(_assertThisInitialized(_this));
     _this.handleRemove = _this.handleRemove.bind(_assertThisInitialized(_this));
+    _this.deleteOrderLine = _this.deleteOrderLine.bind(_assertThisInitialized(_this));
     return _this;
   }
 
@@ -1070,27 +1072,36 @@ function (_React$Component) {
       var newQuantity = parseInt(newProductQuantity);
       var newLineTotal = parseInt(newProductQuantity) * productPrice;
       var oldOrderTotal = currentOrder.order_total;
-      var quantityDifference = newProductQuantity - oldLineQuantity; // debugger;
+      var quantityDifference = newProductQuantity - oldLineQuantity;
 
-      var orderLineInfo = {
-        product_id: productId,
-        order_id: orderId,
-        quantity: newQuantity,
-        line_total: newLineTotal
-      }; // debugger;
+      if (newQuantity < 0) {
+        console.log('cannot update quantity to negative number');
+        return;
+      }
 
-      updateOrderLine(orderLineInfo).then(function () {
-        return getOrderLinesByOrder(currentOrder.id);
-      }).then(function () {
-        _this4.updateOrderTotal(oldOrderTotal, orderId, productPrice, quantityDifference);
-      }).then(function () {
-        _this4.updateStateOriginalLines();
-      }).then(function () {
-        return _this4.QuantityChanged(lineId);
-      }); // .then(() => {
-      //     console.log('Sending Email!!');
-      //     this.sendEmail();
-      // })
+      if (newQuantity === 0) {
+        this.deleteOrderLine(lineId, quantityDifference, orderId, productPrice);
+      } else {
+        var orderLineInfo = {
+          product_id: productId,
+          order_id: orderId,
+          quantity: newQuantity,
+          line_total: newLineTotal
+        }; // debugger;
+
+        updateOrderLine(orderLineInfo).then(function () {
+          return getOrderLinesByOrder(currentOrder.id);
+        }).then(function () {
+          _this4.updateOrderTotal(oldOrderTotal, orderId, productPrice, quantityDifference);
+        }).then(function () {
+          _this4.updateStateOriginalLines();
+        }).then(function () {
+          return _this4.QuantityChanged(lineId);
+        }); // .then(() => {
+        //     console.log('Sending Email!!');
+        //     this.sendEmail();
+        // })
+      }
     }
   }, {
     key: "updateOrderTotal",
@@ -1109,9 +1120,16 @@ function (_React$Component) {
   }, {
     key: "handleBlur",
     value: function handleBlur(event, productId, orderId, newProductQuantity, productPrice, oldLineQuantity, lineId) {
-      // if (event.keyCode === 13) {
       console.log('blurrr and save');
-      this.handleUpdateLine(productId, orderId, newProductQuantity, productPrice, oldLineQuantity, lineId); // }
+      this.handleUpdateLine(productId, orderId, newProductQuantity, productPrice, oldLineQuantity, lineId);
+    }
+  }, {
+    key: "handleEnter",
+    value: function handleEnter(event, productId, orderId, newProductQuantity, productPrice, oldLineQuantity, lineId) {
+      if (event.keyCode === 13) {
+        console.log("enter and save");
+        this.handleUpdateLine(productId, orderId, newProductQuantity, productPrice, oldLineQuantity, lineId);
+      }
     }
   }, {
     key: "getMatchingLine",
@@ -1128,14 +1146,39 @@ function (_React$Component) {
   }, {
     key: "handleRemove",
     value: function handleRemove(lineId, lineQuantity, orderId, productPrice) {
-      var _this5 = this;
-
       var _this$props3 = this.props,
           currentOrder = _this$props3.currentOrder,
           getOrderLinesByOrder = _this$props3.getOrderLinesByOrder,
           deleteOrderLine = _this$props3.deleteOrderLine,
           deleteOrder = _this$props3.deleteOrder;
       var quantityDifference = -lineQuantity;
+      this.deleteOrderLine(lineId, quantityDifference, orderId, productPrice); // .then(() => getOrderLinesByOrder(currentOrder.id))
+      // .then((orderLines) => {
+      //     console.log('orderLines after removing one from cart', orderLines.data)
+      //     if (Object.values(orderLines.data).length === 0) {
+      //         deleteOrder(currentOrder.id)
+      //         .then(() => {
+      //             localStorage.removeItem('currentOrderId');
+      //             console.log('order removed from localStorage, empty cart')
+      //          })
+      //         // .then(order => console.log('order deleted', order))
+      //      } else {
+      //         this.updateOrderTotal(currentOrder.order_total, orderId, productPrice, quantityDifference)
+      //     }
+      // })
+      // .then(() => { this.updateStateOriginalLines() })
+      // .then(() => this.QuantityChanged(lineId))  
+    }
+  }, {
+    key: "deleteOrderLine",
+    value: function deleteOrderLine(lineId, quantityDifference, orderId, productPrice) {
+      var _this5 = this;
+
+      var _this$props4 = this.props,
+          getOrderLinesByOrder = _this$props4.getOrderLinesByOrder,
+          deleteOrderLine = _this$props4.deleteOrderLine,
+          deleteOrder = _this$props4.deleteOrder,
+          currentOrder = _this$props4.currentOrder;
       deleteOrderLine(lineId).then(function () {
         return getOrderLinesByOrder(currentOrder.id);
       }).then(function (orderLines) {
@@ -1145,7 +1188,7 @@ function (_React$Component) {
           deleteOrder(currentOrder.id).then(function () {
             localStorage.removeItem('currentOrderId');
             console.log('order removed from localStorage, empty cart');
-          }); // .then(order => console.log('order deleted', order))
+          });
         } else {
           _this5.updateOrderTotal(currentOrder.order_total, orderId, productPrice, quantityDifference);
         }
@@ -1162,9 +1205,9 @@ function (_React$Component) {
 
       window.orderShowProps = this.props;
       window.orderShowstate = this.state;
-      var _this$props4 = this.props,
-          currentOrderLines = _this$props4.currentOrderLines,
-          currentOrder = _this$props4.currentOrder;
+      var _this$props5 = this.props,
+          currentOrderLines = _this$props5.currentOrderLines,
+          currentOrder = _this$props5.currentOrder;
       var _this$state3 = this.state,
           lineQuantities = _this$state3.lineQuantities,
           originalLineQuantities = _this$state3.originalLineQuantities,
@@ -1214,7 +1257,8 @@ function (_React$Component) {
         }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
           // className="quantity-input"
           className: classnames__WEBPACK_IMPORTED_MODULE_4___default()({
-            'quantity-input': true
+            'quantity-input': true,
+            'border-red': lineQuantities["".concat(line.id)] < 0
           }),
           type: "text",
           value: lineQuantities["".concat(line.id)],
@@ -1222,8 +1266,13 @@ function (_React$Component) {
           ,
           onBlur: function onBlur(event) {
             return _this6.handleBlur(event, line.product_id, line.order_id, lineQuantities[line.id], line.productPrice, line.quantity, line.id);
+          },
+          onKeyDown: function onKeyDown(event) {
+            return _this6.handleEnter(event, line.product_id, line.order_id, lineQuantities[line.id], line.productPrice, line.quantity, line.id);
           }
-        }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
+        }), lineQuantities["".concat(line.id)] < 0 && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
+          className: "message"
+        }, " cannot update to negative number "), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
           className: classnames__WEBPACK_IMPORTED_MODULE_4___default()({
             hidden: !_this6.state.displayUpdateButtons[line.id],
             'save-button': true,
@@ -2073,9 +2122,13 @@ function (_React$Component) {
     _this = _possibleConstructorReturn(this, _getPrototypeOf(SearchPage).call(this, props));
     _this.state = {
       productName: '',
-      showSearchBar: false
+      showSearchBar: false,
+      order: {
+        order_total: 1500
+      }
     };
     _this.update = _this.update.bind(_assertThisInitialized(_this));
+    _this.handleEnter = _this.handleEnter.bind(_assertThisInitialized(_this));
     return _this;
   }
 
@@ -2239,23 +2292,54 @@ function (_React$Component) {
           currentOrderLines = _this$props4.currentOrderLines,
           updateOrderLine = _this$props4.updateOrderLine,
           getOrderLinesByOrder = _this$props4.getOrderLinesByOrder,
-          currentOrder = _this$props4.currentOrder;
+          currentOrder = _this$props4.currentOrder,
+          deleteOrder = _this$props4.deleteOrder,
+          deleteOrderLine = _this$props4.deleteOrderLine;
       var matchingLine = this.getMatchingLine(currentOrderLines, productId);
 
       if (matchingLine) {
         var newQuantity = matchingLine.quantity - 0.5;
         var newLineTotal = matchingLine.line_total - 0.5 * productPrice;
-        var orderLineInfo = {
-          product_id: productId,
-          order_id: matchingLine.order_id,
-          quantity: newQuantity,
-          line_total: newLineTotal
-        };
-        updateOrderLine(orderLineInfo).then(function () {
-          return getOrderLinesByOrder(matchingLine.order_id);
-        }).then(function () {
-          _this6.updateOrderTotal(currentOrder.order_total, currentOrder.id, productPrice, -0.5);
-        });
+
+        if (newQuantity === 0) {
+          deleteOrderLine(matchingLine.id).then(function () {
+            return getOrderLinesByOrder(matchingLine.order_id);
+          }).then(function (orderLines) {
+            console.log('orderLines after deleting one', orderLines.data);
+
+            if (Object.values(orderLines.data).length === 0) {
+              deleteOrder(currentOrder.id).then(function () {
+                localStorage.removeItem('currentOrderId');
+                console.log('order removed from localStorage');
+              }); // .then(order => console.log('order deleted', order))
+            } else {
+              _this6.updateOrderTotal(currentOrder.order_total, currentOrder.id, productPrice, -0.5);
+            }
+          });
+        } else {
+          var orderLineInfo = {
+            product_id: productId,
+            order_id: matchingLine.order_id,
+            quantity: newQuantity,
+            line_total: newLineTotal
+          };
+          updateOrderLine(orderLineInfo).then(function () {
+            return getOrderLinesByOrder(matchingLine.order_id);
+          }).then(function () {
+            _this6.updateOrderTotal(currentOrder.order_total, currentOrder.id, productPrice, -0.5);
+          });
+        }
+      }
+    }
+  }, {
+    key: "handleEnter",
+    value: function handleEnter(event) {
+      var productName = this.state.productName;
+      var searchProducts = this.props.searchProducts;
+
+      if (event.keyCode === 13) {
+        console.log("enter and search ".concat(productName));
+        searchProducts(productName);
       }
     }
   }, {
@@ -2293,6 +2377,9 @@ function (_React$Component) {
         onChange: this.update('productName'),
         onBlur: function onBlur() {
           return searchProducts(_this7.state.productName);
+        },
+        onKeyDown: function onKeyDown(event) {
+          return _this7.handleEnter(event);
         }
       })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "product-list-search-wrapper"
@@ -2363,11 +2450,17 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
     updateOrder: function updateOrder(orderInfo) {
       return dispatch(_actions_order_actions__WEBPACK_IMPORTED_MODULE_7__["updateOrderReduxAjax"](orderInfo));
     },
+    deleteOrder: function deleteOrder(orderId) {
+      return dispatch(_actions_order_actions__WEBPACK_IMPORTED_MODULE_7__["deleteOrderReduxAjax"](orderId));
+    },
     createOrderLine: function createOrderLine(orderLineInfo) {
       return dispatch(_actions_order_line_actions__WEBPACK_IMPORTED_MODULE_8__["createOrderLineReduxAjax"](orderLineInfo));
     },
     updateOrderLine: function updateOrderLine(orderLineInfo) {
       return dispatch(_actions_order_line_actions__WEBPACK_IMPORTED_MODULE_8__["updateOrderLineReduxAjax"](orderLineInfo));
+    },
+    deleteOrderLine: function deleteOrderLine(orderLineId) {
+      return dispatch(_actions_order_line_actions__WEBPACK_IMPORTED_MODULE_8__["deleteOrderLineReduxAjax"](orderLineId));
     },
     getOrderLinesByOrder: function getOrderLinesByOrder(orderId) {
       return dispatch(_actions_order_line_actions__WEBPACK_IMPORTED_MODULE_8__["getOrderLinesByOrderReduxAjax"](orderId));

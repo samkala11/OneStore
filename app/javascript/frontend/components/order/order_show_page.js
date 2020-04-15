@@ -44,7 +44,9 @@ class OrderShowPage extends React.Component {
         this.updateOrderTotal = this.updateOrderTotal.bind(this);
         this.updateStateOriginalLines = this.updateStateOriginalLines.bind(this);
         this.handleBlur = this.handleBlur.bind(this);
+        this.handleEnter = this.handleEnter.bind(this);
         this.handleRemove = this.handleRemove.bind(this);
+        this.deleteOrderLine = this.deleteOrderLine.bind(this);
     }
 
     componentDidMount(){
@@ -178,25 +180,34 @@ class OrderShowPage extends React.Component {
         let newLineTotal = ( parseInt(newProductQuantity) * productPrice) ;
         let oldOrderTotal = currentOrder.order_total;
         let quantityDifference = newProductQuantity - oldLineQuantity;
-        // debugger;
-        const orderLineInfo = {
-            product_id: productId,
-            order_id: orderId,
-            quantity: newQuantity,
-            line_total: newLineTotal,
-        };
-        // debugger;
-        updateOrderLine(orderLineInfo)
-        .then(() => getOrderLinesByOrder(currentOrder.id))
-        .then(() => {
-            this.updateOrderTotal(oldOrderTotal, orderId, productPrice, quantityDifference)
-        })
-        .then(() => { this.updateStateOriginalLines() })
-        .then(() => this.QuantityChanged(lineId))
-        // .then(() => {
-        //     console.log('Sending Email!!');
-        //     this.sendEmail();
-        // })
+
+        if (newQuantity < 0) {
+            console.log('cannot update quantity to negative number');
+            return;
+        }
+
+        if (newQuantity === 0) {
+            this.deleteOrderLine(lineId, quantityDifference, orderId, productPrice);
+        } else { 
+            const orderLineInfo = {
+                product_id: productId,
+                order_id: orderId,
+                quantity: newQuantity,
+                line_total: newLineTotal,
+            };
+            // debugger;
+            updateOrderLine(orderLineInfo)
+            .then(() => getOrderLinesByOrder(currentOrder.id))
+            .then(() => {
+                this.updateOrderTotal(oldOrderTotal, orderId, productPrice, quantityDifference)
+            })
+            .then(() => { this.updateStateOriginalLines() })
+            .then(() => this.QuantityChanged(lineId))
+            // .then(() => {
+            //     console.log('Sending Email!!');
+            //     this.sendEmail();
+            // })
+        }
     }
 
     updateOrderTotal(oldOrderTotal, orderId, productPrice, ProductQuantity) {
@@ -213,11 +224,17 @@ class OrderShowPage extends React.Component {
     }
 
     handleBlur(event, productId, orderId, newProductQuantity, productPrice, oldLineQuantity, lineId) {
-        // if (event.keyCode === 13) {
             console.log('blurrr and save');
             this.handleUpdateLine(productId, orderId, newProductQuantity, productPrice, oldLineQuantity, lineId );
-        // }
     }
+
+    handleEnter(event, productId, orderId, newProductQuantity, productPrice, oldLineQuantity, lineId) {
+        if (event.keyCode === 13) {
+            console.log(`enter and save`);
+            this.handleUpdateLine(productId, orderId, newProductQuantity, productPrice, oldLineQuantity, lineId );
+        }
+    }
+
 
     getMatchingLine(orderLines, lineId) {
         let orderLinesArray = Object.values(orderLines);
@@ -231,6 +248,28 @@ class OrderShowPage extends React.Component {
     handleRemove(lineId, lineQuantity, orderId, productPrice ) {
         const { currentOrder, getOrderLinesByOrder, deleteOrderLine, deleteOrder } = this.props;
         let quantityDifference = - lineQuantity;
+        this.deleteOrderLine(lineId, quantityDifference, orderId, productPrice )
+        // .then(() => getOrderLinesByOrder(currentOrder.id))
+        // .then((orderLines) => {
+        //     console.log('orderLines after removing one from cart', orderLines.data)
+        //     if (Object.values(orderLines.data).length === 0) {
+        //         deleteOrder(currentOrder.id)
+        //         .then(() => {
+        //             localStorage.removeItem('currentOrderId');
+        //             console.log('order removed from localStorage, empty cart')
+        //          })
+        //         // .then(order => console.log('order deleted', order))
+        //      } else {
+        //         this.updateOrderTotal(currentOrder.order_total, orderId, productPrice, quantityDifference)
+        //     }
+            
+        // })
+        // .then(() => { this.updateStateOriginalLines() })
+        // .then(() => this.QuantityChanged(lineId))  
+    }
+
+    deleteOrderLine(lineId, quantityDifference, orderId, productPrice) {
+        const { getOrderLinesByOrder, deleteOrderLine, deleteOrder, currentOrder} = this.props;
         deleteOrderLine(lineId)
         .then(() => getOrderLinesByOrder(currentOrder.id))
         .then((orderLines) => {
@@ -241,7 +280,6 @@ class OrderShowPage extends React.Component {
                     localStorage.removeItem('currentOrderId');
                     console.log('order removed from localStorage, empty cart')
                  })
-                // .then(order => console.log('order deleted', order))
              } else {
                 this.updateOrderTotal(currentOrder.order_total, orderId, productPrice, quantityDifference)
             }
@@ -249,7 +287,6 @@ class OrderShowPage extends React.Component {
         })
         .then(() => { this.updateStateOriginalLines() })
         .then(() => this.QuantityChanged(lineId))
-        
     }
 
    render() {
@@ -308,13 +345,16 @@ class OrderShowPage extends React.Component {
                         <div className="quantity-wrapper"> 
                             <input
                                 // className="quantity-input"
-                                className={classNames({ 'quantity-input': true })}
+                                className={classNames({ 'quantity-input': true, 'border-red': lineQuantities[`${line.id}`] < 0 })}
                                 type="text"
                                 value = { lineQuantities[`${line.id}`] }
                                 onChange = {this.update(line.id)}
                                 // onKeyDown={(event) => this.handleBlur(event, line.product_id, line.order_id, lineQuantities[line.id], line.productPrice, line.quantity, line.id )}
                                 onBlur={(event) => this.handleBlur(event, line.product_id, line.order_id, lineQuantities[line.id], line.productPrice, line.quantity, line.id )}
-                            />  
+                                onKeyDown={(event) => this.handleEnter(event, line.product_id, line.order_id, lineQuantities[line.id], line.productPrice, line.quantity, line.id )}
+                            />
+
+                            { (lineQuantities[`${line.id}`] < 0 ) && <p className="message"> cannot update to negative number </p> }  
                             {/* <span> 
                                 Line total: {line.line_total}
                             </span> */}
@@ -323,7 +363,7 @@ class OrderShowPage extends React.Component {
                                 onClick={() => this.handleUpdateLine(line.product_id, line.order_id, lineQuantities[line.id], line.productPrice, line.quantity, line.id )}
                             > Save </button> */}
 
-
+                            {/* save button */}
                             <i
                                 className={classNames({ hidden: !this.state.displayUpdateButtons[line.id], 'save-button': true, 'fas': true, 'fa-save': true }) }
                                 onClick={() => this.handleUpdateLine(line.product_id, line.order_id, lineQuantities[line.id], line.productPrice, line.quantity, line.id )}
