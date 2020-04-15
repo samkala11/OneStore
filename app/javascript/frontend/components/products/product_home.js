@@ -7,6 +7,8 @@ import * as ProductActions from '../../actions/product_actions'
 import * as InitialHomeLoaderActions from '../../actions/show_loader_home_actions';
 import * as OrderActions from '../../actions/order_actions';
 import * as LineActions from '../../actions/order_line_actions';
+import classNames from 'classnames';
+
 
 class ProductHome extends React.Component {
    
@@ -26,11 +28,19 @@ class ProductHome extends React.Component {
             unit: ''
          },
          errorsCreate: [],
-         showLoader: true
+         showLoader: true,
+         fruitsClicked: false,
+         fruitsTitleClicked: false,
+         vegetablesClicked: false,
+         vegetablesTitleClicked: false,
+
       }
       this.timer = false;
       this.update = this.update.bind(this);
       this.handleCreate = this.handleCreate.bind(this);
+      // this.handleFruitsClicked = this.handleFruitsClicked.bind(this);
+      this.handleImageClicked = this.handleImageClicked.bind(this);
+      this.handleTitleClicked = this.handleTitleClicked.bind(this);
    }
 
    componentDidMount(){
@@ -112,6 +122,22 @@ class ProductHome extends React.Component {
      
    }
 
+   handleImageClicked(imageName) {
+      console.log(`handle department image clicked called for ${imageName}`)
+      
+      this.setState({ [`${imageName}Clicked`]: true });
+      this.timer2 = setTimeout(() => this.setState({ [`${imageName}Clicked`]: false }), 200);
+      this.timer3 = setTimeout(() => this.props.history.push(`/departments/${imageName}`), 400);
+   }
+
+   handleTitleClicked(titleName) {
+      console.log(`handle department title clicked called for ${titleName}`)
+      this.setState({ [`${titleName}TitleClicked`]: true });
+      this.timer4 = setTimeout(() => this.setState({ [`${titleName}TitleClicked`]: false }), 200);
+      this.timer5 = setTimeout(() => this.props.history.push(`/departments/${titleName}`), 400);
+      // debugger;
+   }
+
    render() {
       window.homeState = this.state;
       const {  shouldShowHomeLoader } = this.props;
@@ -143,28 +169,46 @@ class ProductHome extends React.Component {
             <div className="all-department-categories">
                {/* <h4>  Main Categories</h4> */}
                <div className="department-wrapper">
-                  <Link to="/departments/fruits">    
-                    <img className="department-image" 
+                  <div to="/departments/fruits">    
+                    <img
+                        // onClick={this.handleFruitsClicked}
+                        onClick={() => this.handleImageClicked('fruits')}
+                        className={classNames({ 'department-image': true, 'clicked': this.state.fruitsClicked })} 
                      src="https://onestorebucket.s3.eu-west-3.amazonaws.com/fruits.jpg"/> 
-                  </Link>
+                  </div>
                   
-                  <div className="department-details">
-                     <span className="department-title">
-                           <Link to="/departments/fruits"> Fruits </Link>
+                  <div
+                     onClick = { () => this.handleTitleClicked('fruits') }
+                     className={classNames({ 'department-details': true, 'clicked': this.state.fruitsTitleClicked })}   
+                     // className="department-details"
+                     >
+                     <span
+                        className="department-title">
+                           {/* <Link to="/departments/fruits"> Fruits </Link> */}
+                           Fruits 
                      </span>
                   </div>
                </div>
 
                <div className="department-wrapper">
-                  <Link to="/departments/vegetables">    
-                    <img className="department-image" 
+
+                  <div to="/departments/vegetables">    
+                    <img
+                        onClick={() => this.handleImageClicked('vegetables')} 
+                        className={classNames({ 'department-image': true, 'clicked': this.state.vegetablesClicked })}
                      src="https://onestorebucket.s3.eu-west-3.amazonaws.com/vegetables.jpg"/> 
-                  </Link>
-                  <div className="department-details">
+                  </div>
+
+                  <div
+                     onClick = { () => this.handleTitleClicked('vegetables') }
+                     className={classNames({ 'department-details': true, 'clicked': this.state.vegetablesTitleClicked })} 
+                     // className="department-details"
+                     >
                      <span className="department-title">
                            <Link to="/departments/vegetables"> Vegetables </Link>
                      </span>
                   </div>
+
                </div>
 
             </div>

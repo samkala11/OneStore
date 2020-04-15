@@ -1343,7 +1343,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _actions_show_loader_home_actions__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../actions/show_loader_home_actions */ "./app/javascript/frontend/actions/show_loader_home_actions.js");
 /* harmony import */ var _actions_order_actions__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../actions/order_actions */ "./app/javascript/frontend/actions/order_actions.js");
 /* harmony import */ var _actions_order_line_actions__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../actions/order_line_actions */ "./app/javascript/frontend/actions/order_line_actions.js");
+/* harmony import */ var classnames__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! classnames */ "./node_modules/classnames/index.js");
+/* harmony import */ var classnames__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(classnames__WEBPACK_IMPORTED_MODULE_9__);
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -1360,6 +1364,7 @@ function _assertThisInitialized(self) { if (self === void 0) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
 
 
 
@@ -1395,11 +1400,18 @@ function (_React$Component) {
         unit: ''
       },
       errorsCreate: [],
-      showLoader: true
+      showLoader: true,
+      fruitsClicked: false,
+      fruitsTitleClicked: false,
+      vegetablesClicked: false,
+      vegetablesTitleClicked: false
     };
     _this.timer = false;
     _this.update = _this.update.bind(_assertThisInitialized(_this));
-    _this.handleCreate = _this.handleCreate.bind(_assertThisInitialized(_this));
+    _this.handleCreate = _this.handleCreate.bind(_assertThisInitialized(_this)); // this.handleFruitsClicked = this.handleFruitsClicked.bind(this);
+
+    _this.handleImageClicked = _this.handleImageClicked.bind(_assertThisInitialized(_this));
+    _this.handleTitleClicked = _this.handleTitleClicked.bind(_assertThisInitialized(_this));
     return _this;
   }
 
@@ -1501,8 +1513,38 @@ function (_React$Component) {
       });
     }
   }, {
+    key: "handleImageClicked",
+    value: function handleImageClicked(imageName) {
+      var _this5 = this;
+
+      console.log("handle department image clicked called for ".concat(imageName));
+      this.setState(_defineProperty({}, "".concat(imageName, "Clicked"), true));
+      this.timer2 = setTimeout(function () {
+        return _this5.setState(_defineProperty({}, "".concat(imageName, "Clicked"), false));
+      }, 200);
+      this.timer3 = setTimeout(function () {
+        return _this5.props.history.push("/departments/".concat(imageName));
+      }, 400);
+    }
+  }, {
+    key: "handleTitleClicked",
+    value: function handleTitleClicked(titleName) {
+      var _this6 = this;
+
+      console.log("handle department title clicked called for ".concat(titleName));
+      this.setState(_defineProperty({}, "".concat(titleName, "TitleClicked"), true));
+      this.timer4 = setTimeout(function () {
+        return _this6.setState(_defineProperty({}, "".concat(titleName, "TitleClicked"), false));
+      }, 200);
+      this.timer5 = setTimeout(function () {
+        return _this6.props.history.push("/departments/".concat(titleName));
+      }, 400); // debugger;
+    }
+  }, {
     key: "render",
     value: function render() {
+      var _this7 = this;
+
       window.homeState = this.state;
       var shouldShowHomeLoader = this.props.shouldShowHomeLoader;
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -1526,26 +1568,51 @@ function (_React$Component) {
         className: "all-department-categories"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "department-wrapper"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_3__["Link"], {
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         to: "/departments/fruits"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("img", {
-        className: "department-image",
+        // onClick={this.handleFruitsClicked}
+        onClick: function onClick() {
+          return _this7.handleImageClicked('fruits');
+        },
+        className: classnames__WEBPACK_IMPORTED_MODULE_9___default()({
+          'department-image': true,
+          'clicked': this.state.fruitsClicked
+        }),
         src: "https://onestorebucket.s3.eu-west-3.amazonaws.com/fruits.jpg"
       })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "department-details"
+        onClick: function onClick() {
+          return _this7.handleTitleClicked('fruits');
+        },
+        className: classnames__WEBPACK_IMPORTED_MODULE_9___default()({
+          'department-details': true,
+          'clicked': this.state.fruitsTitleClicked
+        }) // className="department-details"
+
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
         className: "department-title"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_3__["Link"], {
-        to: "/departments/fruits"
-      }, " Fruits ")))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      }, "Fruits"))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "department-wrapper"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_3__["Link"], {
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         to: "/departments/vegetables"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("img", {
-        className: "department-image",
+        onClick: function onClick() {
+          return _this7.handleImageClicked('vegetables');
+        },
+        className: classnames__WEBPACK_IMPORTED_MODULE_9___default()({
+          'department-image': true,
+          'clicked': this.state.vegetablesClicked
+        }),
         src: "https://onestorebucket.s3.eu-west-3.amazonaws.com/vegetables.jpg"
       })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "department-details"
+        onClick: function onClick() {
+          return _this7.handleTitleClicked('vegetables');
+        },
+        className: classnames__WEBPACK_IMPORTED_MODULE_9___default()({
+          'department-details': true,
+          'clicked': this.state.vegetablesTitleClicked
+        }) // className="department-details"
+
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
         className: "department-title"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_3__["Link"], {
