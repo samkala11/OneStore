@@ -640,6 +640,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var classnames__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(classnames__WEBPACK_IMPORTED_MODULE_3__);
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -675,9 +677,13 @@ function (_React$Component) {
     _this.state = {
       newOrderExist: false,
       orderLines: [],
-      showSearchBar: false
+      showSearchBar: false,
+      homeIconClicked: false,
+      searchIconClick: false,
+      cartIconClicked: false
     };
     _this.toggleSearchBar = _this.toggleSearchBar.bind(_assertThisInitialized(_this));
+    _this.handleIconClicked = _this.handleIconClicked.bind(_assertThisInitialized(_this));
     return _this;
   }
 
@@ -715,8 +721,24 @@ function (_React$Component) {
       });
     }
   }, {
+    key: "handleIconClicked",
+    value: function handleIconClicked(iconName, path) {
+      var _this2 = this;
+
+      console.log("handle navigation icon clicked called for ".concat(iconName));
+      this.setState(_defineProperty({}, "".concat(iconName, "IconClicked"), true));
+      this.timer4 = setTimeout(function () {
+        return _this2.setState(_defineProperty({}, "".concat(iconName, "IconClicked"), false));
+      }, 200);
+      this.timer5 = setTimeout(function () {
+        return _this2.props.history.push("".concat(path));
+      }, 200);
+    }
+  }, {
     key: "render",
     value: function render() {
+      var _this3 = this;
+
       var _this$state = this.state,
           newOrderExist = _this$state.newOrderExist,
           showSearchBar = _this$state.showSearchBar;
@@ -736,30 +758,53 @@ function (_React$Component) {
         id: "header"
       }, title), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "nav-links-container"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: classnames__WEBPACK_IMPORTED_MODULE_3___default()({
           'home-link': true,
           'current-link': window.location.hash === '#/'
-        }),
-        to: "/"
+        })
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
-        className: "fas fa-home"
-      })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
+        onClick: function onClick() {
+          return _this3.handleIconClicked('home', '/');
+        },
+        className: classnames__WEBPACK_IMPORTED_MODULE_3___default()({
+          'fas': true,
+          'fa-home': true,
+          'icon-clicked': this.state.homeIconClicked
+        }) // className="fas fa-home"
+
+      }, " ")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: classnames__WEBPACK_IMPORTED_MODULE_3___default()({
           'search-link': true,
           'current-link': window.location.hash === '#/search'
-        }),
-        to: "/search"
+        }) // to='/search'
+
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
-        className: "fas fa-search"
-      })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
+        onClick: function onClick() {
+          return _this3.handleIconClicked('search', '/search');
+        },
+        className: classnames__WEBPACK_IMPORTED_MODULE_3___default()({
+          'fas': true,
+          'fa-search': true,
+          'icon-clicked': this.state.searchIconClicked
+        }) // className="fas fa-search"
+
+      })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: classnames__WEBPACK_IMPORTED_MODULE_3___default()({
           'cart-link': true,
           'current-link': window.location.hash === '#/ordercheckout'
-        }),
-        to: "/ordercheckout"
+        }) // to='/ordercheckout'
+
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
-        className: "fas fa-shopping-cart"
+        onClick: function onClick() {
+          return _this3.handleIconClicked('cart', '/ordercheckout');
+        },
+        className: classnames__WEBPACK_IMPORTED_MODULE_3___default()({
+          'fas': true,
+          'fa-shopping-cart': true,
+          'icon-clicked': this.state.cartIconClicked
+        }) // className="fas fa-shopping-cart"
+
       }))), currentOrder && currentOrder.id && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
         className: "navbar-quantity"
       }, this.getLinesQuantity()), showSearchBar && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -1226,13 +1271,15 @@ function (_React$Component) {
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
         className: "close-button",
         to: "/"
-      }, "X"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      }, "X"), currentLinesArray.length === 0 ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "order-header"
-      }, "Your Order"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      }, "Your basket is empty") : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "order-header"
+      }, "Your Order"), currentLinesArray.length > 0 && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "continue-button"
       }, "continue to address ", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
         className: "order-total"
-      }, " ", currentOrder.order_total, " L.L. ")), currentLinesArray.map(function (line) {
+      }, " ", currentOrder.order_total, " L.L. ")), currentLinesArray.length > 0 && currentLinesArray.map(function (line) {
         return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
           className: "order-line-show",
           key: key++
@@ -1272,17 +1319,7 @@ function (_React$Component) {
           }
         }), lineQuantities["".concat(line.id)] < 0 && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
           className: "message"
-        }, " cannot update to negative number "), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
-          className: classnames__WEBPACK_IMPORTED_MODULE_4___default()({
-            hidden: !_this6.state.displayUpdateButtons[line.id],
-            'save-button': true,
-            'fas': true,
-            'fa-save': true
-          }),
-          onClick: function onClick() {
-            return _this6.handleUpdateLine(line.product_id, line.order_id, lineQuantities[line.id], line.productPrice, line.quantity, line.id);
-          }
-        }, " ")));
+        }, " cannot update to negative number ")));
       })));
     }
   }]);
@@ -1615,9 +1652,7 @@ function (_React$Component) {
 
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
         className: "department-title"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_3__["Link"], {
-        to: "/departments/vegetables"
-      }, " Vegetables "))))));
+      }, "Vegetables")))));
     }
   }]);
 

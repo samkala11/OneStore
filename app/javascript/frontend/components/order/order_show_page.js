@@ -314,14 +314,20 @@ class OrderShowPage extends React.Component {
                     X
                 </Link>
 
-                <div className="order-header"> 
-                    Your Order 
-                </div>
+                { currentLinesArray.length === 0 ?
+                    <div className="order-header"> 
+                        Your basket is empty 
+                    </div> :
+                    <div className="order-header"> 
+                        Your Order 
+                    </div> }
 
-                <div className="continue-button"> 
+                { currentLinesArray.length > 0 &&  <div className="continue-button"> 
                     continue to address <span className="order-total"> {currentOrder.order_total} L.L. </span> 
-                </div>
-                { currentLinesArray.map(line => ( 
+                </div>}
+
+                {/* { currentLinesArray.length === 0 && <div> Your cart is empty bitch </div> } */}
+                { currentLinesArray.length > 0 && currentLinesArray.map(line => ( 
                     <div className="order-line-show"
                         key = {key++}
                         >
@@ -364,10 +370,10 @@ class OrderShowPage extends React.Component {
                             > Save </button> */}
 
                             {/* save button */}
-                            <i
+                            {/* <i
                                 className={classNames({ hidden: !this.state.displayUpdateButtons[line.id], 'save-button': true, 'fas': true, 'fa-save': true }) }
                                 onClick={() => this.handleUpdateLine(line.product_id, line.order_id, lineQuantities[line.id], line.productPrice, line.quantity, line.id )}
-                            > </i>    
+                            > </i>     */}
                         </div>
                         
                     </div>

@@ -11,10 +11,14 @@ class NavBar extends React.Component {
         this.state = {
             newOrderExist: false,
             orderLines: [],
-            showSearchBar: false
+            showSearchBar: false,
+            homeIconClicked: false,
+            searchIconClick: false,
+            cartIconClicked: false
         }
 
         this.toggleSearchBar = this.toggleSearchBar.bind(this);
+        this.handleIconClicked = this.handleIconClicked.bind(this);
     }
 
     getLinesQuantity() {
@@ -43,6 +47,14 @@ class NavBar extends React.Component {
         this.setState({showSearchBar: !this.state.showSearchBar})
     }
 
+    handleIconClicked(iconName, path) {
+        console.log(`handle navigation icon clicked called for ${iconName}`)
+        this.setState({ [`${iconName}IconClicked`]: true });
+        this.timer4 = setTimeout(() => this.setState({ [`${iconName}IconClicked`]: false }), 200);
+        this.timer5 = setTimeout(() => this.props.history.push(`${path}`), 200);
+    }
+
+
    render() {
         const { newOrderExist, showSearchBar } = this.state;
         const { currentOrder, title, isHomeNavBar } = this.props;
@@ -58,23 +70,35 @@ class NavBar extends React.Component {
                 </div>
 
                 <div className="nav-links-container">
-                   <Link 
+                   <div 
                         className={classNames({ 'home-link': true, 'current-link': window.location.hash === '#/' })}
-                        to='/'> 
-                        <i className="fas fa-home"></i>
-                   </Link> 
+                        > 
+                        <i  
+                            onClick = { () => this.handleIconClicked('home', '/') }
+                            className={classNames({ 'fas': true, 'fa-home': true, 'icon-clicked': this.state.homeIconClicked })}
+                            // className="fas fa-home"
+                        > </i>
+                   </div> 
 
-                   <Link
+                   <div
                         className={classNames({ 'search-link': true, 'current-link': window.location.hash === '#/search' })}
-                        to='/search'> 
-                        <i className="fas fa-search"></i>
-                   </Link> 
+                        // to='/search'
+                        > 
+                        <i  onClick = { () => this.handleIconClicked('search', '/search')}
+                            className={classNames({ 'fas': true, 'fa-search': true, 'icon-clicked': this.state.searchIconClicked })}
+                            // className="fas fa-search"
+                            ></i>
+                   </div> 
 
-                   <Link 
+                   <div 
                         className={classNames({ 'cart-link': true, 'current-link': window.location.hash === '#/ordercheckout' })}
-                        to='/ordercheckout'> 
-                        <i className="fas fa-shopping-cart"></i>
-                   </Link> 
+                        // to='/ordercheckout'
+                        > 
+                        <i  onClick = { () => this.handleIconClicked('cart', '/ordercheckout')}
+                            className={classNames({ 'fas': true, 'fa-shopping-cart': true, 'icon-clicked': this.state.cartIconClicked })}
+                            // className="fas fa-shopping-cart"
+                            ></i>
+                   </div> 
                 </div>
 
                 { currentOrder  && currentOrder.id && <span className="navbar-quantity"> 

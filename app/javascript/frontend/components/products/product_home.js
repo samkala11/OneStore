@@ -205,7 +205,7 @@ class ProductHome extends React.Component {
                      // className="department-details"
                      >
                      <span className="department-title">
-                           <Link to="/departments/vegetables"> Vegetables </Link>
+                           Vegetables
                      </span>
                   </div>
 
