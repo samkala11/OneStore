@@ -43,7 +43,8 @@ class OrderShowPage extends React.Component {
         this.handleUpdateLine = this.handleUpdateLine.bind(this);
         this.updateOrderTotal = this.updateOrderTotal.bind(this);
         this.updateStateOriginalLines = this.updateStateOriginalLines.bind(this);
-        this.handleEnter = this.handleEnter.bind(this);
+        this.handleBlur = this.handleBlur.bind(this);
+        this.handleRemove = this.handleRemove.bind(this);
     }
 
     componentDidMount(){
@@ -211,12 +212,44 @@ class OrderShowPage extends React.Component {
         .then((updatedOrder) => console.log(`Order total updated successfully from this.updateOrderTotal`, updatedOrder.data.order_total ));
     }
 
-    handleEnter(event, productId, orderId, newProductQuantity, productPrice, oldLineQuantity, lineId) {
+    handleBlur(event, productId, orderId, newProductQuantity, productPrice, oldLineQuantity, lineId) {
         // if (event.keyCode === 13) {
             console.log('blurrr and save');
             this.handleUpdateLine(productId, orderId, newProductQuantity, productPrice, oldLineQuantity, lineId );
         // }
+    }
 
+    getMatchingLine(orderLines, lineId) {
+        let orderLinesArray = Object.values(orderLines);
+        for (let index = 0; index < orderLinesArray.length; index++) {
+           let orderLine = orderLinesArray[index];
+           if (orderLine.id === lineId) return orderLine;
+        }
+        return false;
+    };
+
+    handleRemove(lineId, lineQuantity, orderId, productPrice ) {
+        const { currentOrder, getOrderLinesByOrder, deleteOrderLine, deleteOrder } = this.props;
+        let quantityDifference = - lineQuantity;
+        deleteOrderLine(lineId)
+        .then(() => getOrderLinesByOrder(currentOrder.id))
+        .then((orderLines) => {
+            console.log('orderLines after removing one from cart', orderLines.data)
+            if (Object.values(orderLines.data).length === 0) {
+                deleteOrder(currentOrder.id)
+                .then(() => {
+                    localStorage.removeItem('currentOrderId');
+                    console.log('order removed from localStorage, empty cart')
+                 })
+                // .then(order => console.log('order deleted', order))
+             } else {
+                this.updateOrderTotal(currentOrder.order_total, orderId, productPrice, quantityDifference)
+            }
+            
+        })
+        .then(() => { this.updateStateOriginalLines() })
+        .then(() => this.QuantityChanged(lineId))
+        
     }
 
    render() {
@@ -249,7 +282,7 @@ class OrderShowPage extends React.Component {
                 </div>
 
                 <div className="continue-button"> 
-                    contirue to address <span className="order-total"> {currentOrder.order_total} L.L. </span> 
+                    continue to address <span className="order-total"> {currentOrder.order_total} L.L. </span> 
                 </div>
                 { currentLinesArray.map(line => ( 
                     <div className="order-line-show"
@@ -266,7 +299,9 @@ class OrderShowPage extends React.Component {
                                 {line.productPrice}/<span className="product-unit"> {line.unit} </span>
                             </span>
 
-                            <span className="remove-button"> 
+                            <span 
+                                onClick={ () => this.handleRemove(line.id, line.quantity, line.order_id, line.productPrice)}
+                                className="remove-button"> 
                                Remove
                             </span>
                         </div>
@@ -277,8 +312,8 @@ class OrderShowPage extends React.Component {
                                 type="text"
                                 value = { lineQuantities[`${line.id}`] }
                                 onChange = {this.update(line.id)}
-                                // onKeyDown={(event) => this.handleEnter(event, line.product_id, line.order_id, lineQuantities[line.id], line.productPrice, line.quantity, line.id )}
-                                onBlur={(event) => this.handleEnter(event, line.product_id, line.order_id, lineQuantities[line.id], line.productPrice, line.quantity, line.id )}
+                                // onKeyDown={(event) => this.handleBlur(event, line.product_id, line.order_id, lineQuantities[line.id], line.productPrice, line.quantity, line.id )}
+                                onBlur={(event) => this.handleBlur(event, line.product_id, line.order_id, lineQuantities[line.id], line.productPrice, line.quantity, line.id )}
                             />  
                             {/* <span> 
                                 Line total: {line.line_total}
@@ -315,7 +350,9 @@ const mapStateToProps = state => ({
  const mapDispatchToProps = dispatch => ({
     getOrderLinesByOrder: (orderId) => dispatch(LineActions.getOrderLinesByOrderReduxAjax(orderId)),
     updateOrderLine: (orderLineInfo) => dispatch(LineActions.updateOrderLineReduxAjax(orderLineInfo)),
+    deleteOrderLine: (orderLineId) => dispatch(LineActions.deleteOrderLineReduxAjax(orderLineId)),
     updateOrder: (orderInfo) => dispatch(OrderActions.updateOrderReduxAjax(orderInfo)),
+    deleteOrder: (orderId) => dispatch(OrderActions.deleteOrderReduxAjax(orderId)),
     getCurrentOrder: (orderInfo) => dispatch(OrderActions.getCurrentOrderReduxAjax(orderInfo)),
 });
  

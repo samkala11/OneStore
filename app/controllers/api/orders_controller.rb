@@ -48,6 +48,16 @@ class Api::OrdersController < ApplicationController
         end
     end
 
+    def destroy
+        @order = Order.find(params[:id])
+        # order_num = @order.order_number
+        if @order && @order.destroy
+          render json: { message: "order #{@order.order_number} deleted successfully"} 
+        else
+          render json: { error: "No order to delete" }, status: 409
+        end
+    end
+
 
     def order_params
         params.require(:order).permit!.to_hash

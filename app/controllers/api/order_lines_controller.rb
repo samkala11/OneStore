@@ -40,6 +40,16 @@ class Api::OrderLinesController < ApplicationController
         render :order_lines_order
     end
 
+    def destroy
+        # api/order_lines/112
+        @orderline = OrderLine.find(params[:id])
+        if @orderline && @orderline.destroy
+          render json: { message: "orderline for #{@orderline.product.name} deleted successfully"} 
+        else
+          render json: { error: "No orderline to delete" }, status: 409
+        end
+    end
+
     def order_line_params
         params.require(:order_line).permit(:order_id, :line_no, :product_id, :quantity, :line_total, :unit)
     end

@@ -22,3 +22,11 @@ export const getOrderLinesByOrder = orderId => (
     url: `/api/orderlines/order?order_id=${orderId}`,
   })
 );
+
+
+export const deleteOrderLine = (id) => (
+  $.ajax({
+    method: 'DELETE',
+    url: `/api/order_lines/${id}`
+  })
+);

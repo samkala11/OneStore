@@ -23,3 +23,10 @@ export const getCurrentOrder = order => (
     data: { order }
   })
 );
+
+export const deleteOrder = (id) => (
+  $.ajax({
+    method: 'DELETE',
+    url: `/api/orders/${id}`
+  })
+);

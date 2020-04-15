@@ -90,7 +90,7 @@
 /*!**********************************************************!*\
   !*** ./app/javascript/frontend/actions/order_actions.js ***!
   \**********************************************************/
-/*! exports provided: RECEIVE_CREATED_ORDER_ACTION, RECEIVE_UPDATED_ORDER_ACTION, RECEIVE_CURRENT_ORDER_ACTION, createOrderReduxAjax, updateOrderReduxAjax, getCurrentOrderReduxAjax */
+/*! exports provided: RECEIVE_CREATED_ORDER_ACTION, RECEIVE_UPDATED_ORDER_ACTION, RECEIVE_CURRENT_ORDER_ACTION, RECEIVE_DELETED_ORDER_ACTION, createOrderReduxAjax, updateOrderReduxAjax, getCurrentOrderReduxAjax, deleteOrderReduxAjax */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -98,14 +98,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RECEIVE_CREATED_ORDER_ACTION", function() { return RECEIVE_CREATED_ORDER_ACTION; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RECEIVE_UPDATED_ORDER_ACTION", function() { return RECEIVE_UPDATED_ORDER_ACTION; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RECEIVE_CURRENT_ORDER_ACTION", function() { return RECEIVE_CURRENT_ORDER_ACTION; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RECEIVE_DELETED_ORDER_ACTION", function() { return RECEIVE_DELETED_ORDER_ACTION; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createOrderReduxAjax", function() { return createOrderReduxAjax; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "updateOrderReduxAjax", function() { return updateOrderReduxAjax; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getCurrentOrderReduxAjax", function() { return getCurrentOrderReduxAjax; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "deleteOrderReduxAjax", function() { return deleteOrderReduxAjax; });
 /* harmony import */ var _util_order_api_util__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../util/order_api_util */ "./app/javascript/frontend/util/order_api_util.js");
 
 var RECEIVE_CREATED_ORDER_ACTION = 'RECEIVE_CREATED_ORDER_ACTION';
 var RECEIVE_UPDATED_ORDER_ACTION = 'RECEIVE_UPDATED_ORDER_ACTION';
-var RECEIVE_CURRENT_ORDER_ACTION = 'RECEIVE_CURRENT_ORDER_ACTION'; // Redux Thunk Create order  
+var RECEIVE_CURRENT_ORDER_ACTION = 'RECEIVE_CURRENT_ORDER_ACTION';
+var RECEIVE_DELETED_ORDER_ACTION = 'RECEIVE_DELETED_ORDER_ACTION'; // Redux Thunk Create order  
 
 var createOrderReduxAjax = function createOrderReduxAjax(order) {
   return function (dispatch) {
@@ -155,6 +158,23 @@ var receiveCurrentOrder = function receiveCurrentOrder(data) {
     type: RECEIVE_CURRENT_ORDER_ACTION,
     data: data
   };
+}; // Redux Thunk delete orderline 
+
+
+var deleteOrderReduxAjax = function deleteOrderReduxAjax(id) {
+  return function (dispatch) {
+    return Object(_util_order_api_util__WEBPACK_IMPORTED_MODULE_0__["deleteOrder"])(id).then(function (order) {
+      console.log("order with id ".concat(id, " deleted successfully"));
+      return dispatch(receiveDeletedOrder(order));
+    });
+  };
+}; // Private receive orderlines by department
+
+var receiveDeletedOrder = function receiveDeletedOrder(data) {
+  return {
+    type: RECEIVE_DELETED_ORDER_ACTION,
+    data: data
+  };
 };
 
 /***/ }),
@@ -163,7 +183,7 @@ var receiveCurrentOrder = function receiveCurrentOrder(data) {
 /*!***************************************************************!*\
   !*** ./app/javascript/frontend/actions/order_line_actions.js ***!
   \***************************************************************/
-/*! exports provided: RECEIVE_CREATED_ORDER_LINE_ACTION, RECEIVE_UPDATED_ORDER_LINE_ACTION, RECEIVE_ORDER_LINES_BY_ORDER_ACTION, createOrderLineReduxAjax, updateOrderLineReduxAjax, getOrderLinesByOrderReduxAjax */
+/*! exports provided: RECEIVE_CREATED_ORDER_LINE_ACTION, RECEIVE_UPDATED_ORDER_LINE_ACTION, RECEIVE_ORDER_LINES_BY_ORDER_ACTION, RECEIVE_DELETED_ORDER_LINE_ACTION, createOrderLineReduxAjax, updateOrderLineReduxAjax, getOrderLinesByOrderReduxAjax, deleteOrderLineReduxAjax */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -171,14 +191,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RECEIVE_CREATED_ORDER_LINE_ACTION", function() { return RECEIVE_CREATED_ORDER_LINE_ACTION; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RECEIVE_UPDATED_ORDER_LINE_ACTION", function() { return RECEIVE_UPDATED_ORDER_LINE_ACTION; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RECEIVE_ORDER_LINES_BY_ORDER_ACTION", function() { return RECEIVE_ORDER_LINES_BY_ORDER_ACTION; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RECEIVE_DELETED_ORDER_LINE_ACTION", function() { return RECEIVE_DELETED_ORDER_LINE_ACTION; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createOrderLineReduxAjax", function() { return createOrderLineReduxAjax; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "updateOrderLineReduxAjax", function() { return updateOrderLineReduxAjax; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getOrderLinesByOrderReduxAjax", function() { return getOrderLinesByOrderReduxAjax; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "deleteOrderLineReduxAjax", function() { return deleteOrderLineReduxAjax; });
 /* harmony import */ var _util_order_line_api_util__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../util/order_line_api_util */ "./app/javascript/frontend/util/order_line_api_util.js");
 
 var RECEIVE_CREATED_ORDER_LINE_ACTION = 'RECEIVE_CREATED_ORDER_LINE_ACTION';
 var RECEIVE_UPDATED_ORDER_LINE_ACTION = 'RECEIVE_UPDATED_ORDER_LINE_ACTION';
-var RECEIVE_ORDER_LINES_BY_ORDER_ACTION = 'RECEIVE_ORDER_LINES_BY_ORDER_ACTION'; // Redux Thunk Create order  
+var RECEIVE_ORDER_LINES_BY_ORDER_ACTION = 'RECEIVE_ORDER_LINES_BY_ORDER_ACTION';
+var RECEIVE_DELETED_ORDER_LINE_ACTION = 'RECEIVE_DELETED_ORDER_LINE_ACTION'; // Redux Thunk Create order  
 
 var createOrderLineReduxAjax = function createOrderLineReduxAjax(orderLineInfo) {
   return function (dispatch) {
@@ -226,6 +249,23 @@ var getOrderLinesByOrderReduxAjax = function getOrderLinesByOrderReduxAjax(order
 var receiveOrderLinesByOrder = function receiveOrderLinesByOrder(data) {
   return {
     type: RECEIVE_ORDER_LINES_BY_ORDER_ACTION,
+    data: data
+  };
+}; // Redux Thunk delete orderline 
+
+
+var deleteOrderLineReduxAjax = function deleteOrderLineReduxAjax(id) {
+  return function (dispatch) {
+    return Object(_util_order_line_api_util__WEBPACK_IMPORTED_MODULE_0__["deleteOrderLine"])(id).then(function (orderLine) {
+      console.log('orderline deleted successfully');
+      return dispatch(receiveDeletedOrderLine(orderLine));
+    });
+  };
+}; // Private receive orderlines by department
+
+var receiveDeletedOrderLine = function receiveDeletedOrderLine(data) {
+  return {
+    type: RECEIVE_DELETED_ORDER_LINE_ACTION,
     data: data
   };
 };
@@ -844,7 +884,8 @@ function (_React$Component) {
     _this.handleUpdateLine = _this.handleUpdateLine.bind(_assertThisInitialized(_this));
     _this.updateOrderTotal = _this.updateOrderTotal.bind(_assertThisInitialized(_this));
     _this.updateStateOriginalLines = _this.updateStateOriginalLines.bind(_assertThisInitialized(_this));
-    _this.handleEnter = _this.handleEnter.bind(_assertThisInitialized(_this));
+    _this.handleBlur = _this.handleBlur.bind(_assertThisInitialized(_this));
+    _this.handleRemove = _this.handleRemove.bind(_assertThisInitialized(_this));
     return _this;
   }
 
@@ -1066,22 +1107,64 @@ function (_React$Component) {
       });
     }
   }, {
-    key: "handleEnter",
-    value: function handleEnter(event, productId, orderId, newProductQuantity, productPrice, oldLineQuantity, lineId) {
+    key: "handleBlur",
+    value: function handleBlur(event, productId, orderId, newProductQuantity, productPrice, oldLineQuantity, lineId) {
       // if (event.keyCode === 13) {
       console.log('blurrr and save');
       this.handleUpdateLine(productId, orderId, newProductQuantity, productPrice, oldLineQuantity, lineId); // }
     }
   }, {
+    key: "getMatchingLine",
+    value: function getMatchingLine(orderLines, lineId) {
+      var orderLinesArray = Object.values(orderLines);
+
+      for (var index = 0; index < orderLinesArray.length; index++) {
+        var orderLine = orderLinesArray[index];
+        if (orderLine.id === lineId) return orderLine;
+      }
+
+      return false;
+    }
+  }, {
+    key: "handleRemove",
+    value: function handleRemove(lineId, lineQuantity, orderId, productPrice) {
+      var _this5 = this;
+
+      var _this$props3 = this.props,
+          currentOrder = _this$props3.currentOrder,
+          getOrderLinesByOrder = _this$props3.getOrderLinesByOrder,
+          deleteOrderLine = _this$props3.deleteOrderLine,
+          deleteOrder = _this$props3.deleteOrder;
+      var quantityDifference = -lineQuantity;
+      deleteOrderLine(lineId).then(function () {
+        return getOrderLinesByOrder(currentOrder.id);
+      }).then(function (orderLines) {
+        console.log('orderLines after removing one from cart', orderLines.data);
+
+        if (Object.values(orderLines.data).length === 0) {
+          deleteOrder(currentOrder.id).then(function () {
+            localStorage.removeItem('currentOrderId');
+            console.log('order removed from localStorage, empty cart');
+          }); // .then(order => console.log('order deleted', order))
+        } else {
+          _this5.updateOrderTotal(currentOrder.order_total, orderId, productPrice, quantityDifference);
+        }
+      }).then(function () {
+        _this5.updateStateOriginalLines();
+      }).then(function () {
+        return _this5.QuantityChanged(lineId);
+      });
+    }
+  }, {
     key: "render",
     value: function render() {
-      var _this5 = this;
+      var _this6 = this;
 
       window.orderShowProps = this.props;
       window.orderShowstate = this.state;
-      var _this$props3 = this.props,
-          currentOrderLines = _this$props3.currentOrderLines,
-          currentOrder = _this$props3.currentOrder;
+      var _this$props4 = this.props,
+          currentOrderLines = _this$props4.currentOrderLines,
+          currentOrder = _this$props4.currentOrder;
       var _this$state3 = this.state,
           lineQuantities = _this$state3.lineQuantities,
           originalLineQuantities = _this$state3.originalLineQuantities,
@@ -1104,7 +1187,7 @@ function (_React$Component) {
         className: "order-header"
       }, "Your Order"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "continue-button"
-      }, "contirue to address ", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+      }, "continue to address ", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
         className: "order-total"
       }, " ", currentOrder.order_total, " L.L. ")), currentLinesArray.map(function (line) {
         return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -1122,6 +1205,9 @@ function (_React$Component) {
         }, line.productPrice, "/", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
           className: "product-unit"
         }, " ", line.unit, " ")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+          onClick: function onClick() {
+            return _this6.handleRemove(line.id, line.quantity, line.order_id, line.productPrice);
+          },
           className: "remove-button"
         }, "Remove")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
           className: "quantity-wrapper"
@@ -1132,20 +1218,20 @@ function (_React$Component) {
           }),
           type: "text",
           value: lineQuantities["".concat(line.id)],
-          onChange: _this5.update(line.id) // onKeyDown={(event) => this.handleEnter(event, line.product_id, line.order_id, lineQuantities[line.id], line.productPrice, line.quantity, line.id )}
+          onChange: _this6.update(line.id) // onKeyDown={(event) => this.handleBlur(event, line.product_id, line.order_id, lineQuantities[line.id], line.productPrice, line.quantity, line.id )}
           ,
           onBlur: function onBlur(event) {
-            return _this5.handleEnter(event, line.product_id, line.order_id, lineQuantities[line.id], line.productPrice, line.quantity, line.id);
+            return _this6.handleBlur(event, line.product_id, line.order_id, lineQuantities[line.id], line.productPrice, line.quantity, line.id);
           }
         }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
           className: classnames__WEBPACK_IMPORTED_MODULE_4___default()({
-            hidden: !_this5.state.displayUpdateButtons[line.id],
+            hidden: !_this6.state.displayUpdateButtons[line.id],
             'save-button': true,
             'fas': true,
             'fa-save': true
           }),
           onClick: function onClick() {
-            return _this5.handleUpdateLine(line.product_id, line.order_id, lineQuantities[line.id], line.productPrice, line.quantity, line.id);
+            return _this6.handleUpdateLine(line.product_id, line.order_id, lineQuantities[line.id], line.productPrice, line.quantity, line.id);
           }
         }, " ")));
       })));
@@ -1170,8 +1256,14 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
     updateOrderLine: function updateOrderLine(orderLineInfo) {
       return dispatch(_actions_order_line_actions__WEBPACK_IMPORTED_MODULE_5__["updateOrderLineReduxAjax"](orderLineInfo));
     },
+    deleteOrderLine: function deleteOrderLine(orderLineId) {
+      return dispatch(_actions_order_line_actions__WEBPACK_IMPORTED_MODULE_5__["deleteOrderLineReduxAjax"](orderLineId));
+    },
     updateOrder: function updateOrder(orderInfo) {
       return dispatch(_actions_order_actions__WEBPACK_IMPORTED_MODULE_6__["updateOrderReduxAjax"](orderInfo));
+    },
+    deleteOrder: function deleteOrder(orderId) {
+      return dispatch(_actions_order_actions__WEBPACK_IMPORTED_MODULE_6__["deleteOrderReduxAjax"](orderId));
     },
     getCurrentOrder: function getCurrentOrder(orderInfo) {
       return dispatch(_actions_order_actions__WEBPACK_IMPORTED_MODULE_6__["getCurrentOrderReduxAjax"](orderInfo));
@@ -1660,23 +1752,43 @@ function (_React$Component) {
           currentOrderLines = _this$props4.currentOrderLines,
           updateOrderLine = _this$props4.updateOrderLine,
           getOrderLinesByOrder = _this$props4.getOrderLinesByOrder,
-          currentOrder = _this$props4.currentOrder;
+          deleteOrder = _this$props4.deleteOrder,
+          currentOrder = _this$props4.currentOrder,
+          deleteOrderLine = _this$props4.deleteOrderLine;
       var matchingLine = this.getMatchingLine(currentOrderLines, productId);
 
       if (matchingLine) {
         var newQuantity = matchingLine.quantity - 0.5;
         var newLineTotal = matchingLine.line_total - 0.5 * productPrice;
-        var orderLineInfo = {
-          product_id: productId,
-          order_id: matchingLine.order_id,
-          quantity: newQuantity,
-          line_total: newLineTotal
-        };
-        updateOrderLine(orderLineInfo).then(function () {
-          return getOrderLinesByOrder(matchingLine.order_id);
-        }).then(function () {
-          _this5.updateOrderTotal(currentOrder.order_total, currentOrder.id, productPrice, -0.5);
-        });
+
+        if (newQuantity === 0) {
+          deleteOrderLine(matchingLine.id).then(function () {
+            return getOrderLinesByOrder(matchingLine.order_id);
+          }).then(function (orderLines) {
+            console.log('orderLines after deleting one', orderLines.data);
+
+            if (Object.values(orderLines.data).length === 0) {
+              deleteOrder(currentOrder.id).then(function () {
+                localStorage.removeItem('currentOrderId');
+                console.log('order removed from localStorage');
+              }); // .then(order => console.log('order deleted', order))
+            } else {
+              _this5.updateOrderTotal(currentOrder.order_total, currentOrder.id, productPrice, -0.5);
+            }
+          });
+        } else {
+          var orderLineInfo = {
+            product_id: productId,
+            order_id: matchingLine.order_id,
+            quantity: newQuantity,
+            line_total: newLineTotal
+          };
+          updateOrderLine(orderLineInfo).then(function () {
+            return getOrderLinesByOrder(matchingLine.order_id);
+          }).then(function () {
+            _this5.updateOrderTotal(currentOrder.order_total, currentOrder.id, productPrice, -0.5);
+          });
+        }
       }
     }
   }, {
@@ -1773,11 +1885,17 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
     updateOrder: function updateOrder(orderInfo) {
       return dispatch(_actions_order_actions__WEBPACK_IMPORTED_MODULE_4__["updateOrderReduxAjax"](orderInfo));
     },
+    deleteOrder: function deleteOrder(orderId) {
+      return dispatch(_actions_order_actions__WEBPACK_IMPORTED_MODULE_4__["deleteOrderReduxAjax"](orderId));
+    },
     createOrderLine: function createOrderLine(orderLineInfo) {
       return dispatch(_actions_order_line_actions__WEBPACK_IMPORTED_MODULE_5__["createOrderLineReduxAjax"](orderLineInfo));
     },
     updateOrderLine: function updateOrderLine(orderLineInfo) {
       return dispatch(_actions_order_line_actions__WEBPACK_IMPORTED_MODULE_5__["updateOrderLineReduxAjax"](orderLineInfo));
+    },
+    deleteOrderLine: function deleteOrderLine(orderLineId) {
+      return dispatch(_actions_order_line_actions__WEBPACK_IMPORTED_MODULE_5__["deleteOrderLineReduxAjax"](orderLineId));
     },
     getOrderLinesByOrder: function getOrderLinesByOrder(orderId) {
       return dispatch(_actions_order_line_actions__WEBPACK_IMPORTED_MODULE_5__["getOrderLinesByOrderReduxAjax"](orderId));
@@ -2500,6 +2618,9 @@ __webpack_require__.r(__webpack_exports__);
     case _actions_order_actions__WEBPACK_IMPORTED_MODULE_0__["RECEIVE_CURRENT_ORDER_ACTION"]:
       return action.data;
 
+    case _actions_order_actions__WEBPACK_IMPORTED_MODULE_0__["RECEIVE_DELETED_ORDER_ACTION"]:
+      return {};
+
     default:
       return state;
   }
@@ -2875,7 +2996,7 @@ function () {
 /*!********************************************************!*\
   !*** ./app/javascript/frontend/util/order_api_util.js ***!
   \********************************************************/
-/*! exports provided: createOrder, updateOrder, getCurrentOrder */
+/*! exports provided: createOrder, updateOrder, getCurrentOrder, deleteOrder */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -2883,6 +3004,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createOrder", function() { return createOrder; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "updateOrder", function() { return updateOrder; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getCurrentOrder", function() { return getCurrentOrder; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "deleteOrder", function() { return deleteOrder; });
 /* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js");
 /* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(jquery__WEBPACK_IMPORTED_MODULE_0__);
 
@@ -2913,6 +3035,12 @@ var getCurrentOrder = function getCurrentOrder(order) {
     }
   });
 };
+var deleteOrder = function deleteOrder(id) {
+  return jquery__WEBPACK_IMPORTED_MODULE_0___default.a.ajax({
+    method: 'DELETE',
+    url: "/api/orders/".concat(id)
+  });
+};
 
 /***/ }),
 
@@ -2920,7 +3048,7 @@ var getCurrentOrder = function getCurrentOrder(order) {
 /*!*************************************************************!*\
   !*** ./app/javascript/frontend/util/order_line_api_util.js ***!
   \*************************************************************/
-/*! exports provided: createOrderLine, updateOrderLine, getOrderLinesByOrder */
+/*! exports provided: createOrderLine, updateOrderLine, getOrderLinesByOrder, deleteOrderLine */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -2928,6 +3056,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createOrderLine", function() { return createOrderLine; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "updateOrderLine", function() { return updateOrderLine; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getOrderLinesByOrder", function() { return getOrderLinesByOrder; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "deleteOrderLine", function() { return deleteOrderLine; });
 /* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js");
 /* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(jquery__WEBPACK_IMPORTED_MODULE_0__);
 
@@ -2953,6 +3082,12 @@ var getOrderLinesByOrder = function getOrderLinesByOrder(orderId) {
   return jquery__WEBPACK_IMPORTED_MODULE_0___default.a.ajax({
     method: 'GET',
     url: "/api/orderlines/order?order_id=".concat(orderId)
+  });
+};
+var deleteOrderLine = function deleteOrderLine(id) {
+  return jquery__WEBPACK_IMPORTED_MODULE_0___default.a.ajax({
+    method: 'DELETE',
+    url: "/api/order_lines/".concat(id)
   });
 };
 

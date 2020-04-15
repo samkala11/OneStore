@@ -1,8 +1,9 @@
-import { createOrder, updateOrder, getCurrentOrder } from '../util/order_api_util';
+import { createOrder, updateOrder, getCurrentOrder, deleteOrder } from '../util/order_api_util';
 
 export const RECEIVE_CREATED_ORDER_ACTION = 'RECEIVE_CREATED_ORDER_ACTION';
 export const RECEIVE_UPDATED_ORDER_ACTION = 'RECEIVE_UPDATED_ORDER_ACTION';
 export const RECEIVE_CURRENT_ORDER_ACTION = 'RECEIVE_CURRENT_ORDER_ACTION';
+export const RECEIVE_DELETED_ORDER_ACTION = 'RECEIVE_DELETED_ORDER_ACTION';
 
 
 // Redux Thunk Create order  
@@ -45,3 +46,19 @@ const receiveCurrentOrder = (data) => ({
   type: RECEIVE_CURRENT_ORDER_ACTION,
   data
 });
+
+
+// Redux Thunk delete orderline 
+export const deleteOrderReduxAjax = (id) => dispatch => deleteOrder(id)
+.then((order) => {
+  console.log( `order with id ${id} deleted successfully`);
+  return dispatch(receiveDeletedOrder(order));
+});
+
+// Private receive orderlines by department
+const receiveDeletedOrder = (data) => ({
+    type: RECEIVE_DELETED_ORDER_ACTION,
+    data
+})
+  
+  

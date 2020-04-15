@@ -134,22 +134,42 @@ class ProductListDept extends React.Component {
    }
    
    decreaseLineQuantity(productId, productPrice) {
-      const { currentOrderLines, updateOrderLine, getOrderLinesByOrder, currentOrder } = this.props;
+      const { currentOrderLines, updateOrderLine, getOrderLinesByOrder, 
+         deleteOrder, currentOrder, deleteOrderLine } = this.props;
       let matchingLine = this.getMatchingLine(currentOrderLines, productId);
       if (matchingLine) {
          let newQuantity =  matchingLine.quantity - 0.5;
          let newLineTotal = matchingLine.line_total - (0.5 * productPrice);
-         const orderLineInfo = {
-            product_id: productId,
-            order_id: matchingLine.order_id,
-            quantity: newQuantity,
-            line_total: newLineTotal,
-         };
-         updateOrderLine(orderLineInfo)
-         .then(() => getOrderLinesByOrder( matchingLine.order_id ))
-         .then(() => {
-            this.updateOrderTotal(currentOrder.order_total, currentOrder.id, productPrice, -0.5)
-         })
+
+         if ( newQuantity === 0 ) {
+            deleteOrderLine(matchingLine.id)
+            .then(() => getOrderLinesByOrder( matchingLine.order_id ))
+            .then((orderLines) => {
+               console.log('orderLines after deleting one', orderLines.data)
+               if (Object.values(orderLines.data).length === 0) {
+                  deleteOrder(currentOrder.id)
+                  .then(() => {
+                     localStorage.removeItem('currentOrderId');
+                     console.log('order removed from localStorage')
+                  })
+                  // .then(order => console.log('order deleted', order))
+               } else {
+                  this.updateOrderTotal(currentOrder.order_total, currentOrder.id, productPrice, -0.5)
+               }
+            })
+         } else {
+            const orderLineInfo = {
+               product_id: productId,
+               order_id: matchingLine.order_id,
+               quantity: newQuantity,
+               line_total: newLineTotal,
+            };
+            updateOrderLine(orderLineInfo)
+            .then(() => getOrderLinesByOrder( matchingLine.order_id ))
+            .then(() => {
+               this.updateOrderTotal(currentOrder.order_total, currentOrder.id, productPrice, -0.5)
+            })
+         }
       }
    }
 
@@ -243,8 +263,10 @@ const mapStateToProps = state => ({
    getCurrentOrder: (orderInfo) => dispatch(OrderActions.getCurrentOrderReduxAjax(orderInfo)),
    createOrder: (orderInfo) => dispatch(OrderActions.createOrderReduxAjax(orderInfo)),
    updateOrder: (orderInfo) => dispatch(OrderActions.updateOrderReduxAjax(orderInfo)),
+   deleteOrder: (orderId) => dispatch(OrderActions.deleteOrderReduxAjax(orderId)),
    createOrderLine: (orderLineInfo) => dispatch(LineActions.createOrderLineReduxAjax(orderLineInfo)),
    updateOrderLine: (orderLineInfo) => dispatch(LineActions.updateOrderLineReduxAjax(orderLineInfo)),
+   deleteOrderLine: (orderLineId) => dispatch(LineActions.deleteOrderLineReduxAjax(orderLineId)),
    getOrderLinesByOrder: (orderId) => dispatch(LineActions.getOrderLinesByOrderReduxAjax(orderId))
 });
  
