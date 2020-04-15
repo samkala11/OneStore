@@ -763,7 +763,7 @@ function (_React$Component) {
           'home-link': true,
           'current-link': window.location.hash === '#/'
         })
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
         onClick: function onClick() {
           return _this3.handleIconClicked('home', '/');
         },
@@ -795,7 +795,7 @@ function (_React$Component) {
           'current-link': window.location.hash === '#/ordercheckout'
         }) // to='/ordercheckout'
 
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
         onClick: function onClick() {
           return _this3.handleIconClicked('cart', '/ordercheckout');
         },

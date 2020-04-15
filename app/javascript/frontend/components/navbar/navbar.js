@@ -55,6 +55,7 @@ class NavBar extends React.Component {
     }
 
 
+
    render() {
         const { newOrderExist, showSearchBar } = this.state;
         const { currentOrder, title, isHomeNavBar } = this.props;
@@ -73,11 +74,11 @@ class NavBar extends React.Component {
                    <div 
                         className={classNames({ 'home-link': true, 'current-link': window.location.hash === '#/' })}
                         > 
-                        <i  
+                        <span  
                             onClick = { () => this.handleIconClicked('home', '/') }
                             className={classNames({ 'fas': true, 'fa-home': true, 'icon-clicked': this.state.homeIconClicked })}
                             // className="fas fa-home"
-                        > </i>
+                        > </span>
                    </div> 
 
                    <div
@@ -94,10 +95,10 @@ class NavBar extends React.Component {
                         className={classNames({ 'cart-link': true, 'current-link': window.location.hash === '#/ordercheckout' })}
                         // to='/ordercheckout'
                         > 
-                        <i  onClick = { () => this.handleIconClicked('cart', '/ordercheckout')}
+                        <span  onClick = { () => this.handleIconClicked('cart', '/ordercheckout')}
                             className={classNames({ 'fas': true, 'fa-shopping-cart': true, 'icon-clicked': this.state.cartIconClicked })}
                             // className="fas fa-shopping-cart"
-                            ></i>
+                            ></span>
                    </div> 
                 </div>
 
