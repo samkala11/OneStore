@@ -4,6 +4,8 @@ import { getProductsByDeptThunk } from '../../actions/product_actions';
 import NavBar from '../navbar/navbar';
 import * as OrderActions from '../../actions/order_actions';
 import * as LineActions from '../../actions/order_line_actions';
+import classNames from 'classnames';
+
 
 class ProductListDept extends React.Component {
    
@@ -16,17 +18,30 @@ class ProductListDept extends React.Component {
          },
          orderLine : { 
             quantity: 1
+         },
+         addButtons : {
+
+         },
+         decreaseButtons: {
+
          }
       }
       this.handleCreateOrder = this.handleCreateOrder.bind(this);
       this.handleUpdateOrder = this.handleUpdateOrder.bind(this);
       this.updateOrderTotal = this.updateOrderTotal.bind(this);
+      this.setInitialAddButtonState = this.setInitialAddButtonState.bind(this);
+      this.handleAddClicked = this.handleAddClicked.bind(this);
+      this.handleDecreaseClicked = this.handleDecreaseClicked.bind(this);
    }
    
    componentDidMount(){
       const { getProductsByDept, getCurrentOrder, getOrderLinesByOrder, departmentNumber } = this.props;
       getProductsByDept(departmentNumber) //config constant
-      .then(() => this.setState({products: Object.values(this.props.productsByDept)}));
+      .then((data) => {
+         console.log(`products from component did mount`, data.products);
+         this.setInitialAddButtonState(data.products);
+         this.setState({products: Object.values(this.props.productsByDept)});
+      });
 
       let currentOrderId = localStorage.getItem('currentOrderId');
       if (currentOrderId) {
@@ -35,6 +50,19 @@ class ProductListDept extends React.Component {
          };
          getCurrentOrder(orderInfo)
          .then(() => getOrderLinesByOrder(currentOrderId))
+      }
+   }
+
+   setInitialAddButtonState(productsObject) {
+      let productsArray = Object.values(productsObject);
+      if (productsArray.length > 0) {
+         let addButtonsState = {};
+         for (let index = 0; index < productsArray.length; index++) {
+            let productId = productsArray[index].id; 
+            addButtonsState[`${productId}`] = false;       
+         }
+         this.setState({ addButtons: addButtonsState});
+         this.setState({ decreaseButtons: addButtonsState});
       }
    }
 
@@ -185,7 +213,40 @@ class ProductListDept extends React.Component {
       //      this.toggleResults('allArtists')
       //    }
       // }
+   }
 
+   handleAddClicked(productId, productUnit, productPrice, orderTotal ) {
+      console.log(`handle add button clicked called for product ${productId}`);
+
+      let state = Object.assign({}, this.state);
+      let updatedButtonsState = Object.assign({}, state.addButtons);
+      let resetButtonsState = Object.assign({}, state.addButtons);
+
+      updatedButtonsState[`${productId}`] = true;
+      this.setState({ addButtons: updatedButtonsState });
+      console.log(updatedButtonsState);
+
+      resetButtonsState[`${productId}`] = false;
+      this.timer = setTimeout(() => this.setState({ addButtons: resetButtonsState }), 200);
+      
+      this.handleAddToOrder(productId, productUnit, productPrice, 0.5, orderTotal);
+   }
+
+   handleDecreaseClicked(productId, productPrice ) {
+      console.log(`handle decrease button clicked called for product ${productId}`);
+      
+      let state = Object.assign({}, this.state);
+      let updatedButtonsState = Object.assign({}, state.decreaseButtons);
+      let resetButtonsState = Object.assign({}, state.decreaseButtons);
+
+      updatedButtonsState[`${productId}`] = true;
+      this.setState({ decreaseButtons: updatedButtonsState });
+      // console.log(updatedButtonsState);
+
+      resetButtonsState[`${productId}`] = false;
+      this.timer = setTimeout(() => this.setState({ decreaseButtons: resetButtonsState }), 200);
+      
+      this.decreaseLineQuantity(productId, productPrice);
    }
 
    render() {
@@ -221,13 +282,14 @@ class ProductListDept extends React.Component {
                      </div>
 
                      { (currentOrderLines && this.getMatchingLine(currentOrderLines, product.id) && this.getMatchingLine(currentOrderLines, product.id).quantity > 0) && <button
-                        className="decrease-quantity-button"
-                        onClick = {() => this.decreaseLineQuantity(product.id, product.price)}
+                        // className="decrease-quantity-button"
+                        className= {classNames({ 'decrease-quantity-button': true, 'button-clicked': this.state.decreaseButtons[`${product.id}`] })}
+                        onClick = {() => this.handleDecreaseClicked(product.id, product.price)}
                      > - </button> }
 
                      <button 
-                        onClick = { () => this.handleAddToOrder(product.id, product.unit, product.price, 0.5, currentOrder.order_total)}
-                        className="add-button"
+                        onClick = { () => this.handleAddClicked(product.id, product.unit, product.price, currentOrder.order_total)}
+                        className= {classNames({ 'add-button': true, 'button-clicked': this.state.addButtons[`${product.id}`] })}
                      >
                         { (currentOrderLines && this.getMatchingLine(currentOrderLines, product.id) && this.getMatchingLine(currentOrderLines, product.id).quantity > 0) 
                            ?
@@ -240,7 +302,9 @@ class ProductListDept extends React.Component {
                               </span>
                            </span>
                            :
-                           <span> Add to order </span>}
+                           <span
+                              // className={classNames({ clicked: this.state.addButtons[`add-${product.id}`] })}
+                           > Add to order </span> }
                      </button>
                   </div>
                ))}              

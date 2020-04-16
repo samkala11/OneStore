@@ -24,6 +24,7 @@ class SearchPage extends React.Component {
     }
 
     componentDidMount() {
+        window.scroll(0,0);
         const { currentOrder, getCurrentOrder, getOrderLinesByOrder } = this.props;
 
         let storageCurrentOrderId = localStorage.getItem('currentOrderId');

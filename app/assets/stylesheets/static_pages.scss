@@ -120,6 +120,7 @@ html {
                 width: 432px;
                 margin-left: 18px;
                 position: relative;
+                transition: 200ms, ease-in-out;
             }
 
             // .product-title {
@@ -139,6 +140,11 @@ html {
                 width: 83px;
                 font-size: 64px;
                 margin-left: 18px;
+            }
+
+            .button-clicked {
+                transform: scale(0.96);
+                opacity: 0.8;
             }
 
             .plus-sign {

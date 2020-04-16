@@ -941,6 +941,7 @@ function (_React$Component) {
     value: function componentDidMount() {
       var _this2 = this;
 
+      window.scroll(0, 0);
       var _this$props = this.props,
           currentOrderLines = _this$props.currentOrderLines,
           currentOrder = _this$props.currentOrder,
@@ -1457,6 +1458,7 @@ function (_React$Component) {
     value: function componentDidMount() {
       var _this2 = this;
 
+      window.scroll(0, 0);
       var _this$props = this.props,
           getAllProducts = _this$props.getAllProducts,
           hideInitialHomeLoader = _this$props.hideInitialHomeLoader,
@@ -1707,6 +1709,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _navbar_navbar__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../navbar/navbar */ "./app/javascript/frontend/components/navbar/navbar.js");
 /* harmony import */ var _actions_order_actions__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../actions/order_actions */ "./app/javascript/frontend/actions/order_actions.js");
 /* harmony import */ var _actions_order_line_actions__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../actions/order_line_actions */ "./app/javascript/frontend/actions/order_line_actions.js");
+/* harmony import */ var classnames__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! classnames */ "./node_modules/classnames/index.js");
+/* harmony import */ var classnames__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(classnames__WEBPACK_IMPORTED_MODULE_6__);
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -1724,6 +1728,7 @@ function _assertThisInitialized(self) { if (self === void 0) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
 
 
 
@@ -1750,11 +1755,16 @@ function (_React$Component) {
       },
       orderLine: {
         quantity: 1
-      }
+      },
+      addButtons: {},
+      decreaseButtons: {}
     };
     _this.handleCreateOrder = _this.handleCreateOrder.bind(_assertThisInitialized(_this));
     _this.handleUpdateOrder = _this.handleUpdateOrder.bind(_assertThisInitialized(_this));
     _this.updateOrderTotal = _this.updateOrderTotal.bind(_assertThisInitialized(_this));
+    _this.setInitialAddButtonState = _this.setInitialAddButtonState.bind(_assertThisInitialized(_this));
+    _this.handleAddClicked = _this.handleAddClicked.bind(_assertThisInitialized(_this));
+    _this.handleDecreaseClicked = _this.handleDecreaseClicked.bind(_assertThisInitialized(_this));
     return _this;
   }
 
@@ -1769,8 +1779,12 @@ function (_React$Component) {
           getOrderLinesByOrder = _this$props.getOrderLinesByOrder,
           departmentNumber = _this$props.departmentNumber;
       getProductsByDept(departmentNumber) //config constant
-      .then(function () {
-        return _this2.setState({
+      .then(function (data) {
+        console.log("products from component did mount", data.products);
+
+        _this2.setInitialAddButtonState(data.products);
+
+        _this2.setState({
           products: Object.values(_this2.props.productsByDept)
         });
       });
@@ -1782,6 +1796,27 @@ function (_React$Component) {
         };
         getCurrentOrder(orderInfo).then(function () {
           return getOrderLinesByOrder(currentOrderId);
+        });
+      }
+    }
+  }, {
+    key: "setInitialAddButtonState",
+    value: function setInitialAddButtonState(productsObject) {
+      var productsArray = Object.values(productsObject);
+
+      if (productsArray.length > 0) {
+        var addButtonsState = {};
+
+        for (var index = 0; index < productsArray.length; index++) {
+          var productId = productsArray[index].id;
+          addButtonsState["".concat(productId)] = false;
+        }
+
+        this.setState({
+          addButtons: addButtonsState
+        });
+        this.setState({
+          decreaseButtons: addButtonsState
         });
       }
     }
@@ -1956,9 +1991,53 @@ function (_React$Component) {
       // }
     }
   }, {
+    key: "handleAddClicked",
+    value: function handleAddClicked(productId, productUnit, productPrice, orderTotal) {
+      var _this6 = this;
+
+      console.log("handle add button clicked called for product ".concat(productId));
+      var state = Object.assign({}, this.state);
+      var updatedButtonsState = Object.assign({}, state.addButtons);
+      var resetButtonsState = Object.assign({}, state.addButtons);
+      updatedButtonsState["".concat(productId)] = true;
+      this.setState({
+        addButtons: updatedButtonsState
+      });
+      console.log(updatedButtonsState);
+      resetButtonsState["".concat(productId)] = false;
+      this.timer = setTimeout(function () {
+        return _this6.setState({
+          addButtons: resetButtonsState
+        });
+      }, 200);
+      this.handleAddToOrder(productId, productUnit, productPrice, 0.5, orderTotal);
+    }
+  }, {
+    key: "handleDecreaseClicked",
+    value: function handleDecreaseClicked(productId, productPrice) {
+      var _this7 = this;
+
+      console.log("handle decrease button clicked called for product ".concat(productId));
+      var state = Object.assign({}, this.state);
+      var updatedButtonsState = Object.assign({}, state.decreaseButtons);
+      var resetButtonsState = Object.assign({}, state.decreaseButtons);
+      updatedButtonsState["".concat(productId)] = true;
+      this.setState({
+        decreaseButtons: updatedButtonsState
+      }); // console.log(updatedButtonsState);
+
+      resetButtonsState["".concat(productId)] = false;
+      this.timer = setTimeout(function () {
+        return _this7.setState({
+          decreaseButtons: resetButtonsState
+        });
+      }, 200);
+      this.decreaseLineQuantity(productId, productPrice);
+    }
+  }, {
     key: "render",
     value: function render() {
-      var _this6 = this;
+      var _this8 = this;
 
       var products = this.state.products;
       window.fruitsState = this.state;
@@ -1992,19 +2071,26 @@ function (_React$Component) {
           className: "product-title"
         }, product.name.capitalize()), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
           className: "product-price"
-        }, product.price + '/' + product.unit)), currentOrderLines && _this6.getMatchingLine(currentOrderLines, product.id) && _this6.getMatchingLine(currentOrderLines, product.id).quantity > 0 && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
-          className: "decrease-quantity-button",
+        }, product.price + '/' + product.unit)), currentOrderLines && _this8.getMatchingLine(currentOrderLines, product.id) && _this8.getMatchingLine(currentOrderLines, product.id).quantity > 0 && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+          // className="decrease-quantity-button"
+          className: classnames__WEBPACK_IMPORTED_MODULE_6___default()({
+            'decrease-quantity-button': true,
+            'button-clicked': _this8.state.decreaseButtons["".concat(product.id)]
+          }),
           onClick: function onClick() {
-            return _this6.decreaseLineQuantity(product.id, product.price);
+            return _this8.handleDecreaseClicked(product.id, product.price);
           }
         }, " - "), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
           onClick: function onClick() {
-            return _this6.handleAddToOrder(product.id, product.unit, product.price, 0.5, currentOrder.order_total);
+            return _this8.handleAddClicked(product.id, product.unit, product.price, currentOrder.order_total);
           },
-          className: "add-button"
-        }, currentOrderLines && _this6.getMatchingLine(currentOrderLines, product.id) && _this6.getMatchingLine(currentOrderLines, product.id).quantity > 0 ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+          className: classnames__WEBPACK_IMPORTED_MODULE_6___default()({
+            'add-button': true,
+            'button-clicked': _this8.state.addButtons["".concat(product.id)]
+          })
+        }, currentOrderLines && _this8.getMatchingLine(currentOrderLines, product.id) && _this8.getMatchingLine(currentOrderLines, product.id).quantity > 0 ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
           className: "quantity-display"
-        }, _this6.getMatchingLine(currentOrderLines, product.id).quantity), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+        }, _this8.getMatchingLine(currentOrderLines, product.id).quantity), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
           className: "plus-sign"
         }, "+")) : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, " Add to order ")));
       })));
@@ -2239,6 +2325,7 @@ function (_React$Component) {
     value: function componentDidMount() {
       var _this2 = this;
 
+      window.scroll(0, 0);
       var _this$props = this.props,
           currentOrder = _this$props.currentOrder,
           getCurrentOrder = _this$props.getCurrentOrder,

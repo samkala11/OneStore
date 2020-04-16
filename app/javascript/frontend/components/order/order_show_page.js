@@ -50,6 +50,7 @@ class OrderShowPage extends React.Component {
     }
 
     componentDidMount(){
+        window.scroll(0,0);
         const { currentOrderLines, currentOrder, getCurrentOrder, getOrderLinesByOrder }  = this.props;
         let linesArray = OrderPureFunctions.objectValuesArray(currentOrderLines);
         let lineQuantities = Object.assign({}, this.state.lineQuantities) ;
