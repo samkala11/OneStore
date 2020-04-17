@@ -252,7 +252,7 @@ class ProductListDept extends React.Component {
    render() {
       const products = this.state.products;
       window.fruitsState = this.state;
-      const { currentOrderLines, currentOrder } = this.props;
+      const { currentOrderLines, currentOrder, departmentTitle } = this.props;
       let key = 0;
 
       String.prototype.capitalize = function() {
@@ -266,9 +266,16 @@ class ProductListDept extends React.Component {
                title = 'Beirut Market'
                isHomeNavBar = { true }
             />
-            <div className="product-list-wrapper">
+               <div className="product-list-wrapper">
+
+            <div className="department-title-wrapper"> 
+               <h3 className="department-title"> {departmentTitle} </h3>
+            </div>
+
                {products.map(product => (
-                  <div className="product-item-wrapper" key={key++}>
+                  <div className= {classNames({ 'product-item-wrapper': true, 'wrapper-transform': this.state.addButtons[`${product.id}`] ||  this.state.decreaseButtons[`${product.id}`] })}
+                     // className="product-item-wrapper" 
+                     key={key++}>
                      <img className="product-image" 
                            src={`https://onestorebucket.s3.eu-west-3.amazonaws.com/${product.name}.jpg`}
                      />

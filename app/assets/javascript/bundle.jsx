@@ -2043,7 +2043,8 @@ function (_React$Component) {
       window.fruitsState = this.state;
       var _this$props5 = this.props,
           currentOrderLines = _this$props5.currentOrderLines,
-          currentOrder = _this$props5.currentOrder;
+          currentOrder = _this$props5.currentOrder,
+          departmentTitle = _this$props5.departmentTitle;
       var key = 0;
 
       String.prototype.capitalize = function () {
@@ -2058,9 +2059,17 @@ function (_React$Component) {
         isHomeNavBar: true
       }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "product-list-wrapper"
-      }, products.map(function (product) {
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "department-title-wrapper"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h3", {
+        className: "department-title"
+      }, " ", departmentTitle, " ")), products.map(function (product) {
         return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-          className: "product-item-wrapper",
+          className: classnames__WEBPACK_IMPORTED_MODULE_6___default()({
+            'product-item-wrapper': true,
+            'wrapper-transform': _this8.state.addButtons["".concat(product.id)] || _this8.state.decreaseButtons["".concat(product.id)]
+          }) // className="product-item-wrapper" 
+          ,
           key: key++
         }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("img", {
           className: "product-image",
@@ -2205,14 +2214,16 @@ function (_React$Component) {
         case 'fruits':
           {
             return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_product_list_department__WEBPACK_IMPORTED_MODULE_3__["default"], {
-              departmentNumber: 20
+              departmentNumber: 20,
+              departmentTitle: params
             });
           }
 
         case 'vegetables':
           {
             return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_product_list_department__WEBPACK_IMPORTED_MODULE_3__["default"], {
-              departmentNumber: 10
+              departmentNumber: 10,
+              departmentTitle: params
             });
           }
 

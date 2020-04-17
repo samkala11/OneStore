@@ -17,11 +17,13 @@ class ProductsByDepartment extends React.Component {
            case 'fruits':{
                 return <ProductListDepartment
                     departmentNumber = {20}
+                    departmentTitle = {params}
                 />
            }
            case 'vegetables':{
                  return <ProductListDepartment
-                        departmentNumber = {10}
+                    departmentNumber = {10}
+                    departmentTitle = {params}
                  />
            }
            default:
