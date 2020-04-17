@@ -498,7 +498,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _products_products_by_dept__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./products/products_by_dept */ "./app/javascript/frontend/components/products/products_by_dept.js");
 /* harmony import */ var _session_login_form__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./session/login_form */ "./app/javascript/frontend/components/session/login_form.js");
 /* harmony import */ var _order_order_show_page__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./order/order_show_page */ "./app/javascript/frontend/components/order/order_show_page.js");
-/* harmony import */ var _products_search_page__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./products/search_page */ "./app/javascript/frontend/components/products/search_page.js");
+/* harmony import */ var _order_order_confirmation_page__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./order/order_confirmation_page */ "./app/javascript/frontend/components/order/order_confirmation_page.js");
+/* harmony import */ var _products_search_page__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./products/search_page */ "./app/javascript/frontend/components/products/search_page.js");
+
 
 
 
@@ -532,8 +534,12 @@ var App = function App() {
     component: _order_order_show_page__WEBPACK_IMPORTED_MODULE_5__["default"]
   }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Route"], {
     exact: true,
+    path: "/orderconfirmation",
+    component: _order_order_confirmation_page__WEBPACK_IMPORTED_MODULE_6__["default"]
+  }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Route"], {
+    exact: true,
     path: "/search",
-    component: _products_search_page__WEBPACK_IMPORTED_MODULE_6__["default"]
+    component: _products_search_page__WEBPACK_IMPORTED_MODULE_7__["default"]
   }));
 };
 
@@ -763,48 +769,68 @@ function (_React$Component) {
           'home-link': true,
           'current-link': window.location.hash === '#/'
         })
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+      }, window.location.hash !== '#/' && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("img", {
         onClick: function onClick() {
           return _this3.handleIconClicked('home', '/');
         },
         className: classnames__WEBPACK_IMPORTED_MODULE_3___default()({
-          'fas': true,
-          'fa-home': true,
           'icon-clicked': this.state.homeIconClicked
-        }) // className="fas fa-home"
-
-      }, " ")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        }),
+        src: "data:image/png;base64,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"
+      }), window.location.hash === '#/' && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("img", {
+        onClick: function onClick() {
+          return _this3.handleIconClicked('home', '/');
+        },
+        className: classnames__WEBPACK_IMPORTED_MODULE_3___default()({
+          'icon-clicked': this.state.homeIconClicked
+        }),
+        src: "data:image/png;base64,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"
+      })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: classnames__WEBPACK_IMPORTED_MODULE_3___default()({
           'search-link': true,
           'current-link': window.location.hash === '#/search'
         }) // to='/search'
 
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
+      }, window.location.hash !== '#/search' && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("img", {
         onClick: function onClick() {
           return _this3.handleIconClicked('search', '/search');
         },
         className: classnames__WEBPACK_IMPORTED_MODULE_3___default()({
-          'fas': true,
-          'fa-search': true,
+          'search-icon': true,
           'icon-clicked': this.state.searchIconClicked
-        }) // className="fas fa-search"
-
+        }),
+        src: "data:image/png;base64,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"
+      }), window.location.hash === '#/search' && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("img", {
+        onClick: function onClick() {
+          return _this3.handleIconClicked('search', '/search');
+        },
+        className: classnames__WEBPACK_IMPORTED_MODULE_3___default()({
+          'search-icon': true,
+          'icon-clicked': this.state.searchIconClicked
+        }),
+        src: "data:image/png;base64,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"
       })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: classnames__WEBPACK_IMPORTED_MODULE_3___default()({
           'cart-link': true,
           'current-link': window.location.hash === '#/ordercheckout'
         }) // to='/ordercheckout'
 
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+      }, window.location.hash !== '#/ordercheckout' && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("img", {
         onClick: function onClick() {
           return _this3.handleIconClicked('cart', '/ordercheckout');
         },
         className: classnames__WEBPACK_IMPORTED_MODULE_3___default()({
-          'fas': true,
-          'fa-shopping-cart': true,
           'icon-clicked': this.state.cartIconClicked
-        }) // className="fas fa-shopping-cart"
-
+        }),
+        src: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAABmJLR0QA/wD/AP+gvaeTAAAEaUlEQVR4nO2bXWgcVRTHf2eyGw3xSZMqiilUEfFJaAv6UCFRMG23jRYNRQtt1pZAN9Logx8vMqAQFPQpEVZIgmhFNlIQkxSfKvjgR1N8UBAUCia1Gpu+SFJtNjvHh+zHuJnNzOx0Jt1Jfk/33j1zz8mf/8y9s3sDW2yxxRabGLF3PpwafmAFegzFsI9bgpWAz4/uH/gl2vLCJ2HvFJSzAju0KkgUCtAP3B9dadFguIeUuS+0KjaQ/zlAtNBtSeKwoK224VcjrilSxC1gbHK4fEekUwOu8Y1Gwj2kwvjkcKO54cpyInm2v7v/j1oBvhzQoOSBob79GVNE1vwtfh6CjUoSeGN8amTI6UO/Dnj7RlUVOiKC8ijonuJIoUl4qHov4+sZkE4NvHbDCowA0zSNjl1t08CTQFPB0qeAd+wxsb4FTNO0EKYrI3JPdUysBSjycKmhhqxZDWItQHYmm0TpKfUNKXxVHRNrAZrnVx4HbgdAmDu298XvqmNiLYCqPlvpkNtU+4DsTDYJFfsjTDjFxVaAov3vAECY69uX+d4pLrYC2O2vMOFkf4ipANX2N8RytD/EVIDkn8td2Ozv9PQvEUsBBMOT/SGGApjnzISiB0v99ewPMRTg3sX2LqC92L20nv0hhgIIts0Puq79IWYCmOfMBFJ5+qvKuvaHmAlQbf90KvOt2zWxEsCv/SFGAtRjf4iRANuvtXXi0/4QIwEs295f4DMv9oeYCJDL5ZpEpWJ/vNkfYiLAUutfXQjbit3fZ2eueLI/xEQAVXml1BaYME3T8nptwwswOjVyDPSJYldXkA/8XO/rh5GbiVzuvZbFluZBVN+yDY+fSGV+9jNPIAFqHakJF21VjAcXV3/yusv2wY/NhvWS39kCCVDrSE24CLAm4zeFwsrTR1KDf/udrbGfAcIcwqnZ1oXHTvQMztczRSAH1DhSEyoi8o9lWfNiyA+3LW2b6e3tLQSZL5AAfQdO/Qq8GWSOjcbLLVBWOJczm0OsZUPwIsBcqbHY0n5wvcBGxPWEyOjU8LuivFzsXgdOC4R/YlS4/Nv5hdN+dnX14PoMWLGSQ0nJPwN0ALcA6UiWPYXtu9sAPgozjest0H+gfwGMTgHH39bCRFVD19rTKpBOnbyoqo+MTo/sMZCdqN4ZdmGgP83OXP0k/DxbbG48n/1VVSnfAoCFXnhhX+Zrr1893Sw5qvEkwNjk+zsQ61OU3VVXn0eNw+nUyYtBC4kihxOuAmS/yLYlJX+B1WXQidm8Jneurhb1EUWOWrgugwkj/zqVwq4LMirIKKubIoCOpOQDnSCNIkctXAUQ5VCpraLP96Uyx/tSmeOoHCnHUImphyhy1MLLu8Ddpca/S8aXpbZat1batpg6iSKHI14EuFxqtLTQXb6w6Vq5LbaYOokihyOuO0EVzpRfhkQ/Hpsc3osgqjxXjoEzQYqIIkct6noZqvpKbrZpGcd/RvBKFDlqEehlaHXM6Dx6aOBqkCKiyFGLTb8T/A94e8JxjjTtVgAAAABJRU5ErkJggg=="
+      }), window.location.hash === '#/ordercheckout' && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("img", {
+        onClick: function onClick() {
+          return _this3.handleIconClicked('cart', '/ordercheckout');
+        },
+        className: classnames__WEBPACK_IMPORTED_MODULE_3___default()({
+          'icon-clicked': this.state.cartIconClicked
+        }),
+        src: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAABmJLR0QA/wD/AP+gvaeTAAAEdElEQVR4nO2bTWgcZRjHf8/shy1FtGmsotBDFRFREYKHWiJJmmg82JrUhaIeREo8lEWj4MdFBhSCQrBJyEUoHrQirtmghYZ0EwhIUWuLUAVBwUOjkdKmUA+GJLvzeHBns9nMZmd2OpPuJL/TPLPPvM+TP/9533l3J7DFFltssYmR8qDn2IH7DSN2yEKN8vMGYllW4evx0enfwm0veOLlgYgxoeheqUhSFDFirwD3hddaOBi1U2z03uDa2DhWO8CgWy2OiLDDPqfwVvhthUel29fQm+5S+zg7kquZ32jEa6es0JPuaig3GMgVjclE9vjk39VyPDmgQVlWGBgfyZnAmr/FwyTYsCQE3j2c7hpw+tCTAwQ+uJGdBYkKoqr7BGktniqoZT1Y+SzjaQ4YG8m9fcM6DAHTNI2L82dPA08BMRHjWeDD8pxI3wKmaVqKnLZjEe6pzIm0AAAi+mgpUF2zGkRagL6+lgTKITtWYaYyJ9ICXNl2+wGgqRjOZkemfqjMibQAqKTKoi/ZTM8BfX0tCUFK9hdDMk55kRWgaP9dxXB2bOjMOae8yApQbn+FDA72h4gKsMb+qKP9IaICzCd3dlBmf6fZ3yaSAqjhzv4QQQHazLY4ykE7Xs/+EEEBmucTHcAdxfDP9ewPERTAgpL9RXRd+0PEBGgz2+Kw8uxvFda3P0RMgEr7j49Of1/rmkgJ4NX+ECEB6rE/REiAnVeS7Xi0P0RIAMOgbOsrX+HC/hARAVKpVEzRkv0NwZX9ISIC5Hdf7wB2A6D89VDT467sDxERQAzeXAkkY5qm5fbahhegN931EmhnMVSNWR97ud7TDyM3E6n+fdsLhVtfQ/V9+5yin4wfn/rVyzi+BKj2Sk2QiLBD4IFCXlpB7yqdh58XSPR7Hc+XANVeqQkUtde38lVOvls2Cj0TQxP/eB2u0eeAWUVevbZr6YlvhqYv1zOAPwc4vFITNKq6oMhlIyY/GXO3nc9kMgU/4/kSYGw49zvwnp8xNho3t0BJ4ZSZSgbYy4bgRoBZ+6Awf/3geomNSM0JvCfdNSjwejFcVPQkSOBvjIow90jT/pNenurqoeYckE8uDySWEs8Be4BbBHk5yIZKKFy8dhbg0yDL1LwFTg3OXJW4tgOOv60FiVjutrS+anjJ7T32ZKsKLYbonYF1ZKP88nDz/s+DvgW22OzUdQsAiHIhO3rmW1x+9XQT1Vhd0E3S4f7OvZqXL4DHKj76UeJ6ZOyjqT/8NhJGDSdqCvDMG23NiaXEBf5fBp24tJxcbjk1OHO13ibCqFGNmstgfCnxDiuNLSKcQDgBLBbP7UksJXy9QRpGjWrUFECgt3Ss+kJ2OHc0O5w7CvJiWVqvw6WuCaNGNdzsBe4uJVv5Sfs4v33bpFNOnYRRwxE3AszZB4VYsts+jv270O2UUydh1HCk5l5AIbuyGdLPetKdT4uIoDxflpb100QYNapR32Zo9ap8SS3L8Z8R3BJGjWr43Qydk7i2j49Oz/tpIowa1dj0T4L/AdgLtWawyAYDAAAAAElFTkSuQmCC"
       }))), currentOrder && currentOrder.id && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
         className: "navbar-quantity"
       }, this.getLinesQuantity()), showSearchBar && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -832,6 +858,277 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (Object(react_redux__WEBPACK_IMPORTED_MODULE_2__["connect"])(mapStateToProps, null)(Object(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["withRouter"])(NavBar)));
+
+/***/ }),
+
+/***/ "./app/javascript/frontend/components/order/order_confirmation_page.js":
+/*!*****************************************************************************!*\
+  !*** ./app/javascript/frontend/components/order/order_confirmation_page.js ***!
+  \*****************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
+/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+/* harmony import */ var _util_order_pure_fucntions__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../util/order_pure_fucntions */ "./app/javascript/frontend/util/order_pure_fucntions.js");
+/* harmony import */ var classnames__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! classnames */ "./node_modules/classnames/index.js");
+/* harmony import */ var classnames__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(classnames__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _actions_order_line_actions__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../actions/order_line_actions */ "./app/javascript/frontend/actions/order_line_actions.js");
+/* harmony import */ var _actions_order_actions__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../actions/order_actions */ "./app/javascript/frontend/actions/order_actions.js");
+/* harmony import */ var _config_keymail_json__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../../../../config/keymail.json */ "./config/keymail.json");
+var _config_keymail_json__WEBPACK_IMPORTED_MODULE_7___namespace = /*#__PURE__*/__webpack_require__.t(/*! ../../../../../config/keymail.json */ "./config/keymail.json", 1);
+/* harmony import */ var _navbar_navbar__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../navbar/navbar */ "./app/javascript/frontend/components/navbar/navbar.js");
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance"); }
+
+function _iterableToArrayLimit(arr, i) { if (!(Symbol.iterator in Object(arr) || Object.prototype.toString.call(arr) === "[object Arguments]")) { return; } var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+
+
+
+
+
+
+
+
+
+
+
+var sgMail = __webpack_require__(/*! @sendgrid/mail */ "./node_modules/@sendgrid/mail/index.js");
+
+sgMail.setApiKey(undefined);
+
+var client = __webpack_require__(/*! @sendgrid/client */ "./node_modules/@sendgrid/client/index.js"); // client.setApiKey('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');
+
+
+client.setApiKey(_config_keymail_json__WEBPACK_IMPORTED_MODULE_7__['key']); // client.setApiKey(process.env.SENDGRID_API_KEY);
+// client.setDefaultHeader('User-Agent', 'Some user agent string');
+// client.setDefaultHeader("X-Requested-With", "XMLHttpRequest");
+// client.setDefaultRequest('proxy', 'https://proxy.sendgrid.com/');
+
+var OrderConfirmationPage =
+/*#__PURE__*/
+function (_React$Component) {
+  _inherits(OrderConfirmationPage, _React$Component);
+
+  function OrderConfirmationPage(props) {
+    var _this;
+
+    _classCallCheck(this, OrderConfirmationPage);
+
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(OrderConfirmationPage).call(this, props));
+    _this.state = {
+      lineQuantities: {},
+      fullOpacity: false
+    };
+    _this.update = _this.update.bind(_assertThisInitialized(_this));
+    return _this;
+  }
+
+  _createClass(OrderConfirmationPage, [{
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      window.scroll(0, 0); // const { currentOrderLines, currentOrder, getCurrentOrder, getOrderLinesByOrder }  = this.props;
+      // let linesArray = OrderPureFunctions.objectValuesArray(currentOrderLines);
+      // let lineQuantities = Object.assign({}, this.state.lineQuantities) ;
+      // // set initial line quantities in state
+      // linesArray.forEach(line => {
+      //     lineQuantities[line.id]  = line.quantity
+      // });
+      // this.setState({ lineQuantities: lineQuantities });
+      // this.setState({ originalLineQuantities: lineQuantities });
+      // // check localStorage for draft order 
+      // let currentOrderId = localStorage.getItem('currentOrderId');
+      // if ( !currentOrder.id && currentOrderId ) {
+      //    let orderInfo = {
+      //       id: currentOrderId
+      //    };
+      //    getCurrentOrder(orderInfo)
+      //    .then(() => getOrderLinesByOrder(currentOrderId))
+      //    .then((orderLines) => {
+      //         let linesArray = OrderPureFunctions.objectValuesArray(orderLines.data);
+      //         let lineQuantities = Object.assign({}, this.state.lineQuantities) ;
+      //         linesArray.forEach(line => {
+      //             lineQuantities[line.id]  = line.quantity
+      //         });
+      //         console.log('setting state quantity')
+      //         this.setState({ lineQuantities: lineQuantities });
+      //         this.setState({ originalLineQuantities: lineQuantities });
+      //    })
+      // }
+      // this.timer = setTimeout(() => this.setState({ showWrapper: true }), 50 );
+      // this.timerOpacity = setTimeout(() => this.setState({ fullOpacity: true }), 700 );
+    }
+  }, {
+    key: "componentWillUnmount",
+    value: function componentWillUnmount() {
+      clearTimeout(this.timer);
+      clearTimeout(this.timerOpacity);
+    }
+  }, {
+    key: "update",
+    value: function update(field) {
+      var _this2 = this;
+
+      var lineQuantities = Object.assign({}, this.state.lineQuantities);
+      return function (e) {
+        lineQuantities[field] = e.currentTarget.value; // debugger;
+
+        _this2.setState({
+          lineQuantities: lineQuantities
+        }); // this.QuantityChanged(field);
+
+
+        setTimeout(function () {
+          _this2.QuantityChanged(field);
+        });
+      };
+    }
+  }, {
+    key: "sendEmail",
+    value: function sendEmail() {
+      var currentOrder = this.props.currentOrder;
+      var proxy = "https://cors-anywhere.herokuapp.com/";
+      var emailData = {
+        "content": [{
+          "type": "text/html",
+          "value": "<html><p>A new order ".concat(currentOrder.order_number, " is created</p></html>")
+        }],
+        "from": {
+          "email": "Unostore1279@ovnotifications88.com",
+          "name": "Uno Store"
+        },
+        "personalizations": [{
+          "subject": "new order #".concat(currentOrder.order_number, " created! ").concat(currentOrder.order_total),
+          "to": [{
+            "email": "samkoki77@gmail.com",
+            "name": "Nans"
+          }]
+        }],
+        "reply_to": {
+          "email": "Unostore1279@ovnotifications88.com",
+          "name": "Uno Store"
+        },
+        "subject": "new order #".concat(currentOrder.order_number, " created! ").concat(currentOrder.order_total)
+      };
+      var request = {};
+      request.body = emailData;
+      request.method = 'POST';
+      request.url = "".concat(proxy, "https://api.sendgrid.com/v3/mail/send");
+      client.request(request).then(function (_ref) {
+        var _ref2 = _slicedToArray(_ref, 2),
+            response = _ref2[0],
+            body = _ref2[1];
+
+        console.log("email sent response: ".concat(response));
+      });
+    }
+  }, {
+    key: "handleBlur",
+    // updateStateOriginalLines() {
+    //     const { lineQuantities, originalLineQuantities } = this.state;
+    //     let updatedQuantities = Object.assign( {}, lineQuantities);
+    //     this.setState({ originalLineQuantities: updatedQuantities});
+    // }
+    // updateOrderTotal(oldOrderTotal, orderId, productPrice, ProductQuantity) {
+    //     const { updateOrder } = this.props;
+    //     let newOrderTotal = oldOrderTotal + (productPrice * ProductQuantity);
+    //     const updatedOrderInfo = {
+    //         order_total: newOrderTotal,
+    //         pending_total: newOrderTotal,
+    //         id: orderId
+    //     }
+    //     updateOrder(updatedOrderInfo)
+    //     .then((updatedOrder) => console.log(`Order total updated successfully from this.updateOrderTotal`, updatedOrder.data.order_total ));
+    // }
+    value: function handleBlur(event, productId, orderId, newProductQuantity, productPrice, oldLineQuantity, lineId) {
+      console.log('blurrr and save');
+      this.handleUpdateLine(productId, orderId, newProductQuantity, productPrice, oldLineQuantity, lineId);
+    }
+  }, {
+    key: "handleEnter",
+    value: function handleEnter(event, productId, orderId, newProductQuantity, productPrice, oldLineQuantity, lineId) {
+      if (event.keyCode === 13) {
+        console.log("enter and save");
+        this.handleUpdateLine(productId, orderId, newProductQuantity, productPrice, oldLineQuantity, lineId);
+      }
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      window.orderConfirmatioProps = this.props;
+      window.orderConfirmatiostate = this.state; //   const currentLinesArray = Object.values(currentOrderLines);
+
+      var key = 0;
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "order-confirmation-container"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
+        className: "name-label"
+      }, "Name", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", null)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
+        className: "address-label"
+      }, "address", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", null)));
+    }
+  }]);
+
+  return OrderConfirmationPage;
+}(react__WEBPACK_IMPORTED_MODULE_0___default.a.Component);
+
+var mapStateToProps = function mapStateToProps(state) {
+  return {
+    currentOrderLines: state.orders.currentOrderLines,
+    currentOrder: state.orders.currentOrder
+  };
+};
+
+var mapDispatchToProps = function mapDispatchToProps(dispatch) {
+  return {
+    getOrderLinesByOrder: function getOrderLinesByOrder(orderId) {
+      return dispatch(_actions_order_line_actions__WEBPACK_IMPORTED_MODULE_5__["getOrderLinesByOrderReduxAjax"](orderId));
+    },
+    updateOrderLine: function updateOrderLine(orderLineInfo) {
+      return dispatch(_actions_order_line_actions__WEBPACK_IMPORTED_MODULE_5__["updateOrderLineReduxAjax"](orderLineInfo));
+    },
+    deleteOrderLine: function deleteOrderLine(orderLineId) {
+      return dispatch(_actions_order_line_actions__WEBPACK_IMPORTED_MODULE_5__["deleteOrderLineReduxAjax"](orderLineId));
+    },
+    updateOrder: function updateOrder(orderInfo) {
+      return dispatch(_actions_order_actions__WEBPACK_IMPORTED_MODULE_6__["updateOrderReduxAjax"](orderInfo));
+    },
+    deleteOrder: function deleteOrder(orderId) {
+      return dispatch(_actions_order_actions__WEBPACK_IMPORTED_MODULE_6__["deleteOrderReduxAjax"](orderId));
+    },
+    getCurrentOrder: function getCurrentOrder(orderInfo) {
+      return dispatch(_actions_order_actions__WEBPACK_IMPORTED_MODULE_6__["getCurrentOrderReduxAjax"](orderInfo));
+    }
+  };
+};
+
+/* harmony default export */ __webpack_exports__["default"] = (Object(react_redux__WEBPACK_IMPORTED_MODULE_2__["connect"])(mapStateToProps, mapDispatchToProps)(Object(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["withRouter"])(OrderConfirmationPage)));
 
 /***/ }),
 
@@ -1278,9 +1575,11 @@ function (_React$Component) {
         className: "order-header"
       }, "Your Order"), currentLinesArray.length > 0 && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "continue-button"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
+        to: "/orderconfirmation"
       }, "continue to address ", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
         className: "order-total"
-      }, " ", currentOrder.order_total, " L.L. ")), currentLinesArray.length > 0 && currentLinesArray.map(function (line) {
+      }, " ", currentOrder.order_total, " L.L. "))), currentLinesArray.length > 0 && currentLinesArray.map(function (line) {
         return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
           className: "order-line-show",
           key: key++
@@ -1654,7 +1953,9 @@ function (_React$Component) {
 
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
         className: "department-title"
-      }, "Vegetables")))));
+      }, "Vegetables")))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "footer"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Icons by icon8")));
     }
   }]);
 

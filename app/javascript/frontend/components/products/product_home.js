@@ -273,6 +273,11 @@ class ProductHome extends React.Component {
 
             </div> */}
 
+
+            <div className="footer"> 
+                    <p>Icons by icon8</p>
+            </div>
+
          </div>
       )
    }

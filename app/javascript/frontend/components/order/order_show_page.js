@@ -323,9 +323,12 @@ class OrderShowPage extends React.Component {
                         Your Order 
                     </div> }
 
-                { currentLinesArray.length > 0 &&  <div className="continue-button"> 
-                    continue to address <span className="order-total"> {currentOrder.order_total} L.L. </span> 
-                </div>}
+                { currentLinesArray.length > 0 && <div className="continue-button"> 
+                        <Link to="/orderconfirmation"> 
+                            continue to address <span className="order-total"> {currentOrder.order_total} L.L. </span> 
+                        </Link> 
+                    </div>
+                }
 
                 {/* { currentLinesArray.length === 0 && <div> Your cart is empty bitch </div> } */}
                 { currentLinesArray.length > 0 && currentLinesArray.map(line => ( 

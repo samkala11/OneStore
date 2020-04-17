@@ -9,7 +9,7 @@
     .order-header{
         margin-top: 150px;
         margin-bottom: 60px;
-        margin-left: 88px;
+        margin-left: 106px;
         color: #797b7e;
     }
 
@@ -28,7 +28,7 @@
         font-size: 62px;
         font-weight: 500;
         display: inline-block;
-        margin-left: 88px;
+        margin-left: 106px;
         font-family: sans-serif;
     }
     
@@ -54,13 +54,17 @@
             width: 702px;
             margin: 48px 0px;
             margin-bottom: 96px;
-            margin-left: 88px;
+            margin-left: 106px;
             padding: 10px;
             padding-left: 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
 
+            a {
+                text-decoration: none;
+                color: white;
+            }
             .order-total {
                 font-size: 37px;
                 display: inline-block;
@@ -111,7 +115,7 @@
     .order-line-show {
         display: flex;
         height: 238px;
-        margin-left: 88px;
+        margin-left: 106px;
 
         .product-image {
             width: 230px;

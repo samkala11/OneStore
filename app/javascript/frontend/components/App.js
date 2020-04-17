@@ -4,6 +4,7 @@ import ProductHome from './products/product_home';
 import ProductByDepartment from './products/products_by_dept';
 import LoginForm from './session/login_form';
 import OrderPage from './order/order_show_page';
+import OrderConfirmationPage from './order/order_confirmation_page';
 import SearchPage from './products/search_page';
 
 const App = () => (
@@ -16,6 +17,7 @@ const App = () => (
       <Route exact path="/departments/:department" component={ProductByDepartment}/>
       <Route exact path="/login" component={LoginForm}/>  
       <Route exact path="/ordercheckout" component={OrderPage}/>  
+      <Route exact path="/orderconfirmation" component={OrderConfirmationPage}/>  
       <Route exact path="/search" component={SearchPage}/>  
 
    </div>

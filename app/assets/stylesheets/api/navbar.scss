@@ -3,12 +3,15 @@
     color: white;
     position: fixed;
     background-color: rgb(158, 180, 148);
+    // background-color: rgb(82, 109, 69);
     width: 100%;
     z-index: 10;
     top: 0;
     display: flex;
     justify-content: center;
     flex-direction: column;
+
+    
 
     .header {
         font-size: 80px;
@@ -48,6 +51,10 @@
     
     .search-link { 
         left: 44%;
+
+        .search-icon {
+            height: 74px;
+        }
     }
     
     .cart-link {
