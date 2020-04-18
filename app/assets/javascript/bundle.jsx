@@ -1218,7 +1218,8 @@ function (_React$Component) {
       originalLineQuantities: {},
       displayUpdateButtons: {},
       showWrapper: false,
-      fullOpacity: false
+      fullOpacity: false,
+      showLoader: false
     };
     _this.update = _this.update.bind(_assertThisInitialized(_this));
     _this.stateIncludesLine = _this.stateIncludesLine.bind(_assertThisInitialized(_this));
@@ -1432,6 +1433,9 @@ function (_React$Component) {
           line_total: newLineTotal
         }; // debugger;
 
+        this.setState({
+          showLoader: true
+        });
         updateOrderLine(orderLineInfo).then(function () {
           return getOrderLinesByOrder(currentOrder.id);
         }).then(function () {
@@ -1440,6 +1444,12 @@ function (_React$Component) {
           _this4.updateStateOriginalLines();
         }).then(function () {
           return _this4.QuantityChanged(lineId);
+        }).then(function () {
+          return setTimeout(function () {
+            return _this4.setState({
+              showLoader: false
+            });
+          }, 300);
         }); // .then(() => {
         //     console.log('Sending Email!!');
         //     this.sendEmail();
@@ -1517,6 +1527,9 @@ function (_React$Component) {
     value: function deleteOrderLine(lineId, quantityDifference, orderId, productPrice) {
       var _this5 = this;
 
+      this.setState({
+        showLoader: true
+      });
       var _this$props4 = this.props,
           getOrderLinesByOrder = _this$props4.getOrderLinesByOrder,
           deleteOrderLine = _this$props4.deleteOrderLine,
@@ -1539,6 +1552,12 @@ function (_React$Component) {
         _this5.updateStateOriginalLines();
       }).then(function () {
         return _this5.QuantityChanged(lineId);
+      }).then(function () {
+        return setTimeout(function () {
+          return _this5.setState({
+            showLoader: false
+          });
+        }, 300);
       });
     }
   }, {
@@ -1548,6 +1567,7 @@ function (_React$Component) {
 
       window.orderShowProps = this.props;
       window.orderShowstate = this.state;
+      var showLoader = this.state.showLoader;
       var _this$props5 = this.props,
           currentOrderLines = _this$props5.currentOrderLines,
           currentOrder = _this$props5.currentOrder;
@@ -1560,7 +1580,9 @@ function (_React$Component) {
       var key = 0;
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "order-show-container"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      }, showLoader && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "loader"
+      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: classnames__WEBPACK_IMPORTED_MODULE_4___default()({
           'order-info-wrapper': true,
           'show-wrapper': showWrapper,
@@ -1573,11 +1595,11 @@ function (_React$Component) {
         className: "order-header"
       }, "Your basket is empty") : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "order-header"
-      }, "Your Order"), currentLinesArray.length > 0 && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      }, "Your order"), currentLinesArray.length > 0 && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "continue-button"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
         to: "/orderconfirmation"
-      }, "continue to address ", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+      }, "Continue to address ", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
         className: "order-total"
       }, " ", currentOrder.order_total, " L.L. "))), currentLinesArray.length > 0 && currentLinesArray.map(function (line) {
         return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {

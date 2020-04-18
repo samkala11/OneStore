@@ -21,6 +21,15 @@
         // position: fixed;
     }
 
+    .loader {    
+        height: 100vh;
+        width: 100vw;
+        z-index: 5;
+        position: fixed;
+        background: white;
+        opacity: 0.5;
+    }
+
     .close-button {
         color: #b8c0c7;
         text-decoration: none;

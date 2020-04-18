@@ -35,7 +35,8 @@ class OrderShowPage extends React.Component {
 
             },
             showWrapper: false,
-            fullOpacity: false
+            fullOpacity: false,
+            showLoader: false
         }
         this.update = this.update.bind(this);
         this.stateIncludesLine = this.stateIncludesLine.bind(this);
@@ -197,6 +198,7 @@ class OrderShowPage extends React.Component {
                 line_total: newLineTotal,
             };
             // debugger;
+            this.setState({ showLoader: true })
             updateOrderLine(orderLineInfo)
             .then(() => getOrderLinesByOrder(currentOrder.id))
             .then(() => {
@@ -204,6 +206,7 @@ class OrderShowPage extends React.Component {
             })
             .then(() => { this.updateStateOriginalLines() })
             .then(() => this.QuantityChanged(lineId))
+            .then(() => setTimeout(() => this.setState({ showLoader: false }), 300) )
             // .then(() => {
             //     console.log('Sending Email!!');
             //     this.sendEmail();
@@ -270,6 +273,7 @@ class OrderShowPage extends React.Component {
     }
 
     deleteOrderLine(lineId, quantityDifference, orderId, productPrice) {
+        this.setState({ showLoader: true});
         const { getOrderLinesByOrder, deleteOrderLine, deleteOrder, currentOrder} = this.props;
         deleteOrderLine(lineId)
         .then(() => getOrderLinesByOrder(currentOrder.id))
@@ -288,22 +292,26 @@ class OrderShowPage extends React.Component {
         })
         .then(() => { this.updateStateOriginalLines() })
         .then(() => this.QuantityChanged(lineId))
+        .then(() => setTimeout(() => this.setState({ showLoader: false }), 300) )
     }
 
    render() {
       window.orderShowProps = this.props;
       window.orderShowstate = this.state;
+      const { showLoader } = this.state;
 
       const { currentOrderLines, currentOrder } = this.props;
       const { lineQuantities, originalLineQuantities, showWrapper, fullOpacity } = this.state;
       const currentLinesArray = Object.values(currentOrderLines);
       let key = 0;
-      return(
-         <div className="order-show-container">
+      return( <div className="order-show-container">
+
+        { showLoader && <div className='loader'> 
+        </div> }
 
             {/* <NavBar
-               title = 'Beirut Market'
-               isHomeNavBar = { true }
+            title = 'Beirut Market'
+            isHomeNavBar = { true }
             /> */}
 
             { <div className={classNames({ 'order-info-wrapper': true , 'show-wrapper': showWrapper, 'full-opacity': fullOpacity })}
@@ -320,12 +328,12 @@ class OrderShowPage extends React.Component {
                         Your basket is empty 
                     </div> :
                     <div className="order-header"> 
-                        Your Order 
+                        Your order 
                     </div> }
 
                 { currentLinesArray.length > 0 && <div className="continue-button"> 
                         <Link to="/orderconfirmation"> 
-                            continue to address <span className="order-total"> {currentOrder.order_total} L.L. </span> 
+                            Continue to address <span className="order-total"> {currentOrder.order_total} L.L. </span> 
                         </Link> 
                     </div>
                 }
@@ -349,7 +357,7 @@ class OrderShowPage extends React.Component {
                             <span 
                                 onClick={ () => this.handleRemove(line.id, line.quantity, line.order_id, line.productPrice)}
                                 className="remove-button"> 
-                               Remove
+                            Remove
                             </span>
                         </div>
                         <div className="quantity-wrapper"> 
@@ -383,8 +391,9 @@ class OrderShowPage extends React.Component {
                     </div>
                 ))
                 }
-            </div>}
-         </div>
+            </div> }
+        </div> 
+    
       )
    }
 }
