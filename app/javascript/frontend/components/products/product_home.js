@@ -45,6 +45,8 @@ class ProductHome extends React.Component {
 
    componentDidMount(){
       window.scroll(0,0);
+      window.parent.document.body.style.zoom = 1;
+      
       const { getAllProducts, hideInitialHomeLoader, currentOrder, getCurrentOrder, getOrderLinesByOrder } = this.props;
       // getAllProducts();
       // this.setState({ first: true})

@@ -1780,6 +1780,7 @@ function (_React$Component) {
       var _this2 = this;
 
       window.scroll(0, 0);
+      window.parent.document.body.style.zoom = 1;
       var _this$props = this.props,
           getAllProducts = _this$props.getAllProducts,
           hideInitialHomeLoader = _this$props.hideInitialHomeLoader,
