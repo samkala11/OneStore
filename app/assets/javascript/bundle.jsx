@@ -90,7 +90,7 @@
 /*!**********************************************************!*\
   !*** ./app/javascript/frontend/actions/order_actions.js ***!
   \**********************************************************/
-/*! exports provided: RECEIVE_CREATED_ORDER_ACTION, RECEIVE_UPDATED_ORDER_ACTION, RECEIVE_CURRENT_ORDER_ACTION, RECEIVE_DELETED_ORDER_ACTION, createOrderReduxAjax, updateOrderReduxAjax, getCurrentOrderReduxAjax, deleteOrderReduxAjax */
+/*! exports provided: RECEIVE_CREATED_ORDER_ACTION, RECEIVE_UPDATED_ORDER_ACTION, RECEIVE_CURRENT_ORDER_ACTION, RECEIVE_DELETED_ORDER_ACTION, RECEIVE_CONFIRMED_ORDER_ACTION, CLEAR_CURRENT_ORDER_ACTION, CLEAR_CONFIRMED_ORDER_ACTION, createOrderReduxAjax, updateOrderReduxAjax, getCurrentOrderReduxAjax, getConfirmedOrderReduxAjax, receiveConfirmedOrder, deleteOrderReduxAjax, clearCurrentOrder, clearConfirmedOrder */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -99,16 +99,26 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RECEIVE_UPDATED_ORDER_ACTION", function() { return RECEIVE_UPDATED_ORDER_ACTION; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RECEIVE_CURRENT_ORDER_ACTION", function() { return RECEIVE_CURRENT_ORDER_ACTION; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RECEIVE_DELETED_ORDER_ACTION", function() { return RECEIVE_DELETED_ORDER_ACTION; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RECEIVE_CONFIRMED_ORDER_ACTION", function() { return RECEIVE_CONFIRMED_ORDER_ACTION; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CLEAR_CURRENT_ORDER_ACTION", function() { return CLEAR_CURRENT_ORDER_ACTION; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CLEAR_CONFIRMED_ORDER_ACTION", function() { return CLEAR_CONFIRMED_ORDER_ACTION; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createOrderReduxAjax", function() { return createOrderReduxAjax; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "updateOrderReduxAjax", function() { return updateOrderReduxAjax; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getCurrentOrderReduxAjax", function() { return getCurrentOrderReduxAjax; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getConfirmedOrderReduxAjax", function() { return getConfirmedOrderReduxAjax; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "receiveConfirmedOrder", function() { return receiveConfirmedOrder; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "deleteOrderReduxAjax", function() { return deleteOrderReduxAjax; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "clearCurrentOrder", function() { return clearCurrentOrder; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "clearConfirmedOrder", function() { return clearConfirmedOrder; });
 /* harmony import */ var _util_order_api_util__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../util/order_api_util */ "./app/javascript/frontend/util/order_api_util.js");
 
 var RECEIVE_CREATED_ORDER_ACTION = 'RECEIVE_CREATED_ORDER_ACTION';
 var RECEIVE_UPDATED_ORDER_ACTION = 'RECEIVE_UPDATED_ORDER_ACTION';
 var RECEIVE_CURRENT_ORDER_ACTION = 'RECEIVE_CURRENT_ORDER_ACTION';
-var RECEIVE_DELETED_ORDER_ACTION = 'RECEIVE_DELETED_ORDER_ACTION'; // Redux Thunk Create order  
+var RECEIVE_DELETED_ORDER_ACTION = 'RECEIVE_DELETED_ORDER_ACTION';
+var RECEIVE_CONFIRMED_ORDER_ACTION = 'RECEIVE_CONFIRMED_ORDER_ACTION';
+var CLEAR_CURRENT_ORDER_ACTION = 'CLEAR_CURRENT_ORDER_ACTION';
+var CLEAR_CONFIRMED_ORDER_ACTION = 'CLEAR_CONFIRMED_ORDER_ACTION'; // Redux Thunk Create order  
 
 var createOrderReduxAjax = function createOrderReduxAjax(order) {
   return function (dispatch) {
@@ -158,8 +168,24 @@ var receiveCurrentOrder = function receiveCurrentOrder(data) {
     type: RECEIVE_CURRENT_ORDER_ACTION,
     data: data
   };
-}; // Redux Thunk delete orderline 
+}; // Redux Thunk get confirmed order  
 
+
+var getConfirmedOrderReduxAjax = function getConfirmedOrderReduxAjax(order) {
+  return function (dispatch) {
+    return Object(_util_order_api_util__WEBPACK_IMPORTED_MODULE_0__["getCurrentOrder"])(order).then(function (order) {
+      console.log('confirmed order received', order);
+      return dispatch(receiveConfirmedOrder(order));
+    });
+  };
+}; // Private receive confirmed order
+
+var receiveConfirmedOrder = function receiveConfirmedOrder(data) {
+  return {
+    type: RECEIVE_CONFIRMED_ORDER_ACTION,
+    data: data
+  };
+}; // Redux Thunk delete orderline 
 
 var deleteOrderReduxAjax = function deleteOrderReduxAjax(id) {
   return function (dispatch) {
@@ -174,6 +200,19 @@ var receiveDeletedOrder = function receiveDeletedOrder(data) {
   return {
     type: RECEIVE_DELETED_ORDER_ACTION,
     data: data
+  };
+}; // clear current order
+
+
+var clearCurrentOrder = function clearCurrentOrder() {
+  return {
+    type: CLEAR_CURRENT_ORDER_ACTION
+  };
+}; // clear confirmed order
+
+var clearConfirmedOrder = function clearConfirmedOrder() {
+  return {
+    type: CLEAR_CONFIRMED_ORDER_ACTION
   };
 };
 
@@ -970,6 +1009,7 @@ function (_React$Component) {
     };
     _this.update = _this.update.bind(_assertThisInitialized(_this));
     _this.handleConfirmOrder = _this.handleConfirmOrder.bind(_assertThisInitialized(_this));
+    _this.checkRequiredFields = _this.checkRequiredFields.bind(_assertThisInitialized(_this));
     return _this;
   }
 
@@ -1014,6 +1054,15 @@ function (_React$Component) {
       // this.timer = setTimeout(() => this.setState({ showWrapper: true }), 50 );
       // this.timerOpacity = setTimeout(() => this.setState({ fullOpacity: true }), 700 );
 
+    }
+  }, {
+    key: "checkRequiredFields",
+    value: function checkRequiredFields() {
+      var _this$state = this.state,
+          customerName = _this$state.customerName,
+          customerAddress = _this$state.customerAddress,
+          customerPhoneNumber = _this$state.customerPhoneNumber;
+      return customerName.length > 0 && customerAddress.length > 0 && customerPhoneNumber.length > 0;
     }
   }, {
     key: "componentWillUnmount",
@@ -1085,15 +1134,14 @@ function (_React$Component) {
       var _this$props2 = this.props,
           updateOrder = _this$props2.updateOrder,
           currentOrder = _this$props2.currentOrder,
-          getCurrentOrder = _this$props2.getCurrentOrder;
-      var _this$state = this.state,
-          customerName = _this$state.customerName,
-          customerAddress = _this$state.customerAddress,
-          customerPhoneNumber = _this$state.customerPhoneNumber,
-          customerEmail = _this$state.customerEmail;
-      this.setState({
-        showConfirmLoader: true
-      });
+          getCurrentOrder = _this$props2.getCurrentOrder,
+          getConfirmedOrder = _this$props2.getConfirmedOrder,
+          clearCurrentOrder = _this$props2.clearCurrentOrder;
+      var _this$state2 = this.state,
+          customerName = _this$state2.customerName,
+          customerAddress = _this$state2.customerAddress,
+          customerPhoneNumber = _this$state2.customerPhoneNumber,
+          customerEmail = _this$state2.customerEmail;
       this.setState({
         showErrors: true
       });
@@ -1105,18 +1153,27 @@ function (_React$Component) {
         email: customerEmail,
         status: 2000
       };
-      updateOrder(updatedOrderInfo).then(function () {
-        var orderInfo = {
-          id: currentOrder.id
-        };
-        getCurrentOrder(orderInfo).then(function () {
-          _this3.timer = setTimeout(function () {
-            _this3.setState({
-              showConfirmLoader: false
-            });
-          }, 800); // this.sendEmail();
+
+      if (this.checkRequiredFields()) {
+        this.setState({
+          showConfirmLoader: true
         });
-      });
+        updateOrder(updatedOrderInfo).then(function () {
+          var orderInfo = {
+            id: currentOrder.id
+          };
+          getConfirmedOrder(orderInfo).then(function () {
+            _this3.timer = setTimeout(function () {
+              _this3.setState({
+                showConfirmLoader: false
+              });
+            }, 800); // this.sendEmail();
+
+            clearCurrentOrder();
+            localStorage.removeItem('currentOrderId');
+          });
+        });
+      }
     }
   }, {
     key: "handleBlur",
@@ -1139,13 +1196,16 @@ function (_React$Component) {
 
       var _this$props3 = this.props,
           currentOrderLines = _this$props3.currentOrderLines,
-          currentOrder = _this$props3.currentOrder;
+          currentOrder = _this$props3.currentOrder,
+          confirmedOrder = _this$props3.confirmedOrder;
       window.orderConfirmatioProps = this.props;
       window.orderConfirmatiostate = this.state; //   const currentLinesArray = Object.values(currentOrderLines);
 
       var key = 0;
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "order-confirmation-container"
+      }, !currentOrder.id && confirmedOrder.id ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, " Order Confirmed #", confirmedOrder.order_number, " ") : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "order-confirmation-form"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
         to: "/ordercheckout",
         className: "back-button"
@@ -1206,8 +1266,8 @@ function (_React$Component) {
         },
         className: "confirm-button"
       }, this.state.showConfirmLoader ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        "class": "confirm-loader"
-      }) : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, " Confirm order "))));
+        className: "confirm-loader"
+      }) : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, " Confirm order ")))));
     }
   }]);
 
@@ -1217,7 +1277,8 @@ function (_React$Component) {
 var mapStateToProps = function mapStateToProps(state) {
   return {
     currentOrderLines: state.orders.currentOrderLines,
-    currentOrder: state.orders.currentOrder
+    currentOrder: state.orders.currentOrder,
+    confirmedOrder: state.orders.confirmedOrder
   };
 };
 
@@ -1238,8 +1299,14 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
     deleteOrder: function deleteOrder(orderId) {
       return dispatch(_actions_order_actions__WEBPACK_IMPORTED_MODULE_6__["deleteOrderReduxAjax"](orderId));
     },
+    getConfirmedOrder: function getConfirmedOrder(orderInfo) {
+      return dispatch(_actions_order_actions__WEBPACK_IMPORTED_MODULE_6__["getConfirmedOrderReduxAjax"](orderInfo));
+    },
     getCurrentOrder: function getCurrentOrder(orderInfo) {
       return dispatch(_actions_order_actions__WEBPACK_IMPORTED_MODULE_6__["getCurrentOrderReduxAjax"](orderInfo));
+    },
+    clearCurrentOrder: function clearCurrentOrder() {
+      return dispatch(_actions_order_actions__WEBPACK_IMPORTED_MODULE_6__["clearCurrentOrder"]());
     }
   };
 };
@@ -1715,9 +1782,9 @@ function (_React$Component) {
         className: "continue-button"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
         to: "/orderconfirmation"
-      }, "Continue to address ", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
         className: "order-total"
-      }, " ", currentOrder.order_total, " L.L. "))), currentLinesArray.length > 0 && currentLinesArray.map(function (line) {
+      }, " Continue to delivery address ", currentOrder.order_total, " L.L. "))), currentLinesArray.length > 0 && currentLinesArray.map(function (line) {
         return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
           className: "order-line-show",
           key: key++
@@ -3329,6 +3396,36 @@ document.addEventListener("DOMContentLoaded", function () {
 
 /***/ }),
 
+/***/ "./app/javascript/frontend/reducers/orders/confirmed_order_reducer.js":
+/*!****************************************************************************!*\
+  !*** ./app/javascript/frontend/reducers/orders/confirmed_order_reducer.js ***!
+  \****************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _actions_order_actions__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../actions/order_actions */ "./app/javascript/frontend/actions/order_actions.js");
+
+/* harmony default export */ __webpack_exports__["default"] = (function () {
+  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+  var action = arguments.length > 1 ? arguments[1] : undefined;
+  Object.freeze(state);
+
+  switch (action.type) {
+    case _actions_order_actions__WEBPACK_IMPORTED_MODULE_0__["RECEIVE_CONFIRMED_ORDER_ACTION"]:
+      return action.data;
+
+    case _actions_order_actions__WEBPACK_IMPORTED_MODULE_0__["CLEAR_CONFIRMED_ORDER_ACTION"]:
+      return {};
+
+    default:
+      return state;
+  }
+});
+
+/***/ }),
+
 /***/ "./app/javascript/frontend/reducers/orders/created_order_reducer.js":
 /*!**************************************************************************!*\
   !*** ./app/javascript/frontend/reducers/orders/created_order_reducer.js ***!
@@ -3356,6 +3453,9 @@ __webpack_require__.r(__webpack_exports__);
       return action.data;
 
     case _actions_order_actions__WEBPACK_IMPORTED_MODULE_0__["RECEIVE_DELETED_ORDER_ACTION"]:
+      return {};
+
+    case _actions_order_actions__WEBPACK_IMPORTED_MODULE_0__["CLEAR_CURRENT_ORDER_ACTION"]:
       return {};
 
     default:
@@ -3435,6 +3535,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _orders_created_order_reducer__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./orders/created_order_reducer */ "./app/javascript/frontend/reducers/orders/created_order_reducer.js");
 /* harmony import */ var _orders_last_line_reducer__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./orders/last_line_reducer */ "./app/javascript/frontend/reducers/orders/last_line_reducer.js");
 /* harmony import */ var _orders_order_lines_by_order__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./orders/order_lines_by_order */ "./app/javascript/frontend/reducers/orders/order_lines_by_order.js");
+/* harmony import */ var _orders_confirmed_order_reducer__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./orders/confirmed_order_reducer */ "./app/javascript/frontend/reducers/orders/confirmed_order_reducer.js");
+
 
 
 
@@ -3442,7 +3544,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = (Object(redux__WEBPACK_IMPORTED_MODULE_0__["combineReducers"])({
   currentOrder: _orders_created_order_reducer__WEBPACK_IMPORTED_MODULE_1__["default"],
   lastOrderLine: _orders_last_line_reducer__WEBPACK_IMPORTED_MODULE_2__["default"],
-  currentOrderLines: _orders_order_lines_by_order__WEBPACK_IMPORTED_MODULE_3__["default"]
+  currentOrderLines: _orders_order_lines_by_order__WEBPACK_IMPORTED_MODULE_3__["default"],
+  confirmedOrder: _orders_confirmed_order_reducer__WEBPACK_IMPORTED_MODULE_4__["default"]
 }));
 
 /***/ }),

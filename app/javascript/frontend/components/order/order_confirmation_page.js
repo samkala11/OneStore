@@ -39,6 +39,7 @@ class OrderConfirmationPage extends React.Component {
         }
         this.update = this.update.bind(this);
         this.handleConfirmOrder = this.handleConfirmOrder.bind(this);
+        this.checkRequiredFields = this.checkRequiredFields.bind(this);
     }
 
     componentDidMount(){
@@ -79,6 +80,10 @@ class OrderConfirmationPage extends React.Component {
         // this.timerOpacity = setTimeout(() => this.setState({ fullOpacity: true }), 700 );
     }
 
+    checkRequiredFields () {
+      const { customerName, customerAddress, customerPhoneNumber } = this.state;
+      return (customerName.length > 0 && customerAddress.length > 0 && customerPhoneNumber.length > 0);
+    }
     componentWillUnmount() {
         clearTimeout(this.timer);
         clearTimeout(this.timerOpacity);
@@ -142,12 +147,10 @@ class OrderConfirmationPage extends React.Component {
     // }
     
     handleConfirmOrder(orderId) {
-        const { updateOrder, currentOrder, getCurrentOrder } = this.props;
+        const { updateOrder, currentOrder, getCurrentOrder, getConfirmedOrder, clearCurrentOrder } = this.props;
         const { customerName, customerAddress, customerPhoneNumber, customerEmail } = this.state;
         
-        this.setState({ showConfirmLoader: true });
         this.setState({ showErrors: true });
-
         const updatedOrderInfo = {
           id: orderId,
           first_name: customerName,
@@ -157,18 +160,22 @@ class OrderConfirmationPage extends React.Component {
           status: 2000
         }
 
-        updateOrder(updatedOrderInfo)
-        .then(() => { 
-          let orderInfo = {
-            id: currentOrder.id
-          };
-          getCurrentOrder(orderInfo)
-          .then(() => {
-            this.timer = setTimeout(() => { this.setState({ showConfirmLoader: false }) }, 800);
-            // this.sendEmail();
-            
+        if (this.checkRequiredFields()) {
+          this.setState({ showConfirmLoader: true });
+          updateOrder(updatedOrderInfo)
+          .then(() => { 
+            let orderInfo = {
+              id: currentOrder.id
+            };
+            getConfirmedOrder(orderInfo)
+            .then(() => {
+              this.timer = setTimeout(() => { this.setState({ showConfirmLoader: false }) }, 800);
+              // this.sendEmail();
+              clearCurrentOrder();
+              localStorage.removeItem('currentOrderId');
+            })
           })
-        })
+        }
     }
 
     handleBlur(event, productId, orderId, newProductQuantity, productPrice, oldLineQuantity, lineId) {
@@ -186,7 +193,7 @@ class OrderConfirmationPage extends React.Component {
 
    render() {
 
-    const { currentOrderLines, currentOrder  } = this.props;
+    const { currentOrderLines, currentOrder, confirmedOrder  } = this.props;
       window.orderConfirmatioProps = this.props;
       window.orderConfirmatiostate = this.state;
 
@@ -194,6 +201,17 @@ class OrderConfirmationPage extends React.Component {
       let key = 0;
       return(
          <div className="order-confirmation-container">
+            
+          { (!currentOrder.id && confirmedOrder.id) 
+          
+            ? 
+
+          <div> Order Confirmed #{confirmedOrder.order_number} </div>
+
+            :
+          <div className="order-confirmation-form">  
+            
+            
             <Link to="/ordercheckout"
                   className="back-button"
             > 
@@ -272,13 +290,14 @@ class OrderConfirmationPage extends React.Component {
                 
                 { this.state.showConfirmLoader 
                   ?
-                  <div class="confirm-loader"></div>
+                  <div className="confirm-loader"></div>
                   :
                   <span> Confirm order </span> }
               </div>
 
               
             </div>
+          </div>}
           
          </div>
       )
@@ -290,6 +309,7 @@ class OrderConfirmationPage extends React.Component {
 const mapStateToProps = state => ({
    currentOrderLines: state.orders.currentOrderLines,
    currentOrder: state.orders.currentOrder,
+   confirmedOrder: state.orders.confirmedOrder,
 
  });
  
@@ -299,7 +319,9 @@ const mapStateToProps = state => ({
     deleteOrderLine: (orderLineId) => dispatch(LineActions.deleteOrderLineReduxAjax(orderLineId)),
     updateOrder: (orderInfo) => dispatch(OrderActions.updateOrderReduxAjax(orderInfo)),
     deleteOrder: (orderId) => dispatch(OrderActions.deleteOrderReduxAjax(orderId)),
+    getConfirmedOrder: (orderInfo) => dispatch(OrderActions.getConfirmedOrderReduxAjax(orderInfo)),
     getCurrentOrder: (orderInfo) => dispatch(OrderActions.getCurrentOrderReduxAjax(orderInfo)),
+    clearCurrentOrder: () => dispatch(OrderActions.clearCurrentOrder()),
 });
  
  

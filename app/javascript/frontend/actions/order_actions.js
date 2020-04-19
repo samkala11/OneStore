@@ -4,6 +4,9 @@ export const RECEIVE_CREATED_ORDER_ACTION = 'RECEIVE_CREATED_ORDER_ACTION';
 export const RECEIVE_UPDATED_ORDER_ACTION = 'RECEIVE_UPDATED_ORDER_ACTION';
 export const RECEIVE_CURRENT_ORDER_ACTION = 'RECEIVE_CURRENT_ORDER_ACTION';
 export const RECEIVE_DELETED_ORDER_ACTION = 'RECEIVE_DELETED_ORDER_ACTION';
+export const RECEIVE_CONFIRMED_ORDER_ACTION = 'RECEIVE_CONFIRMED_ORDER_ACTION';
+export const CLEAR_CURRENT_ORDER_ACTION = 'CLEAR_CURRENT_ORDER_ACTION';
+export const CLEAR_CONFIRMED_ORDER_ACTION = 'CLEAR_CONFIRMED_ORDER_ACTION';
 
 
 // Redux Thunk Create order  
@@ -48,6 +51,20 @@ const receiveCurrentOrder = (data) => ({
 });
 
 
+// Redux Thunk get confirmed order  
+export const getConfirmedOrderReduxAjax = (order) => dispatch => getCurrentOrder(order)
+.then((order) => {
+  console.log( 'confirmed order received', order );
+  return dispatch(receiveConfirmedOrder(order));
+});
+
+// Private receive confirmed order
+export const receiveConfirmedOrder = (data) => ({
+  type: RECEIVE_CONFIRMED_ORDER_ACTION,
+  data
+});
+
+
 // Redux Thunk delete orderline 
 export const deleteOrderReduxAjax = (id) => dispatch => deleteOrder(id)
 .then((order) => {
@@ -59,6 +76,18 @@ export const deleteOrderReduxAjax = (id) => dispatch => deleteOrder(id)
 const receiveDeletedOrder = (data) => ({
     type: RECEIVE_DELETED_ORDER_ACTION,
     data
-})
+});
+
+// clear current order
+export const clearCurrentOrder = () => ({
+  type: CLEAR_CURRENT_ORDER_ACTION
+});
+
+// clear confirmed order
+export const clearConfirmedOrder = () => ({
+  type: CLEAR_CONFIRMED_ORDER_ACTION
+});
+
+
   
   

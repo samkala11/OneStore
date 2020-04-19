@@ -333,7 +333,7 @@ class OrderShowPage extends React.Component {
 
                 { currentLinesArray.length > 0 && <div className="continue-button"> 
                         <Link to="/orderconfirmation"> 
-                            Continue to address <span className="order-total"> {currentOrder.order_total} L.L. </span> 
+                            <span className="order-total"> Continue to delivery address {currentOrder.order_total} L.L. </span> 
                         </Link> 
                     </div>
                 }
