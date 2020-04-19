@@ -276,7 +276,9 @@ class ProductListDept extends React.Component {
                   <div className= {classNames({ 'product-item-wrapper': true, 'wrapper-transform': this.state.addButtons[`${product.id}`] ||  this.state.decreaseButtons[`${product.id}`] })}
                      // className="product-item-wrapper" 
                      key={key++}>
-                     <img className="product-image" 
+
+                     <img  onClick = { () => this.handleAddClicked(product.id, product.unit, product.price, currentOrder.order_total)}
+                           className="product-image" 
                            src={`https://onestorebucket.s3.eu-west-3.amazonaws.com/${product.name}.jpg`}
                      />
                      <div className="product-details">

@@ -1,0 +1,97 @@
+.order-confirmation-container {
+    margin-top: 162px;
+    display: flex;
+    flex-direction: column;
+
+    p {
+        color: #92a88e;
+        margin: 0;
+        font-size: 31px;
+        font-weight: 600;
+    }
+
+    .name-label, .name-input, .address-label, .address-textarea, 
+    .phone-label, .phone-input {
+        margin-left: 8%;
+    }
+
+    .name-input, .phone-input {
+        font-size: 30px;
+        width: 50%;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        min-height: 50px;
+        color: #92a88e;
+    }
+
+    .address-textarea {
+        // font-size: 30px;
+        width: 83%;
+        padding-top: 20px;
+        padding-bottom: 10px;
+        margin-top: 12px;
+        min-height: 172px;
+        color: #92a88e;
+        font-size: 20px;
+    }
+
+    .confirm-container {
+        display: flex;
+        justify-content: flex-end;
+        margin-right: 4%;
+
+        .confirm-button {
+            border: 1px solid rgb(62, 119, 226);;
+            background: rgb(81, 135, 235);
+            color: white;
+            height: 72px;
+            width: 400px;
+            margin: 48px 0px;
+            margin-bottom: 96px;
+            // margin-left: 106px;
+            padding: 10px;
+            padding-left: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 35px;
+        }
+    }
+
+
+    .charges-container {
+        display: flex;
+        justify-content: flex-end;
+        margin-right: 4%;
+
+        span {
+            margin-top: 35px;
+            color: rgb(71, 69, 69);
+            font-weight: 600;
+            font-size: 28px;
+            display: inline-block;
+        }
+
+        .charges-breakdown {
+            width: 46%;
+
+            div {
+                display: flex;
+                justify-content: space-between;
+                width: 100%;
+            }
+        }
+
+    }
+    .back-button {
+        color: #92a88e;
+        text-decoration: none;
+        margin-bottom: 90px;
+
+        .back-arrow {
+            height: 42px;
+            margin-bottom: 12px;
+            margin-left: 6%;
+        }
+    }
+}
