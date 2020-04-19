@@ -961,9 +961,15 @@ function (_React$Component) {
     _this.state = {
       lineQuantities: {},
       fullOpacity: false,
-      address: "tomato"
+      showConfirmLoader: false,
+      showErrors: false,
+      customerName: "",
+      customerAddress: "",
+      customerPhoneNumber: "",
+      customerEmail: ""
     };
     _this.update = _this.update.bind(_assertThisInitialized(_this));
+    _this.handleConfirmOrder = _this.handleConfirmOrder.bind(_assertThisInitialized(_this));
     return _this;
   }
 
@@ -1045,7 +1051,7 @@ function (_React$Component) {
           "subject": "new order #".concat(currentOrder.order_number, " created! ").concat(currentOrder.order_total),
           "to": [{
             "email": "samkoki77@gmail.com",
-            "name": "Nans"
+            "name": "Sam"
           }]
         }],
         "reply_to": {
@@ -1067,23 +1073,53 @@ function (_React$Component) {
       });
     }
   }, {
-    key: "handleBlur",
+    key: "handleConfirmOrder",
     // updateStateOriginalLines() {
     //     const { lineQuantities, originalLineQuantities } = this.state;
     //     let updatedQuantities = Object.assign( {}, lineQuantities);
     //     this.setState({ originalLineQuantities: updatedQuantities});
     // }
-    // updateOrderTotal(oldOrderTotal, orderId, productPrice, ProductQuantity) {
-    //     const { updateOrder } = this.props;
-    //     let newOrderTotal = oldOrderTotal + (productPrice * ProductQuantity);
-    //     const updatedOrderInfo = {
-    //         order_total: newOrderTotal,
-    //         pending_total: newOrderTotal,
-    //         id: orderId
-    //     }
-    //     updateOrder(updatedOrderInfo)
-    //     .then((updatedOrder) => console.log(`Order total updated successfully from this.updateOrderTotal`, updatedOrder.data.order_total ));
-    // }
+    value: function handleConfirmOrder(orderId) {
+      var _this3 = this;
+
+      var _this$props2 = this.props,
+          updateOrder = _this$props2.updateOrder,
+          currentOrder = _this$props2.currentOrder,
+          getCurrentOrder = _this$props2.getCurrentOrder;
+      var _this$state = this.state,
+          customerName = _this$state.customerName,
+          customerAddress = _this$state.customerAddress,
+          customerPhoneNumber = _this$state.customerPhoneNumber,
+          customerEmail = _this$state.customerEmail;
+      this.setState({
+        showConfirmLoader: true
+      });
+      this.setState({
+        showErrors: true
+      });
+      var updatedOrderInfo = {
+        id: orderId,
+        first_name: customerName,
+        customer_address: customerAddress,
+        phone_number: customerPhoneNumber,
+        email: customerEmail,
+        status: 2000
+      };
+      updateOrder(updatedOrderInfo).then(function () {
+        var orderInfo = {
+          id: currentOrder.id
+        };
+        getCurrentOrder(orderInfo).then(function () {
+          _this3.timer = setTimeout(function () {
+            _this3.setState({
+              showConfirmLoader: false
+            });
+          }, 800); // this.sendEmail();
+        });
+      });
+    }
+  }, {
+    key: "handleBlur",
     value: function handleBlur(event, productId, orderId, newProductQuantity, productPrice, oldLineQuantity, lineId) {
       console.log('blurrr and save');
       this.handleUpdateLine(productId, orderId, newProductQuantity, productPrice, oldLineQuantity, lineId);
@@ -1099,9 +1135,11 @@ function (_React$Component) {
   }, {
     key: "render",
     value: function render() {
-      var _this$props2 = this.props,
-          currentOrderLines = _this$props2.currentOrderLines,
-          currentOrder = _this$props2.currentOrder;
+      var _this4 = this;
+
+      var _this$props3 = this.props,
+          currentOrderLines = _this$props3.currentOrderLines,
+          currentOrder = _this$props3.currentOrder;
       window.orderConfirmatioProps = this.props;
       window.orderConfirmatiostate = this.state; //   const currentLinesArray = Object.values(currentOrderLines);
 
@@ -1118,18 +1156,34 @@ function (_React$Component) {
         src: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAABmJLR0QA/wD/AP+gvaeTAAAEaUlEQVR4nO2bXWgcVRTHf2eyGw3xSZMqiilUEfFJaAv6UCFRMG23jRYNRQtt1pZAN9Logx8vMqAQFPQpEVZIgmhFNlIQkxSfKvjgR1N8UBAUCia1Gpu+SFJtNjvHh+zHuJnNzOx0Jt1Jfk/33j1zz8mf/8y9s3sDW2yxxRabGLF3PpwafmAFegzFsI9bgpWAz4/uH/gl2vLCJ2HvFJSzAju0KkgUCtAP3B9dadFguIeUuS+0KjaQ/zlAtNBtSeKwoK224VcjrilSxC1gbHK4fEekUwOu8Y1Gwj2kwvjkcKO54cpyInm2v7v/j1oBvhzQoOSBob79GVNE1vwtfh6CjUoSeGN8amTI6UO/Dnj7RlUVOiKC8ijonuJIoUl4qHov4+sZkE4NvHbDCowA0zSNjl1t08CTQFPB0qeAd+wxsb4FTNO0EKYrI3JPdUysBSjycKmhhqxZDWItQHYmm0TpKfUNKXxVHRNrAZrnVx4HbgdAmDu298XvqmNiLYCqPlvpkNtU+4DsTDYJFfsjTDjFxVaAov3vAECY69uX+d4pLrYC2O2vMOFkf4ipANX2N8RytD/EVIDkn8td2Ozv9PQvEUsBBMOT/SGGApjnzISiB0v99ewPMRTg3sX2LqC92L20nv0hhgIIts0Puq79IWYCmOfMBFJ5+qvKuvaHmAlQbf90KvOt2zWxEsCv/SFGAtRjf4iRANuvtXXi0/4QIwEs295f4DMv9oeYCJDL5ZpEpWJ/vNkfYiLAUutfXQjbit3fZ2eueLI/xEQAVXml1BaYME3T8nptwwswOjVyDPSJYldXkA/8XO/rh5GbiVzuvZbFluZBVN+yDY+fSGV+9jNPIAFqHakJF21VjAcXV3/yusv2wY/NhvWS39kCCVDrSE24CLAm4zeFwsrTR1KDf/udrbGfAcIcwqnZ1oXHTvQMztczRSAH1DhSEyoi8o9lWfNiyA+3LW2b6e3tLQSZL5AAfQdO/Qq8GWSOjcbLLVBWOJczm0OsZUPwIsBcqbHY0n5wvcBGxPWEyOjU8LuivFzsXgdOC4R/YlS4/Nv5hdN+dnX14PoMWLGSQ0nJPwN0ALcA6UiWPYXtu9sAPgozjest0H+gfwGMTgHH39bCRFVD19rTKpBOnbyoqo+MTo/sMZCdqN4ZdmGgP83OXP0k/DxbbG48n/1VVSnfAoCFXnhhX+Zrr1893Sw5qvEkwNjk+zsQ61OU3VVXn0eNw+nUyYtBC4kihxOuAmS/yLYlJX+B1WXQidm8Jneurhb1EUWOWrgugwkj/zqVwq4LMirIKKubIoCOpOQDnSCNIkctXAUQ5VCpraLP96Uyx/tSmeOoHCnHUImphyhy1MLLu8Ddpca/S8aXpbZat1batpg6iSKHI14EuFxqtLTQXb6w6Vq5LbaYOokihyOuO0EVzpRfhkQ/Hpsc3osgqjxXjoEzQYqIIkct6noZqvpKbrZpGcd/RvBKFDlqEehlaHXM6Dx6aOBqkCKiyFGLTb8T/A94e8JxjjTtVgAAAABJRU5ErkJggg=="
       })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
         className: "name-label"
-      }, "Name"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
-        className: "name-input"
+      }, "Name*"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        onChange: this.update('customerName'),
+        className: classnames__WEBPACK_IMPORTED_MODULE_4___default()({
+          'name-input': true,
+          'error-border': this.state.showErrors && this.state['customerName'].length === 0
+        })
       }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
         className: "address-label"
-      }, "Address"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("textarea", {
-        className: "address-textarea",
+      }, "Address*"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("textarea", {
+        className: classnames__WEBPACK_IMPORTED_MODULE_4___default()({
+          'address-textarea': true,
+          'error-border': this.state.showErrors && this.state['customerAddress'].length === 0
+        }),
         value: this.state['address'],
-        onChange: this.update('address')
+        onChange: this.update('customerAddress')
       }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
         className: "phone-label"
-      }, "Phone"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+      }, "Phone*"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", _defineProperty({
+        onChange: this.update('customerPhoneNumber'),
         className: "phone-input"
+      }, "className", classnames__WEBPACK_IMPORTED_MODULE_4___default()({
+        'phone-input': true,
+        'error-border': this.state.showErrors && this.state['customerPhoneNumber'].length === 0
+      }))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
+        className: "email-label"
+      }, "Email"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        onChange: this.update('customerEmail'),
+        className: "email-input"
       }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "charges-container"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -1140,11 +1194,20 @@ function (_React$Component) {
         className: "shipping-breakdown"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, "Shipping"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, _en_json__WEBPACK_IMPORTED_MODULE_8__["shippingCharge"], " L.L.")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "order-total"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, " Total "), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, " ", currentOrder.order_total, " L.L. ")))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+        id: "total-title"
+      }, " Total "), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+        id: "total-amount"
+      }, " ", currentOrder.order_total, " L.L. ")))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "confirm-container"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        onClick: function onClick() {
+          return _this4.handleConfirmOrder(currentOrder.id);
+        },
         className: "confirm-button"
-      }, "Confirm order")));
+      }, this.state.showConfirmLoader ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        "class": "confirm-loader"
+      }) : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, " Confirm order "))));
     }
   }]);
 
@@ -2150,6 +2213,7 @@ function (_React$Component) {
     value: function componentDidMount() {
       var _this2 = this;
 
+      window.scroll(0, 0);
       var _this$props = this.props,
           getProductsByDept = _this$props.getProductsByDept,
           getCurrentOrder = _this$props.getCurrentOrder,

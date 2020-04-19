@@ -30,9 +30,15 @@ class OrderConfirmationPage extends React.Component {
 
             },
             fullOpacity: false,
-            address: "tomato"
+            showConfirmLoader: false,
+            showErrors: false,
+            customerName: "",
+            customerAddress: "",
+            customerPhoneNumber: "",
+            customerEmail: ""
         }
         this.update = this.update.bind(this);
+        this.handleConfirmOrder = this.handleConfirmOrder.bind(this);
     }
 
     componentDidMount(){
@@ -107,7 +113,7 @@ class OrderConfirmationPage extends React.Component {
                 "to": [
                   {
                     "email": "samkoki77@gmail.com", 
-                    "name": "Nans"
+                    "name": "Sam"
                   }
                 ]
               }
@@ -135,17 +141,34 @@ class OrderConfirmationPage extends React.Component {
     //     this.setState({ originalLineQuantities: updatedQuantities});
     // }
     
-    // updateOrderTotal(oldOrderTotal, orderId, productPrice, ProductQuantity) {
-    //     const { updateOrder } = this.props;
-    //     let newOrderTotal = oldOrderTotal + (productPrice * ProductQuantity);
-    //     const updatedOrderInfo = {
-    //         order_total: newOrderTotal,
-    //         pending_total: newOrderTotal,
-    //         id: orderId
-    //     }
-    //     updateOrder(updatedOrderInfo)
-    //     .then((updatedOrder) => console.log(`Order total updated successfully from this.updateOrderTotal`, updatedOrder.data.order_total ));
-    // }
+    handleConfirmOrder(orderId) {
+        const { updateOrder, currentOrder, getCurrentOrder } = this.props;
+        const { customerName, customerAddress, customerPhoneNumber, customerEmail } = this.state;
+        
+        this.setState({ showConfirmLoader: true });
+        this.setState({ showErrors: true });
+
+        const updatedOrderInfo = {
+          id: orderId,
+          first_name: customerName,
+          customer_address: customerAddress,
+          phone_number: customerPhoneNumber,
+          email: customerEmail,
+          status: 2000
+        }
+
+        updateOrder(updatedOrderInfo)
+        .then(() => { 
+          let orderInfo = {
+            id: currentOrder.id
+          };
+          getCurrentOrder(orderInfo)
+          .then(() => {
+            this.timer = setTimeout(() => { this.setState({ showConfirmLoader: false }) }, 800);
+            // this.sendEmail();
+          })
+        })
+    }
 
     handleBlur(event, productId, orderId, newProductQuantity, productPrice, oldLineQuantity, lineId) {
             console.log('blurrr and save');
@@ -180,25 +203,37 @@ class OrderConfirmationPage extends React.Component {
             </Link>
 
             <p className="name-label"> 
-                Name
+                Name*
             </p>
             <input 
-              className="name-input"/>
+              onChange={this.update('customerName')}
+              className={classNames({ 'name-input': true, 'error-border': (this.state.showErrors && this.state['customerName'].length === 0)  })}
+              />
 
             <p className="address-label"> 
-                Address
+                Address*
             </p>
             <textarea 
-              className="address-textarea"
+              className={classNames({ 'address-textarea': true, 'error-border': (this.state.showErrors && this.state['customerAddress'].length === 0)  })}
               value={this.state['address']}
-              onChange={this.update('address')}
+              onChange={this.update('customerAddress')}
             />
 
             <p className="phone-label"> 
-                Phone
+                Phone*
             </p>
             <input 
-              className="phone-input"/>
+              onChange={this.update('customerPhoneNumber')}
+              className="phone-input"
+              className={classNames({ 'phone-input': true, 'error-border': (this.state.showErrors && this.state['customerPhoneNumber'].length === 0)  })}
+              />
+
+            <p className="email-label"> 
+                Email
+            </p>
+            <input
+              onChange={this.update('customerEmail')} 
+              className="email-input"/>
 
             <div className="charges-container">
               <div className="charges-breakdown">
@@ -222,17 +257,26 @@ class OrderConfirmationPage extends React.Component {
                 </div>
 
                 <div className="order-total"> 
-                  <span> Total </span>
-                  <span> {currentOrder.order_total} L.L. </span>
+                  <span id="total-title"> Total </span>
+                  <span id="total-amount"> {currentOrder.order_total} L.L. </span>
                 </div>
 
               </div>
             </div>
 
             <div className="confirm-container">
-              <div className="confirm-button">
-                Confirm order
+              <div 
+                onClick={() => this.handleConfirmOrder(currentOrder.id)}
+                className="confirm-button">
+                
+                { this.state.showConfirmLoader 
+                  ?
+                  <div class="confirm-loader"></div>
+                  :
+                  <span> Confirm order </span> }
               </div>
+
+              
             </div>
           
          </div>

@@ -35,6 +35,7 @@ class ProductListDept extends React.Component {
    }
    
    componentDidMount(){
+      window.scroll(0,0);
       const { getProductsByDept, getCurrentOrder, getOrderLinesByOrder, departmentNumber } = this.props;
       getProductsByDept(departmentNumber) //config constant
       .then((data) => {

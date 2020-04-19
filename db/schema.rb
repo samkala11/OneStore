@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_05_083531) do
+ActiveRecord::Schema.define(version: 2020_04_19_040754) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -58,7 +58,6 @@ ActiveRecord::Schema.define(version: 2020_04_05_083531) do
     t.integer "order_type", null: false
     t.integer "customer_id"
     t.string "first_name"
-    t.string "last_name"
     t.string "customer_address"
     t.integer "order_total", null: false
     t.integer "pending_total"
@@ -67,10 +66,13 @@ ActiveRecord::Schema.define(version: 2020_04_05_083531) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "order_number"
+    t.string "phone_number"
+    t.string "email"
     t.index ["customer_address"], name: "index_orders_on_customer_address"
+    t.index ["email"], name: "index_orders_on_email"
     t.index ["first_name"], name: "index_orders_on_first_name"
-    t.index ["last_name"], name: "index_orders_on_last_name"
     t.index ["order_number"], name: "index_orders_on_order_number"
+    t.index ["phone_number"], name: "index_orders_on_phone_number"
   end
 
   create_table "products", force: :cascade do |t|

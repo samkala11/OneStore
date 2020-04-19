@@ -8,36 +8,42 @@
         margin: 0;
         font-size: 31px;
         font-weight: 600;
+        margin-bottom: 7px;
+        margin-top: 25px;
     }
 
     .name-label, .name-input, .address-label, .address-textarea, 
-    .phone-label, .phone-input {
+    .phone-label, .phone-input, .email-label, .email-input {
         margin-left: 8%;
     }
 
-    .name-input, .phone-input {
+    .name-input, .phone-input, .email-input {
         font-size: 30px;
-        width: 50%;
+        width: 80%;
         padding-top: 10px;
         padding-bottom: 10px;
         min-height: 50px;
         color: #92a88e;
+        border: transparent;
+        border-bottom: 1px solid gray;
     }
 
     .address-textarea {
         // font-size: 30px;
-        width: 83%;
+        width: 80%;
         padding-top: 20px;
         padding-bottom: 10px;
-        margin-top: 12px;
+        margin-top: 7px;
         min-height: 172px;
         color: #92a88e;
-        font-size: 20px;
+        // font-size: 20px;
+        border: transparent;
+        border-bottom: 1px solid #92a88e;
     }
 
     .confirm-container {
         display: flex;
-        justify-content: flex-end;
+        justify-content: center;
         margin-right: 4%;
 
         .confirm-button {
@@ -45,7 +51,7 @@
             background: rgb(81, 135, 235);
             color: white;
             height: 72px;
-            width: 400px;
+            width: 80%;
             margin: 48px 0px;
             margin-bottom: 96px;
             // margin-left: 106px;
@@ -56,30 +62,56 @@
             align-items: center;
             font-size: 35px;
         }
+
+        .confirm-loader {
+            border: 8px solid rgb(81, 135, 235);
+            border-radius: 50%;
+            border-top: 8px solid #f3f3f3;
+            width: 38px;
+            height: 38px;
+            -webkit-animation: spin 2s linear infinite; /* Safari */
+            animation: spin 2s linear infinite;
+        }
+
+                /* Safari */
+        @-webkit-keyframes spin {
+            0% { -webkit-transform: rotate(0deg); }
+            100% { -webkit-transform: rotate(360deg); }
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+        }
     }
 
 
     .charges-container {
         display: flex;
         justify-content: flex-end;
-        margin-right: 4%;
+        margin-right: 12%;
+        margin-top: 102px;
 
         span {
             margin-top: 35px;
             color: rgb(71, 69, 69);
-            font-weight: 600;
-            font-size: 28px;
+            // font-weight: 600;
+            font-size: 25px;
             display: inline-block;
         }
 
         .charges-breakdown {
-            width: 46%;
+            width: 42%;
 
             div {
                 display: flex;
                 justify-content: space-between;
                 width: 100%;
             }
+        }
+
+        #total-title, #total-amount {
+            font-size: 28px;
         }
 
     }
@@ -93,5 +125,9 @@
             margin-bottom: 12px;
             margin-left: 6%;
         }
+    }
+
+    .error-border {
+        border: 2px solid red;
     }
 }
