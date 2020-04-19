@@ -166,6 +166,7 @@ class OrderConfirmationPage extends React.Component {
           .then(() => {
             this.timer = setTimeout(() => { this.setState({ showConfirmLoader: false }) }, 800);
             // this.sendEmail();
+            
           })
         })
     }
