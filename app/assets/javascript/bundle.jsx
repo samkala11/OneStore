@@ -222,7 +222,7 @@ var clearConfirmedOrder = function clearConfirmedOrder() {
 /*!***************************************************************!*\
   !*** ./app/javascript/frontend/actions/order_line_actions.js ***!
   \***************************************************************/
-/*! exports provided: RECEIVE_CREATED_ORDER_LINE_ACTION, RECEIVE_UPDATED_ORDER_LINE_ACTION, RECEIVE_ORDER_LINES_BY_ORDER_ACTION, RECEIVE_DELETED_ORDER_LINE_ACTION, createOrderLineReduxAjax, updateOrderLineReduxAjax, getOrderLinesByOrderReduxAjax, deleteOrderLineReduxAjax */
+/*! exports provided: RECEIVE_CREATED_ORDER_LINE_ACTION, RECEIVE_UPDATED_ORDER_LINE_ACTION, RECEIVE_ORDER_LINES_BY_ORDER_ACTION, RECEIVE_DELETED_ORDER_LINE_ACTION, CLEAR_CURRENT_ORDER_LINES_ACTION, createOrderLineReduxAjax, updateOrderLineReduxAjax, getOrderLinesByOrderReduxAjax, deleteOrderLineReduxAjax, clearCurrentOrderLines */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -231,16 +231,19 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RECEIVE_UPDATED_ORDER_LINE_ACTION", function() { return RECEIVE_UPDATED_ORDER_LINE_ACTION; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RECEIVE_ORDER_LINES_BY_ORDER_ACTION", function() { return RECEIVE_ORDER_LINES_BY_ORDER_ACTION; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RECEIVE_DELETED_ORDER_LINE_ACTION", function() { return RECEIVE_DELETED_ORDER_LINE_ACTION; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CLEAR_CURRENT_ORDER_LINES_ACTION", function() { return CLEAR_CURRENT_ORDER_LINES_ACTION; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createOrderLineReduxAjax", function() { return createOrderLineReduxAjax; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "updateOrderLineReduxAjax", function() { return updateOrderLineReduxAjax; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getOrderLinesByOrderReduxAjax", function() { return getOrderLinesByOrderReduxAjax; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "deleteOrderLineReduxAjax", function() { return deleteOrderLineReduxAjax; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "clearCurrentOrderLines", function() { return clearCurrentOrderLines; });
 /* harmony import */ var _util_order_line_api_util__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../util/order_line_api_util */ "./app/javascript/frontend/util/order_line_api_util.js");
 
 var RECEIVE_CREATED_ORDER_LINE_ACTION = 'RECEIVE_CREATED_ORDER_LINE_ACTION';
 var RECEIVE_UPDATED_ORDER_LINE_ACTION = 'RECEIVE_UPDATED_ORDER_LINE_ACTION';
 var RECEIVE_ORDER_LINES_BY_ORDER_ACTION = 'RECEIVE_ORDER_LINES_BY_ORDER_ACTION';
-var RECEIVE_DELETED_ORDER_LINE_ACTION = 'RECEIVE_DELETED_ORDER_LINE_ACTION'; // Redux Thunk Create order  
+var RECEIVE_DELETED_ORDER_LINE_ACTION = 'RECEIVE_DELETED_ORDER_LINE_ACTION';
+var CLEAR_CURRENT_ORDER_LINES_ACTION = 'CLEAR_CURRENT_ORDER_LINES_ACTION'; // Redux Thunk Create order  
 
 var createOrderLineReduxAjax = function createOrderLineReduxAjax(orderLineInfo) {
   return function (dispatch) {
@@ -306,6 +309,13 @@ var receiveDeletedOrderLine = function receiveDeletedOrderLine(data) {
   return {
     type: RECEIVE_DELETED_ORDER_LINE_ACTION,
     data: data
+  };
+}; //clear orderlines
+
+
+var clearCurrentOrderLines = function clearCurrentOrderLines() {
+  return {
+    type: CLEAR_CURRENT_ORDER_LINES_ACTION
   };
 };
 
@@ -882,6 +892,9 @@ function (_React$Component) {
         }),
         src: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAABmJLR0QA/wD/AP+gvaeTAAAEdElEQVR4nO2bTWgcZRjHf8/shy1FtGmsotBDFRFREYKHWiJJmmg82JrUhaIeREo8lEWj4MdFBhSCQrBJyEUoHrQirtmghYZ0EwhIUWuLUAVBwUOjkdKmUA+GJLvzeHBns9nMZmd2OpPuJL/TPLPPvM+TP/9533l3J7DFFltssYmR8qDn2IH7DSN2yEKN8vMGYllW4evx0enfwm0veOLlgYgxoeheqUhSFDFirwD3hddaOBi1U2z03uDa2DhWO8CgWy2OiLDDPqfwVvhthUel29fQm+5S+zg7kquZ32jEa6es0JPuaig3GMgVjclE9vjk39VyPDmgQVlWGBgfyZnAmr/FwyTYsCQE3j2c7hpw+tCTAwQ+uJGdBYkKoqr7BGktniqoZT1Y+SzjaQ4YG8m9fcM6DAHTNI2L82dPA08BMRHjWeDD8pxI3wKmaVqKnLZjEe6pzIm0AAAi+mgpUF2zGkRagL6+lgTKITtWYaYyJ9ICXNl2+wGgqRjOZkemfqjMibQAqKTKoi/ZTM8BfX0tCUFK9hdDMk55kRWgaP9dxXB2bOjMOae8yApQbn+FDA72h4gKsMb+qKP9IaICzCd3dlBmf6fZ3yaSAqjhzv4QQQHazLY4ykE7Xs/+EEEBmucTHcAdxfDP9ewPERTAgpL9RXRd+0PEBGgz2+Kw8uxvFda3P0RMgEr7j49Of1/rmkgJ4NX+ECEB6rE/REiAnVeS7Xi0P0RIAMOgbOsrX+HC/hARAVKpVEzRkv0NwZX9ISIC5Hdf7wB2A6D89VDT467sDxERQAzeXAkkY5qm5fbahhegN931EmhnMVSNWR97ud7TDyM3E6n+fdsLhVtfQ/V9+5yin4wfn/rVyzi+BKj2Sk2QiLBD4IFCXlpB7yqdh58XSPR7Hc+XANVeqQkUtde38lVOvls2Cj0TQxP/eB2u0eeAWUVevbZr6YlvhqYv1zOAPwc4vFITNKq6oMhlIyY/GXO3nc9kMgU/4/kSYGw49zvwnp8xNho3t0BJ4ZSZSgbYy4bgRoBZ+6Awf/3geomNSM0JvCfdNSjwejFcVPQkSOBvjIow90jT/pNenurqoeYckE8uDySWEs8Be4BbBHk5yIZKKFy8dhbg0yDL1LwFTg3OXJW4tgOOv60FiVjutrS+anjJ7T32ZKsKLYbonYF1ZKP88nDz/s+DvgW22OzUdQsAiHIhO3rmW1x+9XQT1Vhd0E3S4f7OvZqXL4DHKj76UeJ6ZOyjqT/8NhJGDSdqCvDMG23NiaXEBf5fBp24tJxcbjk1OHO13ibCqFGNmstgfCnxDiuNLSKcQDgBLBbP7UksJXy9QRpGjWrUFECgt3Ss+kJ2OHc0O5w7CvJiWVqvw6WuCaNGNdzsBe4uJVv5Sfs4v33bpFNOnYRRwxE3AszZB4VYsts+jv270O2UUydh1HCk5l5AIbuyGdLPetKdT4uIoDxflpb100QYNapR32Zo9ap8SS3L8Z8R3BJGjWr43Qydk7i2j49Oz/tpIowa1dj0T4L/AdgLtWawyAYDAAAAAElFTkSuQmCC"
       }))), currentOrder && currentOrder.id && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+        onClick: function onClick() {
+          return _this3.handleIconClicked('cart', '/ordercheckout');
+        },
         className: "navbar-quantity"
       }, this.getLinesQuantity()), showSearchBar && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "search-bar"
@@ -1135,6 +1148,7 @@ function (_React$Component) {
           updateOrder = _this$props2.updateOrder,
           currentOrder = _this$props2.currentOrder,
           getCurrentOrder = _this$props2.getCurrentOrder,
+          clearCurrentOrderLines = _this$props2.clearCurrentOrderLines,
           getConfirmedOrder = _this$props2.getConfirmedOrder,
           clearCurrentOrder = _this$props2.clearCurrentOrder;
       var _this$state2 = this.state,
@@ -1170,6 +1184,7 @@ function (_React$Component) {
             }, 800); // this.sendEmail();
 
             clearCurrentOrder();
+            clearCurrentOrderLines();
             localStorage.removeItem('currentOrderId');
           });
         });
@@ -1204,7 +1219,12 @@ function (_React$Component) {
       var key = 0;
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "order-confirmation-container"
-      }, !currentOrder.id && confirmedOrder.id ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, " Order Confirmed #", confirmedOrder.order_number, " ") : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      }, !currentOrder.id && confirmedOrder.id ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_navbar_navbar__WEBPACK_IMPORTED_MODULE_9__["default"], {
+        title: "Beirut Market",
+        isHomeNavBar: true
+      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "confirmed-title"
+      }, "  Order Confirmed #", confirmedOrder.order_number, " ")) : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "order-confirmation-form"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
         to: "/ordercheckout",
@@ -1307,6 +1327,9 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
     },
     clearCurrentOrder: function clearCurrentOrder() {
       return dispatch(_actions_order_actions__WEBPACK_IMPORTED_MODULE_6__["clearCurrentOrder"]());
+    },
+    clearCurrentOrderLines: function clearCurrentOrderLines() {
+      return dispatch(_actions_order_line_actions__WEBPACK_IMPORTED_MODULE_5__["clearCurrentOrderLines"]());
     }
   };
 };
@@ -1942,7 +1965,7 @@ function (_React$Component) {
         unit: ''
       },
       errorsCreate: [],
-      showLoader: true,
+      showLoader: _this.props.shouldShowHomeLoader,
       fruitsClicked: false,
       fruitsTitleClicked: false,
       vegetablesClicked: false,
@@ -1969,20 +1992,28 @@ function (_React$Component) {
           hideInitialHomeLoader = _this$props.hideInitialHomeLoader,
           currentOrder = _this$props.currentOrder,
           getCurrentOrder = _this$props.getCurrentOrder,
-          getOrderLinesByOrder = _this$props.getOrderLinesByOrder; // getAllProducts();
+          getOrderLinesByOrder = _this$props.getOrderLinesByOrder,
+          clearConfirmedOrder = _this$props.clearConfirmedOrder,
+          confirmedOrder = _this$props.confirmedOrder; // getAllProducts();
       // this.setState({ first: true})
       // this.setState({array: [...this.state.array, 5,4]})
       // this.setState({array: [...this.state.array, 5]})
       // setTimeout(() => this.setState({array: [...this.state.array, 7]}), 500)
       // this.setState({array: [...this.state.array, 7]})
 
-      this.timer = setTimeout(function () {
-        _this2.setState({
-          showLoader: false
-        });
+      confirmedOrder.id ? clearConfirmedOrder() : null;
 
-        hideInitialHomeLoader();
-      }, 900);
+      if (this.state.showLoader) {
+        this.timer = setTimeout(function () {
+          _this2.setState({
+            showLoader: false
+          });
+
+          hideInitialHomeLoader();
+        }, 900);
+      } // check for local sotrage
+
+
       var storageCurrentOrderId = localStorage.getItem('currentOrderId');
 
       if (!currentOrder.id && storageCurrentOrderId) {
@@ -2171,6 +2202,7 @@ function (_React$Component) {
 var mapStateToProps = function mapStateToProps(state) {
   return {
     currentOrder: state.orders.currentOrder,
+    confirmedOrder: state.orders.confirmedOrder,
     products: state.products,
     shouldShowHomeLoader: state.showHomeLoader
   };
@@ -2189,6 +2221,9 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
     },
     getCurrentOrder: function getCurrentOrder(orderInfo) {
       return dispatch(_actions_order_actions__WEBPACK_IMPORTED_MODULE_7__["getCurrentOrderReduxAjax"](orderInfo));
+    },
+    clearConfirmedOrder: function clearConfirmedOrder(orderInfo) {
+      return dispatch(_actions_order_actions__WEBPACK_IMPORTED_MODULE_7__["clearConfirmedOrder"](orderInfo));
     },
     getOrderLinesByOrder: function getOrderLinesByOrder(orderId) {
       return dispatch(_actions_order_line_actions__WEBPACK_IMPORTED_MODULE_8__["getOrderLinesByOrderReduxAjax"](orderId));
@@ -3465,6 +3500,36 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./app/javascript/frontend/reducers/orders/current_order_lines_reducer.js":
+/*!********************************************************************************!*\
+  !*** ./app/javascript/frontend/reducers/orders/current_order_lines_reducer.js ***!
+  \********************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _actions_order_line_actions__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../actions/order_line_actions */ "./app/javascript/frontend/actions/order_line_actions.js");
+
+/* harmony default export */ __webpack_exports__["default"] = (function () {
+  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+  var action = arguments.length > 1 ? arguments[1] : undefined;
+  Object.freeze(state);
+
+  switch (action.type) {
+    case _actions_order_line_actions__WEBPACK_IMPORTED_MODULE_0__["RECEIVE_ORDER_LINES_BY_ORDER_ACTION"]:
+      return action.data;
+
+    case _actions_order_line_actions__WEBPACK_IMPORTED_MODULE_0__["CLEAR_CURRENT_ORDER_LINES_ACTION"]:
+      return {};
+
+    default:
+      return state;
+  }
+});
+
+/***/ }),
+
 /***/ "./app/javascript/frontend/reducers/orders/last_line_reducer.js":
 /*!**********************************************************************!*\
   !*** ./app/javascript/frontend/reducers/orders/last_line_reducer.js ***!
@@ -3488,32 +3553,8 @@ __webpack_require__.r(__webpack_exports__);
     case _actions_order_line_actions__WEBPACK_IMPORTED_MODULE_0__["RECEIVE_UPDATED_ORDER_LINE_ACTION"]:
       return action.data;
 
-    default:
-      return state;
-  }
-});
-
-/***/ }),
-
-/***/ "./app/javascript/frontend/reducers/orders/order_lines_by_order.js":
-/*!*************************************************************************!*\
-  !*** ./app/javascript/frontend/reducers/orders/order_lines_by_order.js ***!
-  \*************************************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _actions_order_line_actions__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../actions/order_line_actions */ "./app/javascript/frontend/actions/order_line_actions.js");
-
-/* harmony default export */ __webpack_exports__["default"] = (function () {
-  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-  var action = arguments.length > 1 ? arguments[1] : undefined;
-  Object.freeze(state);
-
-  switch (action.type) {
-    case _actions_order_line_actions__WEBPACK_IMPORTED_MODULE_0__["RECEIVE_ORDER_LINES_BY_ORDER_ACTION"]:
-      return action.data;
+    case _actions_order_line_actions__WEBPACK_IMPORTED_MODULE_0__["CLEAR_CURRENT_ORDER_LINES_ACTION"]:
+      return {};
 
     default:
       return state;
@@ -3534,7 +3575,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var redux__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! redux */ "./node_modules/redux/es/redux.js");
 /* harmony import */ var _orders_created_order_reducer__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./orders/created_order_reducer */ "./app/javascript/frontend/reducers/orders/created_order_reducer.js");
 /* harmony import */ var _orders_last_line_reducer__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./orders/last_line_reducer */ "./app/javascript/frontend/reducers/orders/last_line_reducer.js");
-/* harmony import */ var _orders_order_lines_by_order__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./orders/order_lines_by_order */ "./app/javascript/frontend/reducers/orders/order_lines_by_order.js");
+/* harmony import */ var _orders_current_order_lines_reducer__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./orders/current_order_lines_reducer */ "./app/javascript/frontend/reducers/orders/current_order_lines_reducer.js");
 /* harmony import */ var _orders_confirmed_order_reducer__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./orders/confirmed_order_reducer */ "./app/javascript/frontend/reducers/orders/confirmed_order_reducer.js");
 
 
@@ -3544,7 +3585,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = (Object(redux__WEBPACK_IMPORTED_MODULE_0__["combineReducers"])({
   currentOrder: _orders_created_order_reducer__WEBPACK_IMPORTED_MODULE_1__["default"],
   lastOrderLine: _orders_last_line_reducer__WEBPACK_IMPORTED_MODULE_2__["default"],
-  currentOrderLines: _orders_order_lines_by_order__WEBPACK_IMPORTED_MODULE_3__["default"],
+  currentOrderLines: _orders_current_order_lines_reducer__WEBPACK_IMPORTED_MODULE_5__["default"],
   confirmedOrder: _orders_confirmed_order_reducer__WEBPACK_IMPORTED_MODULE_4__["default"]
 }));
 

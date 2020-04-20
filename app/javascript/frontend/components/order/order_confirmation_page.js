@@ -67,7 +67,6 @@ class OrderConfirmationPage extends React.Component {
         //    .then((orderLines) => {
         //         let linesArray = OrderPureFunctions.objectValuesArray(orderLines.data);
         //         let lineQuantities = Object.assign({}, this.state.lineQuantities) ;
-        
         //         linesArray.forEach(line => {
         //             lineQuantities[line.id]  = line.quantity
         //         });
@@ -139,7 +138,6 @@ class OrderConfirmationPage extends React.Component {
         })
     };
 
-
     // updateStateOriginalLines() {
     //     const { lineQuantities, originalLineQuantities } = this.state;
     //     let updatedQuantities = Object.assign( {}, lineQuantities);
@@ -147,7 +145,8 @@ class OrderConfirmationPage extends React.Component {
     // }
     
     handleConfirmOrder(orderId) {
-        const { updateOrder, currentOrder, getCurrentOrder, getConfirmedOrder, clearCurrentOrder } = this.props;
+        const { updateOrder, currentOrder, getCurrentOrder, 
+          clearCurrentOrderLines, getConfirmedOrder, clearCurrentOrder } = this.props;
         const { customerName, customerAddress, customerPhoneNumber, customerEmail } = this.state;
         
         this.setState({ showErrors: true });
@@ -172,6 +171,7 @@ class OrderConfirmationPage extends React.Component {
               this.timer = setTimeout(() => { this.setState({ showConfirmLoader: false }) }, 800);
               // this.sendEmail();
               clearCurrentOrder();
+              clearCurrentOrderLines();
               localStorage.removeItem('currentOrderId');
             })
           })
@@ -179,23 +179,23 @@ class OrderConfirmationPage extends React.Component {
     }
 
     handleBlur(event, productId, orderId, newProductQuantity, productPrice, oldLineQuantity, lineId) {
-            console.log('blurrr and save');
-            this.handleUpdateLine(productId, orderId, newProductQuantity, productPrice, oldLineQuantity, lineId );
+      console.log('blurrr and save');
+      this.handleUpdateLine(productId, orderId, newProductQuantity, productPrice, oldLineQuantity, lineId );
     }
 
     handleEnter(event, productId, orderId, newProductQuantity, productPrice, oldLineQuantity, lineId) {
-        if (event.keyCode === 13) {
-            console.log(`enter and save`);
-            this.handleUpdateLine(productId, orderId, newProductQuantity, productPrice, oldLineQuantity, lineId );
-        }
+      if (event.keyCode === 13) {
+          console.log(`enter and save`);
+          this.handleUpdateLine(productId, orderId, newProductQuantity, productPrice, oldLineQuantity, lineId );
+      }
     }
 
 
    render() {
 
     const { currentOrderLines, currentOrder, confirmedOrder  } = this.props;
-      window.orderConfirmatioProps = this.props;
-      window.orderConfirmatiostate = this.state;
+    window.orderConfirmatioProps = this.props;
+    window.orderConfirmatiostate = this.state;
 
     //   const currentLinesArray = Object.values(currentOrderLines);
       let key = 0;
@@ -206,7 +206,13 @@ class OrderConfirmationPage extends React.Component {
           
             ? 
 
-          <div> Order Confirmed #{confirmedOrder.order_number} </div>
+          <div>
+            <NavBar
+               title = 'Beirut Market'
+               isHomeNavBar = { true }
+            />
+            <div className="confirmed-title">  Order Confirmed #{confirmedOrder.order_number} </div>
+          </div>
 
             :
           <div className="order-confirmation-form">  
@@ -322,6 +328,7 @@ const mapStateToProps = state => ({
     getConfirmedOrder: (orderInfo) => dispatch(OrderActions.getConfirmedOrderReduxAjax(orderInfo)),
     getCurrentOrder: (orderInfo) => dispatch(OrderActions.getCurrentOrderReduxAjax(orderInfo)),
     clearCurrentOrder: () => dispatch(OrderActions.clearCurrentOrder()),
+    clearCurrentOrderLines: () => dispatch(LineActions.clearCurrentOrderLines()),
 });
  
  

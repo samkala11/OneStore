@@ -141,7 +141,10 @@ class NavBar extends React.Component {
                    </div> 
                 </div>
 
-                { currentOrder  && currentOrder.id && <span className="navbar-quantity"> 
+                { currentOrder  && currentOrder.id && <span 
+                    onClick = { () => this.handleIconClicked('cart', '/ordercheckout') }  
+                    className="navbar-quantity"
+                > 
                     {this.getLinesQuantity()}
                 </span>}
 

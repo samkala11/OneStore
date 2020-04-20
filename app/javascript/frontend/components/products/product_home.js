@@ -28,7 +28,7 @@ class ProductHome extends React.Component {
             unit: ''
          },
          errorsCreate: [],
-         showLoader: true,
+         showLoader: this.props.shouldShowHomeLoader,
          fruitsClicked: false,
          fruitsTitleClicked: false,
          vegetablesClicked: false,
@@ -46,8 +46,9 @@ class ProductHome extends React.Component {
    componentDidMount(){
       window.scroll(0,0);
       window.parent.document.body.style.zoom = 1;
-      
-      const { getAllProducts, hideInitialHomeLoader, currentOrder, getCurrentOrder, getOrderLinesByOrder } = this.props;
+
+      const { getAllProducts, hideInitialHomeLoader, currentOrder, 
+         getCurrentOrder, getOrderLinesByOrder , clearConfirmedOrder, confirmedOrder} = this.props;
       // getAllProducts();
       // this.setState({ first: true})
       // this.setState({array: [...this.state.array, 5,4]})
@@ -55,11 +56,16 @@ class ProductHome extends React.Component {
       // setTimeout(() => this.setState({array: [...this.state.array, 7]}), 500)
       // this.setState({array: [...this.state.array, 7]})
       
-      this.timer = setTimeout(() => {
-         this.setState({showLoader: false});
-         hideInitialHomeLoader();
-      }, 900)
+      confirmedOrder.id ? clearConfirmedOrder() : null;
 
+      if (this.state.showLoader) {
+         this.timer = setTimeout(() => {
+            this.setState({showLoader: false});
+            hideInitialHomeLoader();
+         }, 900)
+      }
+
+      // check for local sotrage
       let storageCurrentOrderId = localStorage.getItem('currentOrderId');
       if ( !currentOrder.id && storageCurrentOrderId ) {
          let orderInfo = {
@@ -289,6 +295,7 @@ class ProductHome extends React.Component {
 
 const mapStateToProps = state => ({
    currentOrder: state.orders.currentOrder,
+   confirmedOrder: state.orders.confirmedOrder,
    products: state.products,
    shouldShowHomeLoader: state.showHomeLoader
  });
@@ -298,6 +305,7 @@ const mapStateToProps = state => ({
    createProduct: (productInfo) => dispatch(ProductActions.createProductThunk(productInfo)),
    hideInitialHomeLoader: () => dispatch(InitialHomeLoaderActions.hideInitialHomeLoader()),
    getCurrentOrder: (orderInfo) => dispatch(OrderActions.getCurrentOrderReduxAjax(orderInfo)),
+   clearConfirmedOrder: (orderInfo) => dispatch(OrderActions.clearConfirmedOrder(orderInfo)),
    getOrderLinesByOrder: (orderId) => dispatch(LineActions.getOrderLinesByOrderReduxAjax(orderId))
 });
  

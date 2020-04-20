@@ -4,6 +4,7 @@ export const RECEIVE_CREATED_ORDER_LINE_ACTION = 'RECEIVE_CREATED_ORDER_LINE_ACT
 export const RECEIVE_UPDATED_ORDER_LINE_ACTION = 'RECEIVE_UPDATED_ORDER_LINE_ACTION';
 export const RECEIVE_ORDER_LINES_BY_ORDER_ACTION = 'RECEIVE_ORDER_LINES_BY_ORDER_ACTION';
 export const RECEIVE_DELETED_ORDER_LINE_ACTION = 'RECEIVE_DELETED_ORDER_LINE_ACTION';
+export const CLEAR_CURRENT_ORDER_LINES_ACTION = 'CLEAR_CURRENT_ORDER_LINES_ACTION';
 
 // Redux Thunk Create order  
 export const createOrderLineReduxAjax = (orderLineInfo) => dispatch => createOrderLine(orderLineInfo)
@@ -60,4 +61,8 @@ const receiveDeletedOrderLine = (data) => ({
     data
 });
   
-  
+
+//clear orderlines
+export const clearCurrentOrderLines = () => ({
+  type: CLEAR_CURRENT_ORDER_LINES_ACTION
+});
