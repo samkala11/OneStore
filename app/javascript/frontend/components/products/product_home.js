@@ -16,9 +16,6 @@ class ProductHome extends React.Component {
       super(props);
 
       this.state = {
-         // array: [],
-         // first: false,
-         // name: '',
          productInfo: {
             name: '',
             short_desc: '',
@@ -32,12 +29,11 @@ class ProductHome extends React.Component {
          fruitsClicked: false,
          fruitsTitleClicked: false,
          vegetablesClicked: false,
-         vegetablesTitleClicked: false,
-
+         vegetablesTitleClicked: false
       }
       this.timer = false;
       this.update = this.update.bind(this);
-      this.handleCreate = this.handleCreate.bind(this);
+      this.handleCreateProduct = this.handleCreateProduct.bind(this);
       // this.handleFruitsClicked = this.handleFruitsClicked.bind(this);
       this.handleImageClicked = this.handleImageClicked.bind(this);
       this.handleTitleClicked = this.handleTitleClicked.bind(this);
@@ -82,44 +78,21 @@ class ProductHome extends React.Component {
    }
 
    update(field) {
-
       let newProductInfo = Object.assign({}, this.state.productInfo) ;
       return e => {
          newProductInfo[field]  = e.currentTarget.value
-         this.setState({ productInfo: newProductInfo})
+         this.setState({ productInfo: newProductInfo});
       }
    }
 
-   handleCreate(e) {
+   handleCreateProduct(e) {
       e.preventDefault()
-      const { createProduct, getAllProducts } = this.props;
-
-      // let products = {
-      //    products: [
-      //       {
-      //          name: 'tomatoo',
-      //          short_desc: 'tomato',
-      //          department_id: 6,
-      //          price: 10,
-      //          product_id: 2908878,
-      //          unit: 'kg'
-      //       },
-      //       {
-      //          name: 'bananaaa',
-      //          short_desc: 'bananaa',
-      //          department_id: 7,
-      //          price: 20,
-      //          product_id: 29440074,
-      //          unit: 'kg'
-      //       }
-      //    ]
-      // }
+      const { createProduct } = this.props;
 
       console.log('right before create', this.state.productInfo);      
       createProduct(this.state.productInfo)
-      // createProduct(products)
       .then((response) => {
-         console.log('your response', response);
+         console.log('product created response', response);
          // let resetProductInfo =  { name: '', short_desc: '', department_id: '', price: ''};
          // this.setState({ productInfo: resetProductInfo })
          // getAllProducts();
@@ -144,7 +117,6 @@ class ProductHome extends React.Component {
       this.setState({ [`${titleName}TitleClicked`]: true });
       this.timer4 = setTimeout(() => this.setState({ [`${titleName}TitleClicked`]: false }), 200);
       this.timer5 = setTimeout(() => this.props.history.push(`/departments/${titleName}`), 400);
-      // debugger;
    }
 
    render() {
@@ -164,10 +136,6 @@ class ProductHome extends React.Component {
                </div>
            </div> 
            </div>}
-            <NavBar
-               title = 'Beirut Market'
-               isHomeNavBar = { true }
-            />
             {/* <Map/> */}
             
             {/* <div className="search-bar">
@@ -175,8 +143,11 @@ class ProductHome extends React.Component {
                   placeholder="search"
                   type="text"/>
             </div> */}
-            <div className="all-department-categories">
-               {/* <h4>  Main Categories</h4> */}
+         { !shouldShowHomeLoader && <div className="all-department-categories">
+               <NavBar
+                  title = 'Beirut Market'
+                  isHomeNavBar = { true }
+               />
                <div className="department-wrapper">
                   <div to="/departments/fruits">    
                     <img
@@ -219,8 +190,7 @@ class ProductHome extends React.Component {
                   </div>
 
                </div>
-
-            </div>
+         </div>}
 
 {/* 
             <div className="new-product-form">
@@ -274,7 +244,7 @@ class ProductHome extends React.Component {
                /> 
 
                <button 
-                  onClick = {this.handleCreate}
+                  onClick = {this.handleCreateProduct}
                >
                   Create
                </button>

@@ -28,6 +28,45 @@
         border-bottom: 1px solid gray;
     }
 
+    .order-line-show {
+        display: flex;
+        // height: 238px;
+        margin-left: 106px;
+        justify-content: center;
+
+        .product-image {
+            width: 192px;
+            height: 156px;
+            margin-top: 6px;
+        }
+
+        .line-details {
+            margin-left: -277px;
+            width: 400px;
+
+            .product-name {
+                text-transform: capitalize;
+                font-weight: 600;
+                font-size: 35px;
+                display: inline-block;
+                color: #8da084;
+            }
+
+            .product-price {
+                font-size: 30px;
+                display: inline-block;
+                font-style: italic;
+                margin-left: 34px;
+            }
+
+            .product-unit {
+                font-size: 32px;
+                margin-left: -5px;
+                font-style: italic;
+            }
+        }
+    }
+
     .address-textarea {
         // font-size: 30px;
         width: 80%;
@@ -133,5 +172,8 @@
 
     .confirmed-title {
         margin-top: 284px;
+        margin-bottom: 30px;
+        text-align: center;
+        color: #9eb494;
     }
 }

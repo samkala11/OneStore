@@ -40,6 +40,7 @@ class OrderConfirmationPage extends React.Component {
         this.update = this.update.bind(this);
         this.handleConfirmOrder = this.handleConfirmOrder.bind(this);
         this.checkRequiredFields = this.checkRequiredFields.bind(this);
+        this.orderLineEmailContent = this.orderLineEmailContent.bind(this);
     }
 
     componentDidMount(){
@@ -97,19 +98,34 @@ class OrderConfirmationPage extends React.Component {
         }
     }
 
-    sendEmail() {
+    orderLineEmailContent() {
+      const { currentOrderLines } = this.props;
+      const linesArray = Object.values(currentOrderLines);
+      let lineParagraphs = "";
+
+      for (let index = 0; index < linesArray.length; index++) {
+        let line = linesArray[index];
+        lineParagraphs += `<p> ${line.productName} ${line.quantity} ${line.line_total} </p>`
+      }
+
+      return lineParagraphs;
+
+    }
+
+    sendNotificationEmail() {
         const { currentOrder } = this.props;
         const proxy = "https://cors-anywhere.herokuapp.com/";
         const emailData = {
             "content": [
               {
                 "type": "text/html", 
-                "value": `<html><p>A new order ${currentOrder.order_number} is created</p></html>`
+                "value": `<html>
+                  <p> new order ${currentOrder.order_number} created! ${currentOrder.order_total} </p> </html>`
               }
             ], 
             "from": {
-              "email": "Unostore1279@ovnotifications88.com", 
-              "name": "Uno Store"
+              "email": "Milos@confirmation.com", 
+              "name": "Milo's"
             }, 
             "personalizations": [
               {
@@ -117,14 +133,14 @@ class OrderConfirmationPage extends React.Component {
                 "to": [
                   {
                     "email": "samkoki77@gmail.com", 
-                    "name": "Sam"
+                    "name": "store"
                   }
                 ]
               }
             ], 
             "reply_to": {
-              "email": "Unostore1279@ovnotifications88.com", 
-              "name": "Uno Store"
+              "email": "Milos@confirmation.com", 
+              "name": "Milo's"
             }, 
             "subject": `new order #${currentOrder.order_number} created! ${currentOrder.order_total}`
         };
@@ -138,6 +154,54 @@ class OrderConfirmationPage extends React.Component {
         })
     };
 
+
+    sendCustomerEmail() {
+      let orderLines = this.orderLineEmailContent();
+      const { currentOrder } = this.props;
+      const proxy = "https://cors-anywhere.herokuapp.com/";
+      const emailData = {
+          "content": [
+            {
+              "type": "text/html", 
+              "value": `<html>
+                <p>Your order #${currentOrder.order_number} is received</p>
+                ${orderLines}
+                <p> order total ${currentOrder.order_total} L.L. </p>  
+                </html>`
+            }
+          ], 
+          "from": {
+            "email": "Milos@confirmation.com", 
+            "name": "Milo's"
+          }, 
+          "personalizations": [
+            {
+              "subject": `Your order #${currentOrder.order_number} is received!`, 
+              "to": [
+                {
+                  "email": `${this.state.customerEmail}`, 
+                  "name": `${this.state.customerEmail}`
+                }
+              ]
+            }
+          ], 
+          "reply_to": {
+            "email": "Milos@confirmation.com", 
+            "name": "Milo's"
+          }, 
+          "subject": `Your order #${currentOrder.order_number} is received!`
+      };
+      let request = {};
+      request.body = emailData;
+      request.method = 'POST';
+      request.url = `${proxy}https://api.sendgrid.com/v3/mail/send`;
+      client.request(request)
+      .then(([response, body]) => {
+          console.log(`email sent response: ${response}`);
+      })
+  };
+
+
     // updateStateOriginalLines() {
     //     const { lineQuantities, originalLineQuantities } = this.state;
     //     let updatedQuantities = Object.assign( {}, lineQuantities);
@@ -145,37 +209,40 @@ class OrderConfirmationPage extends React.Component {
     // }
     
     handleConfirmOrder(orderId) {
-        const { updateOrder, currentOrder, getCurrentOrder, 
-          clearCurrentOrderLines, getConfirmedOrder, clearCurrentOrder } = this.props;
-        const { customerName, customerAddress, customerPhoneNumber, customerEmail } = this.state;
+      const { updateOrder, currentOrder, getCurrentOrder, 
+        clearCurrentOrderLines, getConfirmedOrder, currentOrderLines,
+        clearCurrentOrder, receiveConfirmedOrder, receiveConfirmedOrderLines } = this.props;
+      const { customerName, customerAddress, customerPhoneNumber, customerEmail } = this.state;
+      
+      this.setState({ showErrors: true });
+      const updatedOrderInfo = {
+        id: orderId,
+        first_name: customerName,
+        customer_address: customerAddress,
+        phone_number: customerPhoneNumber,
+        email: customerEmail,
+        status: 2000
+      }
+      this.sendNotificationEmail();
+      this.sendCustomerEmail();
+      
+      if (this.checkRequiredFields()) {
+        this.setState({ showConfirmLoader: true });
         
-        this.setState({ showErrors: true });
-        const updatedOrderInfo = {
-          id: orderId,
-          first_name: customerName,
-          customer_address: customerAddress,
-          phone_number: customerPhoneNumber,
-          email: customerEmail,
-          status: 2000
-        }
-
-        if (this.checkRequiredFields()) {
-          this.setState({ showConfirmLoader: true });
-          updateOrder(updatedOrderInfo)
-          .then(() => { 
-            let orderInfo = {
-              id: currentOrder.id
-            };
-            getConfirmedOrder(orderInfo)
-            .then(() => {
-              this.timer = setTimeout(() => { this.setState({ showConfirmLoader: false }) }, 800);
-              // this.sendEmail();
-              clearCurrentOrder();
-              clearCurrentOrderLines();
-              localStorage.removeItem('currentOrderId');
-            })
-          })
-        }
+        updateOrder(updatedOrderInfo)
+        .then((order) => { 
+          let orderInfo = {
+            id: currentOrder.id
+          };
+          console.log( 'updated order!!', order.data)
+          this.timer = setTimeout(() => { this.setState({ showConfirmLoader: false }) }, 800);
+          receiveConfirmedOrder(order.data);
+          receiveConfirmedOrderLines(currentOrderLines)
+          localStorage.removeItem('currentOrderId');
+          clearCurrentOrder();
+          clearCurrentOrderLines();
+        })
+      }
     }
 
     handleBlur(event, productId, orderId, newProductQuantity, productPrice, oldLineQuantity, lineId) {
@@ -193,7 +260,8 @@ class OrderConfirmationPage extends React.Component {
 
    render() {
 
-    const { currentOrderLines, currentOrder, confirmedOrder  } = this.props;
+    const { currentOrderLines, currentOrder, confirmedOrder, confirmedOrderLines  } = this.props;
+    let confirmedLinesArray = Object.values(confirmedOrderLines);
     window.orderConfirmatioProps = this.props;
     window.orderConfirmatiostate = this.state;
 
@@ -212,6 +280,39 @@ class OrderConfirmationPage extends React.Component {
                isHomeNavBar = { true }
             />
             <div className="confirmed-title">  Order Confirmed #{confirmedOrder.order_number} </div>
+
+            { confirmedLinesArray.map( line => (
+              
+              <div className="order-line-show"
+                        key = {key++}
+                  >
+
+                  <div className="line-details"> 
+                      <span className="product-name"> 
+                          {line.productName}
+                      </span>
+                      <span className="product-price"> 
+                          {line.quantity} <span className="product-unit"> {line.unit}  {line.line_total}</span>
+                      </span>
+                  </div>
+              </div>
+
+            )) }
+
+
+            <div className="order-line-show" >
+              <div className="line-details"> 
+                  <span className="product-name"> 
+                      Total
+                  </span>
+                  <span className="product-price"> 
+                      {confirmedOrder.order_total} L.L.
+                      {/* <span className="product-unit"> {line.unit}  {line.line_total}</span> */}
+                  </span>
+              </div>
+            </div>
+
+            
           </div>
 
             :
@@ -316,19 +417,22 @@ const mapStateToProps = state => ({
    currentOrderLines: state.orders.currentOrderLines,
    currentOrder: state.orders.currentOrder,
    confirmedOrder: state.orders.confirmedOrder,
+   confirmedOrderLines: state.orders.confirmedOrderLines
 
  });
  
- const mapDispatchToProps = dispatch => ({
-    getOrderLinesByOrder: (orderId) => dispatch(LineActions.getOrderLinesByOrderReduxAjax(orderId)),
-    updateOrderLine: (orderLineInfo) => dispatch(LineActions.updateOrderLineReduxAjax(orderLineInfo)),
-    deleteOrderLine: (orderLineId) => dispatch(LineActions.deleteOrderLineReduxAjax(orderLineId)),
-    updateOrder: (orderInfo) => dispatch(OrderActions.updateOrderReduxAjax(orderInfo)),
-    deleteOrder: (orderId) => dispatch(OrderActions.deleteOrderReduxAjax(orderId)),
-    getConfirmedOrder: (orderInfo) => dispatch(OrderActions.getConfirmedOrderReduxAjax(orderInfo)),
-    getCurrentOrder: (orderInfo) => dispatch(OrderActions.getCurrentOrderReduxAjax(orderInfo)),
-    clearCurrentOrder: () => dispatch(OrderActions.clearCurrentOrder()),
-    clearCurrentOrderLines: () => dispatch(LineActions.clearCurrentOrderLines()),
+const mapDispatchToProps = dispatch => ({
+  getOrderLinesByOrder: (orderId) => dispatch(LineActions.getOrderLinesByOrderReduxAjax(orderId)),
+  updateOrderLine: (orderLineInfo) => dispatch(LineActions.updateOrderLineReduxAjax(orderLineInfo)),
+  deleteOrderLine: (orderLineId) => dispatch(LineActions.deleteOrderLineReduxAjax(orderLineId)),
+  updateOrder: (orderInfo) => dispatch(OrderActions.updateOrderReduxAjax(orderInfo)),
+  deleteOrder: (orderId) => dispatch(OrderActions.deleteOrderReduxAjax(orderId)),
+  getConfirmedOrder: (orderInfo) => dispatch(OrderActions.getConfirmedOrderReduxAjax(orderInfo)),
+  receiveConfirmedOrder: (orderInfo) => dispatch(OrderActions.receiveConfirmedOrder(orderInfo)),
+  receiveConfirmedOrderLines: (orderLines) => dispatch(LineActions.receiveConfirmedOrderLines(orderLines)),
+  getCurrentOrder: (orderInfo) => dispatch(OrderActions.getCurrentOrderReduxAjax(orderInfo)),
+  clearCurrentOrder: () => dispatch(OrderActions.clearCurrentOrder()),
+  clearCurrentOrderLines: () => dispatch(LineActions.clearCurrentOrderLines()),
 });
  
  

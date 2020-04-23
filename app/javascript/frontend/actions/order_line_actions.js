@@ -5,6 +5,8 @@ export const RECEIVE_UPDATED_ORDER_LINE_ACTION = 'RECEIVE_UPDATED_ORDER_LINE_ACT
 export const RECEIVE_ORDER_LINES_BY_ORDER_ACTION = 'RECEIVE_ORDER_LINES_BY_ORDER_ACTION';
 export const RECEIVE_DELETED_ORDER_LINE_ACTION = 'RECEIVE_DELETED_ORDER_LINE_ACTION';
 export const CLEAR_CURRENT_ORDER_LINES_ACTION = 'CLEAR_CURRENT_ORDER_LINES_ACTION';
+export const CLEAR_CONFIRMED_ORDER_LINES_ACTION = 'CLEAR_CONFIRMED_ORDER_LINES_ACTION';
+export const RECEIVE_CONFIRMED_ORDER_LINES_ACTION = 'RECEIVE_CONFIRMED_ORDER_LINES_ACTION';
 
 // Redux Thunk Create order  
 export const createOrderLineReduxAjax = (orderLineInfo) => dispatch => createOrderLine(orderLineInfo)
@@ -47,6 +49,11 @@ const receiveOrderLinesByOrder = (data) => ({
     data
 })
 
+// Private receive orderlines by department
+export const receiveConfirmedOrderLines = (data) => ({
+  type: RECEIVE_CONFIRMED_ORDER_LINES_ACTION,
+  data
+})
 
 // Redux Thunk delete orderline 
 export const deleteOrderLineReduxAjax = (id) => dispatch => deleteOrderLine(id)
@@ -65,4 +72,9 @@ const receiveDeletedOrderLine = (data) => ({
 //clear orderlines
 export const clearCurrentOrderLines = () => ({
   type: CLEAR_CURRENT_ORDER_LINES_ACTION
+});
+
+// clear confirmed orderlines
+export const clearConfirmedOrderLines = () => ({
+  type: CLEAR_CONFIRMED_ORDER_LINES_ACTION
 });

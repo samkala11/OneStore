@@ -51,6 +51,12 @@ html {
         height: 100%;
     }
 
+    .no-results-message {
+        text-align: center;
+        margin-top: 200px;
+        color: #7a966d;
+    }
+
     .product-list-wrapper {
         box-sizing: border-box;
         // margin-top: 6%;
@@ -220,10 +226,8 @@ html {
             display: block;
             margin-bottom: 20px;
             box-sizing: border-box;
-            font-size: 65px;
             text-decoration: none;
             color: #9eb494;
-            font-weight: bold;
             font-size: 49px;
             margin-top: 20px;
 

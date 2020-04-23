@@ -18,9 +18,12 @@ class SearchPage extends React.Component {
             order: {
                 order_total: 1500,
             },
+            showNoResults: false,
+            firstSearchDone: false
         }
         this.update = this.update.bind(this);
         this.handleEnter = this.handleEnter.bind(this);
+        this.handleSearchProducts = this.handleSearchProducts.bind(this);
     }
 
     componentDidMount() {
@@ -190,14 +193,27 @@ class SearchPage extends React.Component {
     
     handleEnter(event) {
         const { productName } = this.state;
-        const { searchProducts } = this.props;
         if (event.keyCode === 13) {
             console.log(`enter and search ${productName}`);
-            searchProducts(productName);
+            this.handleSearchProducts();
+            // if (this.state.productName.length > 0) {
+            //     searchProducts(productName)
+            //     .then( () => this.setState({firstSearchDone: true}) )                   
+            // }
         }
     }
 
 
+    handleSearchProducts() {
+        const { productName } = this.state;
+        const { searchProducts } = this.props;
+         if (productName.length > 0) {
+            searchProducts(productName)
+            .then( () => this.setState({firstSearchDone: true}) )                   
+        } else {
+            this.props.history.push('/');
+        }
+    }
 
 
    render() {
@@ -211,6 +227,7 @@ class SearchPage extends React.Component {
         };
 
       window.searchState = this.state;
+      window.searchProps = this.props;
       return(
         <div className="search-page">
             <NavBar
@@ -224,12 +241,15 @@ class SearchPage extends React.Component {
                   placeholder="Search"
                   type="text"
                   onChange = {this.update('productName')}
-                  onBlur = {() => searchProducts(this.state.productName)}
+                  onBlur =  { this.handleSearchProducts }
                   onKeyDown = { (event) => this.handleEnter(event) }
-                  
                   />
             </div>
 
+        { (productsArray.length === 0 && this.state.firstSearchDone) ? 
+            
+            <div className="no-results-message">  No results found </div>
+            :
             <div className="product-list-search-wrapper">
                {productsArray.map(product => (
                   <div className="product-item-wrapper" key={key++}>
@@ -269,13 +289,13 @@ class SearchPage extends React.Component {
                      </button>
                   </div>
                ))}              
-            </div>
-
+            </div> 
+        }
             {/* <button
                 onClick={() => searchProducts(this.state.productName)}
             > Start </button> */}
         </div>
-      )
+    )
    }
 }
 

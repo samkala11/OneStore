@@ -9,7 +9,7 @@
         .loader-main {
             width: 100vw;
             height: 100vh;
-            background-color: floralwhite;
+            background-color: beige;
             z-index: 2;
             position: fixed;
 
@@ -22,23 +22,22 @@
                 transform: translate(-50%,-50%);
 
                 .loader-div{
-                    width: calc(100% - 16px);
-                    height: calc(100% - 16px);
-                    // border: 8px solid #162534;
-                    border-radius: 50%;
-                    animation: rotate 5s linear infinite;
+                    width: calc(100% - 55px);
+                    height: calc(100% - 60px);
+                    border-radius: 90%;
+                    animation: rotate 3s linear infinite;
                 }
 
                 .red-border {
-                    border-top: 20px solid rgb(218, 44, 44);
+                    border-top: 19px solid rgb(218, 44, 44);
                 }
 
                 .white-border {
-                    border-top: 20px solid rgb(245, 239, 239);
+                    border-top: 19px solid rgb(245, 239, 239);
                 }
 
                 .green-border {
-                    border-top: 20px solid rgb(5, 156, 18);
+                    border-top: 19px solid rgb(5, 156, 18);
                 }
 
                 @keyframes rotate {
